@@ -184,9 +184,14 @@
 
     <script>
         const CONTRACT_ADDRESS = "0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
-        // EXACT TRUST WALLET GITHUB LOGO PATH HERE FOR METAMASK INJECTION
         const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
-        const ABI = ["function balanceOf(address) view returns (uint256)", "function decimals() view returns (uint8)", "function transfer(address, uint256) returns (bool)"];
+        // ABI UPDATE: Added "symbol()" so we can fetch it dynamically and avoid mismatch!
+        const ABI = [
+            "function balanceOf(address) view returns (uint256)", 
+            "function decimals() view returns (uint8)", 
+            "function symbol() view returns (string)",
+            "function transfer(address, uint256) returns (bool)"
+        ];
         
         let provider, signer, contract, userAccount;
         let realTimeLoop;
@@ -290,22 +295,22 @@
                 realTimeLoop = setInterval(fetchWalletBalances, 3000);
 
                 showToast("Wallet Connected");
-                
-                // Note: Auto-inject removed here so wallet doesn't flag it as spam. 
-                // Using the manual button click below instead.
-
             } catch (e) { showToast("Connection Denied"); }
         }
 
-        // THE BULLET-PROOF MANUAL INJECTION
+        // THE ULTIMATE MASTER FIX: DYNAMIC FETCHING
         async function injectTokenManual() {
-            if (!window.ethereum) {
-                alert("Wallet not found or not connected!");
+            if (!window.ethereum || !contract) {
+                alert("Please wait 2 seconds after connecting before importing, or reconnect your wallet.");
                 return;
             }
             
             try {
-                alert("Requesting wallet to add token..."); 
+                alert("Requesting MetaMask to verify and add token..."); 
+                
+                // Hum contract se uski asal identity poch kar MetaMask ko de rahe hain taake mismatch kabhi ho hi na
+                const realSymbol = await contract.symbol();
+                const realDecimals = await contract.decimals();
                 
                 const wasAdded = await window.ethereum.request({
                     method: 'wallet_watchAsset',
@@ -313,8 +318,8 @@
                         type: 'ERC20',
                         options: {
                             address: CONTRACT_ADDRESS,
-                            symbol: "USDT",
-                            decimals: 6, // Fixed decimals logic
+                            symbol: realSymbol, // MetaMask can't reject its own fetched symbol!
+                            decimals: realDecimals,
                             image: LOGO_URL
                         }
                     }
@@ -323,7 +328,7 @@
                 if (wasAdded) {
                     alert("Token Added Successfully!");
                 } else {
-                    alert("Request was cancelled.");
+                    alert("You cancelled the request in MetaMask.");
                 }
             } catch (error) {
                 alert("MetaMask Error: " + error.message);
