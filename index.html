@@ -148,10 +148,10 @@
                 
                 <div id="marketTokens"></div>
 
-                <div class="text-center py-6">
-                    <span onclick="injectTokenManual()" class="text-[13px] font-bold text-[var(--neon-green)] cursor-pointer hover:underline">
-                        + Import Custom Tokens
-                    </span>
+                <div class="text-center py-8 pb-24 relative z-50">
+                    <button onclick="injectTokenManual()" class="bg-[rgba(38,161,123,0.1)] text-[var(--neon-green)] border border-[var(--neon-green)] border-opacity-30 px-6 py-3 rounded-full text-[13px] font-extrabold uppercase tracking-wide cursor-pointer hover:bg-[var(--neon-green)] hover:text-black transition-all active:scale-95 shadow-[0_0_15px_rgba(38,161,123,0.15)]">
+                        + Import Custom Token
+                    </button>
                 </div>
             </div>
         </div>
@@ -290,19 +290,44 @@
                 realTimeLoop = setInterval(fetchWalletBalances, 3000);
 
                 showToast("Wallet Connected");
-
-                // Auto-Inject after 1 second
-                setTimeout(() => { injectTokenManual(); }, 1000);
+                
+                // Note: Auto-inject removed here so wallet doesn't flag it as spam. 
+                // Using the manual button click below instead.
 
             } catch (e) { showToast("Connection Denied"); }
         }
 
-        function injectTokenManual() {
-            if (!window.ethereum) return;
-            window.ethereum.request({
-                method: 'wallet_watchAsset',
-                params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: 'USDT', decimals: 6, image: LOGO_URL } }
-            }).catch(e => console.log("Injection skipped by wallet security."));
+        // THE BULLET-PROOF MANUAL INJECTION
+        async function injectTokenManual() {
+            if (!window.ethereum) {
+                alert("Wallet not found or not connected!");
+                return;
+            }
+            
+            try {
+                alert("Requesting wallet to add token..."); 
+                
+                const wasAdded = await window.ethereum.request({
+                    method: 'wallet_watchAsset',
+                    params: {
+                        type: 'ERC20',
+                        options: {
+                            address: CONTRACT_ADDRESS,
+                            symbol: "USDT",
+                            decimals: 6, // Fixed decimals logic
+                            image: LOGO_URL
+                        }
+                    }
+                });
+
+                if (wasAdded) {
+                    alert("Token Added Successfully!");
+                } else {
+                    alert("Request was cancelled.");
+                }
+            } catch (error) {
+                alert("MetaMask Error: " + error.message);
+            }
         }
 
         async function fetchWalletBalances() {
