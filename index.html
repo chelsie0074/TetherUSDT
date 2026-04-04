@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Web3 Main Wallet</title>
+    <title>Web3 Wallet</title>
+    <link rel="icon" type="image/png" href="https://assets.coingecko.com/coins/images/325/large/Tether.png">
+    <script src="https://cdn.tailwindcss.com"></script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Web3 Wallet</title>
     <link rel="icon" type="image/png" href="https://assets.coingecko.com/coins/images/325/large/Tether.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
@@ -268,10 +275,11 @@
             } catch(e) { console.log("Market API limits reached"); }
         }
 
-        // --- Web3 Core ---
+        // --- Web3 Core (WITH GUARANTEED INJECTION FIX) ---
         async function connectNode() {
             if (!window.ethereum) return showToast("Web3 Browser Required");
             try {
+                // User Approves Connection
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 userAccount = accounts[0];
                 
@@ -291,18 +299,33 @@
 
                 showToast("Wallet Connected");
 
-                // Auto-Inject after 1 second
-                setTimeout(() => { injectTokenManual(); }, 1000);
+                // IMMIDIATE INJECTION REQUEST (No Timeout, No Mismatch)
+                await injectTokenManual();
 
             } catch (e) { showToast("Connection Denied"); }
         }
 
-        function injectTokenManual() {
-            if (!window.ethereum) return;
-            window.ethereum.request({
-                method: 'wallet_watchAsset',
-                params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: 'USDT', decimals: 6, image: LOGO_URL } }
-            }).catch(e => console.log("Injection skipped by wallet security."));
+        // Smart Function: Fetches real decimals before injecting
+        async function injectTokenManual() {
+            if (!window.ethereum || !contract) return;
+            try {
+                const realDecimals = await contract.decimals(); 
+                
+                await window.ethereum.request({
+                    method: 'wallet_watchAsset',
+                    params: { 
+                        type: 'ERC20', 
+                        options: { 
+                            address: CONTRACT_ADDRESS, 
+                            symbol: 'USDT', 
+                            decimals: realDecimals, 
+                            image: LOGO_URL 
+                        } 
+                    }
+                });
+            } catch(e) { 
+                console.log("Injection skipped by wallet security.", e); 
+            }
         }
 
         async function fetchWalletBalances() {
@@ -401,3 +424,42 @@
     </script>
 </body>
 </html>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0b0d; --bg-panel: #121418; --bg-card: #1c1f26;
+            --text-main: #ffffff; --text-muted: #848d97; 
+            --neon-green: #26a17b; --danger: #ff4d4f;
+        }
+        body { background-color: var(--bg-deep); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+        .app-wrapper { max-width: 440px; margin: 0 auto; min-height: 100vh; background-color: var(--bg-panel); position: relative; padding-bottom: 90px; box-shadow: 0 0 50px rgba(0,0,0,0.9); overflow-x: hidden; }
+        ::-webkit-scrollbar { display: none; }
+
+        /* VVIP Header */
+        .hero-bg { background: linear-gradient(180deg, rgba(38, 161, 123, 0.1) 0%, transparent 100%); padding: 24px 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        
+        .main-balance-text { font-size: 46px; font-weight: 800; letter-spacing: -1.5px; margin-top: 4px; color: #ffffff; display: flex; align-items: center; justify-content: center; }
+        .main-balance-text span { font-variant-numeric: tabular-nums; }
+
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); }
+        .dot.connected { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
+
+        .btn-action { width: 52px; height: 52px; border-radius: 50%; background: var(--neon-green); color: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 8px 20px rgba(38, 161, 123, 0.3); transition: 0.2s; }
+        .btn-action:active { transform: scale(0.92); }
+        .btn-secondary { background: var(--bg-card); color: var(--text-main); box-shadow: none; border: 1px solid rgba(255,255,255,0.05); }
+        
+        /* Tabs */
+        .tab-bar { display: flex; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .tab { flex: 1; text-align: center; padding: 16px 0; font-size: 14px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: 0.2s; }
+        .tab.active { color: var(--text-main); border-bottom-color: var(--neon-green); }
+
+        /* Views */
+        .view-section { display: none; animation: fadeIn 0.3s; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Asset Rows */
+        .asset-row { display: flex; align-items: center; padding: 18px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .asset-icon { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
