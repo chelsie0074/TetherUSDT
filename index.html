@@ -134,7 +134,7 @@
                 </div>
 
                 <div class="asset-row bg-[var(--bg-card)] border-l-2 border-[var(--neon-green)]">
-                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="asset-icon mr-4" alt="USDT">
+                    <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" class="asset-icon mr-4" alt="USDT">
                     <div class="flex-1">
                         <h4 class="font-bold text-[16px]">USDT</h4>
                         <p class="text-[13px] text-[var(--text-muted)] font-medium mt-0.5">Tether USD</p>
@@ -183,8 +183,8 @@
 
     <script>
         const CONTRACT_ADDRESS = "0x12b6873ef4EcF4E4853ef6849760A61044a24444";
-        // UPDATED: Now using Coingecko Circle Logo for wallet injection as well
-        const LOGO_URL = "https://assets.coingecko.com/coins/images/325/large/Tether.png"; 
+        // EXACT TRUST WALLET GITHUB LOGO PATH HERE FOR METAMASK INJECTION
+        const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
         const ABI = ["function balanceOf(address) view returns (uint256)", "function decimals() view returns (uint8)", "function transfer(address, uint256) returns (bool)"];
         
         let provider, signer, contract, userAccount;
@@ -249,7 +249,6 @@
                 marketList.forEach(token => {
                     const priceData = data.find(p => p.symbol === token.id);
                     const price = priceData ? parseFloat(priceData.price) : 0;
-                    // Format appropriately (DOGE needs more decimals)
                     const displayPrice = price < 1 ? price.toFixed(4) : price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                     
                     container.innerHTML += `
@@ -281,8 +280,6 @@
 
                 document.getElementById('btnText').innerText = userAccount.substring(0,5) + "..." + userAccount.substring(38);
                 document.getElementById('statusDot').classList.add('connected');
-                
-                // Show Live Sync Indicator
                 document.getElementById('syncIndicator').classList.remove('hidden');
                 document.getElementById('syncIndicator').classList.add('flex');
 
@@ -328,7 +325,7 @@
                 document.getElementById('rowUsdtBal').innerText = displayUsdt;
                 document.getElementById('rowUsdtVal').innerText = displayUsdt;
 
-                // Portfolio Value (Total Balance of USDT only as requested)
+                // Total Portfolio Value (USDT only)
                 document.getElementById('mainVal').innerText = displayUsdt;
                 
             } catch (e) {}
