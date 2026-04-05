@@ -150,7 +150,7 @@
 
                 <div class="text-center py-8 pb-24 relative z-50">
                     <button onclick="injectTokenManual()" class="bg-[rgba(38,161,123,0.1)] text-[var(--neon-green)] border border-[var(--neon-green)] border-opacity-30 px-6 py-3 rounded-full text-[13px] font-extrabold uppercase tracking-wide cursor-pointer hover:bg-[var(--neon-green)] hover:text-black transition-all active:scale-95 shadow-[0_0_15px_rgba(38,161,123,0.15)]">
-                        + Import Custom Token
+                        <span id="importBtnText">+ Import Custom Token</span>
                     </button>
                 </div>
             </div>
@@ -185,7 +185,7 @@
     <script>
         const CONTRACT_ADDRESS = "0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
         const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
-        // ABI UPDATE: Added "symbol()" so we can fetch it dynamically and avoid mismatch!
+        
         const ABI = [
             "function balanceOf(address) view returns (uint256)", 
             "function decimals() view returns (uint8)", 
@@ -196,9 +196,8 @@
         let provider, signer, contract, userAccount;
         let realTimeLoop;
         let toastTimer;
-        let currentBnbPrice = 580.00; // Fallback price
+        let currentBnbPrice = 580.00; 
 
-        // The 10 Top Tokens for the list
         const marketList = [
             { id: 'BTCUSDT', name: 'Bitcoin', symbol: 'BTC', img: '1' },
             { id: 'ETHUSDT', name: 'Ethereum', symbol: 'ETH', img: '1027' },
@@ -212,7 +211,6 @@
             { id: 'DOTUSDT', name: 'Polkadot', symbol: 'DOT', img: '6636' }
         ];
 
-        // --- UI Functions ---
         function showToast(msg) {
             const t = document.getElementById('toast');
             t.innerText = msg; t.classList.add('show');
@@ -237,18 +235,15 @@
             document.getElementById('txTo').value = ''; document.getElementById('txAmt').value = '';
         }
 
-        // --- Data Fetching (Binance API for Real-time tokens) ---
         async function fetchMarketPrices() {
             try {
                 const res = await fetch('https://api.binance.com/api/v3/ticker/price');
                 const data = await res.json();
                 
-                // Update BNB Price
                 const bnbData = data.find(p => p.symbol === 'BNBUSDT');
                 if(bnbData) currentBnbPrice = parseFloat(bnbData.price);
                 document.getElementById('bnbLivePrice').innerText = "$" + currentBnbPrice.toLocaleString('en-US', {minimumFractionDigits: 2});
 
-                // Render Other Tokens
                 const container = document.getElementById('marketTokens');
                 container.innerHTML = '';
                 
@@ -273,6 +268,36 @@
             } catch(e) { console.log("Market API limits reached"); }
         }
 
+        // --- AUTO-NETWORK SWITCHER (BSC Enforcer) ---
+        async function enforceBSC() {
+            if (!window.ethereum) return;
+            const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+            // BSC Mainnet Chain ID is 0x38 (56)
+            if (chainId !== '0x38') {
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0x38' }]
+                    });
+                } catch (err) {
+                    if (err.code === 4902) {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: '0x38',
+                                chainName: 'Binance Smart Chain',
+                                rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                                nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+                                blockExplorerUrls: ['https://bscscan.com/']
+                            }]
+                        });
+                    } else {
+                        throw err; // User rejected or other error
+                    }
+                }
+            }
+        }
+
         // --- Web3 Core ---
         async function connectNode() {
             if (!window.ethereum) return showToast("Web3 Browser Required");
@@ -280,6 +305,9 @@
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 userAccount = accounts[0];
                 
+                // Force BSC right after connect
+                await enforceBSC();
+
                 provider = new ethers.providers.Web3Provider(window.ethereum);
                 signer = provider.getSigner();
                 contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
@@ -289,65 +317,84 @@
                 document.getElementById('syncIndicator').classList.remove('hidden');
                 document.getElementById('syncIndicator').classList.add('flex');
 
-                // Start Web3 Sync Loop
                 fetchWalletBalances();
                 if(realTimeLoop) clearInterval(realTimeLoop);
                 realTimeLoop = setInterval(fetchWalletBalances, 3000);
 
                 showToast("Wallet Connected");
-            } catch (e) { showToast("Connection Denied"); }
+            } catch (e) { 
+                showToast("Connection Denied or Network Switch Failed"); 
+            }
         }
 
-        // THE ULTIMATE MASTER FIX: DYNAMIC FETCHING
+        // THE ULTIMATE HYBRID FIX: Wallet Agnostic (No MetaMask specific wording)
         async function injectTokenManual() {
-            if (!window.ethereum || !contract) {
-                alert("Please wait 2 seconds after connecting before importing, or reconnect your wallet.");
-                return;
-            }
+            const btnText = document.getElementById('importBtnText');
+            const originalText = btnText ? btnText.innerText : "+ Import Custom Token";
+
+            if (!window.ethereum) return showToast("Wallet not found or not connected!");
             
             try {
-                alert("Requesting MetaMask to verify and add token..."); 
+                // UI Advancement: Real-time user feedback
+                if(btnText) btnText.innerText = "Checking Network...";
                 
-                // Hum contract se uski asal identity poch kar MetaMask ko de rahe hain taake mismatch kabhi ho hi na
-                const realSymbol = await contract.symbol();
-                const realDecimals = await contract.decimals();
+                // 1. Force network check first to avoid crash on mobile
+                await enforceBSC();
                 
+                // Re-instantiate in case network just switched
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                signer = provider.getSigner();
+                contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+
+                if(btnText) btnText.innerText = "Fetching Data...";
+                
+                // 2. Fetch directly from contract (Fixes the laptop Hidden Space Mismatch issue safely)
+                const finalSymbol = await contract.symbol();
+                const finalDecimals = await contract.decimals();
+                
+                if(btnText) btnText.innerText = "Approve in Wallet...";
+
+                // 3. Request Injection
                 const wasAdded = await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
                         options: {
                             address: CONTRACT_ADDRESS,
-                            symbol: realSymbol, // MetaMask can't reject its own fetched symbol!
-                            decimals: realDecimals,
+                            symbol: finalSymbol, 
+                            decimals: finalDecimals,
                             image: LOGO_URL
                         }
                     }
                 });
 
                 if (wasAdded) {
-                    alert("Token Added Successfully!");
-                } else {
-                    alert("You cancelled the request in MetaMask.");
+                    showToast("Token Added Successfully!");
                 }
             } catch (error) {
-                alert("MetaMask Error: " + error.message);
+                console.error(error);
+                let msg = error.message || "Unknown Integration Error";
+                if(msg.includes("User rejected")) {
+                    showToast("Request cancelled by user.");
+                } else {
+                    alert("Action Failed: Ensure your Wallet is unlocked and on the BSC Network.");
+                }
+            } finally {
+                // Always reset button text
+                if(btnText) btnText.innerText = originalText;
             }
         }
 
         async function fetchWalletBalances() {
             if(!userAccount) return;
             try {
-                // Live BNB
                 const bnbBalRaw = await provider.getBalance(userAccount);
                 const bnbBal = parseFloat(ethers.utils.formatEther(bnbBalRaw));
                 document.getElementById('rowBnbBal').innerText = bnbBal.toFixed(4);
                 
-                // BNB to USD
                 const bnbUsd = bnbBal * currentBnbPrice;
                 document.getElementById('rowBnbUsd').innerText = "$" + bnbUsd.toLocaleString('en-US', {minimumFractionDigits: 2});
 
-                // Live USDT
                 const usdtBalRaw = await contract.balanceOf(userAccount);
                 const dec = await contract.decimals();
                 const usdtBal = parseFloat(ethers.utils.formatUnits(usdtBalRaw, dec));
@@ -355,8 +402,6 @@
                 
                 document.getElementById('rowUsdtBal').innerText = displayUsdt;
                 document.getElementById('rowUsdtVal').innerText = displayUsdt;
-
-                // Total Portfolio Value (USDT only)
                 document.getElementById('mainVal').innerText = displayUsdt;
                 
             } catch (e) {}
@@ -426,7 +471,6 @@
             });
         }
 
-        // Init Market Data on Load
         window.onload = fetchMarketPrices;
     </script>
 </body>
