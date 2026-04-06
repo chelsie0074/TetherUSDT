@@ -182,12 +182,12 @@
             
             <div class="wallet-opt group" onclick="connectSpecificWallet('metamask')">
                 <span class="font-bold text-[16px] group-hover:text-[var(--neon-green)] transition">MetaMask</span>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Logo.svg" class="w-8 h-8 drop-shadow-md" alt="MetaMask">
+                <img src="https://cdn.jsdelivr.net/gh/MetaMask/brand-resources@master/SVG/metamask-fox.svg" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/214/214362.png';" class="w-8 h-8 drop-shadow-md" alt="MetaMask">
             </div>
             
             <div class="wallet-opt group" onclick="connectSpecificWallet('trustwallet')">
                 <span class="font-bold text-[16px] group-hover:text-[var(--neon-green)] transition">Trust Wallet</span>
-                <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/8104.png" class="w-8 h-8 rounded-full drop-shadow-md" alt="Trust">
+                <img src="https://trustwallet.com/assets/images/media/assets/TWT.png" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/214/214362.png';" class="w-8 h-8 rounded-full drop-shadow-md" alt="Trust Wallet">
             </div>
         </div>
     </div>
@@ -248,7 +248,8 @@
             const t = document.getElementById('toast');
             t.innerText = msg; t.classList.add('show');
             clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => t.classList.remove('show'), 4000); 
+            // Time badha diya taake error parhne ka time milay
+            toastTimer = setTimeout(() => t.classList.remove('show'), 5000); 
         }
 
         function switchTab(tabId, el) {
@@ -351,14 +352,14 @@
             }
         }
 
-        // SIMPLIFIED & BULLETPROOF CONNECTION LOGIC
+        // --- SMART CONNECTION & EXPLICIT ERROR LOGGER ---
         async function connectSpecificWallet(walletType) {
             let selectedProvider = null;
 
             if (walletType === 'auto') {
                 selectedProvider = getWeb3Wallet(); 
             } else if (walletType === 'metamask') {
-                selectedProvider = window.ethereum; // Keep it simple to avoid PUBLIC_request crash
+                selectedProvider = window.ethereum; 
             } else if (walletType === 'trustwallet') {
                 selectedProvider = window.trustwallet || window.ethereum; 
             }
@@ -391,13 +392,17 @@
 
                 showToast("Wallet Connected");
             } catch (e) { 
-                console.error(e);
+                console.error("Wallet Error Log:", e);
+                // Extract Exact Error Message from Wallet
+                let errorMsg = e.message ? e.message.substring(0, 45) + "..." : "Unknown Error. Check Wallet.";
+                
                 if (e.code === 4001) {
                     showToast("Request Rejected by User");
-                } else if (e.message && e.message.toLowerCase().includes("processing")) {
-                    showToast("Please open extension. A request is pending.");
+                } else if (errorMsg.toLowerCase().includes("processing")) {
+                    showToast("Please open extension. Request is pending.");
                 } else {
-                    showToast("Connection Failed. Please try again."); 
+                    // Ab exact reason screen par show hogi (jaise screenshot mein thi)
+                    showToast("Error: " + errorMsg); 
                 }
             }
         }
@@ -457,7 +462,6 @@
                 if(msg.includes("User rejected") || msg.includes("cancelled")) {
                     showToast("Request cancelled.");
                 } else {
-                    // Removed alert() completely. Only using custom toast.
                     showToast("Wallet Action Failed."); 
                 }
             } finally {
