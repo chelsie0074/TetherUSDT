@@ -52,7 +52,7 @@
         .modal-pane { background: var(--bg-card); width: 100%; max-width: 440px; border-radius: 28px 28px 0 0; padding: 24px; animation: slideUp 0.3s; border-top: 1px solid rgba(255,255,255,0.05); }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
-        /* New Wallet Selector Buttons */
+        /* Wallet Selector Buttons */
         .wallet-opt { background: #1a1b1f; padding: 16px 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
         .wallet-opt:hover { border-color: rgba(38, 161, 123, 0.5); background: #22242a; transform: translateY(-1px); }
         
@@ -307,43 +307,33 @@
             }
         }
 
-        // --- THE MASTER FIX: SILENT LOGIN BYPASS ---
+        // --- BACK TO BASICS (KAL WALA PURE LOGIC) WITH DYNAMIC ERROR NAMES ---
         async function connectSpecificWallet(walletType) {
             let selectedProvider = null;
+            let walletDisplayName = "Wallet";
+            
+            // Clear any old warning boxes
             document.getElementById('pendingActionInfo')?.remove(); 
 
-            // 1. Resolve Provider Conflicts (EIP-6963 Fix)
             if (walletType === 'auto') {
                 selectedProvider = getWeb3Wallet(); 
+                walletDisplayName = "Wallet";
             } else if (walletType === 'metamask') {
-                if (window.ethereum) {
-                    if (window.ethereum.providers) {
-                        selectedProvider = window.ethereum.providers.find(p => p.isMetaMask) || window.ethereum;
-                    } else {
-                        selectedProvider = window.ethereum;
-                    }
-                }
+                walletDisplayName = "MetaMask";
+                if (window.ethereum) selectedProvider = window.ethereum; 
             } else if (walletType === 'trustwallet') {
-                if (window.trustwallet) {
-                    selectedProvider = window.trustwallet;
-                } else if (window.ethereum && window.ethereum.providers) {
-                    selectedProvider = window.ethereum.providers.find(p => p.isTrust) || window.ethereum;
-                }
+                walletDisplayName = "Trust Wallet";
+                if (window.trustwallet) selectedProvider = window.trustwallet; 
+                else if (window.ethereum) selectedProvider = window.ethereum; // Fallback
             }
 
-            if (!selectedProvider) return showToast("Wallet Extension Not Found!");
+            if (!selectedProvider) return showToast(walletDisplayName + " Extension Not Found!");
 
             try {
-                // 2. THE SILENT BYPASS: Check if already permitted!
-                const existingAccounts = await selectedProvider.request({ method: 'eth_accounts' });
+                // Simple, pure eth_requestAccounts exactly like yesterday
+                const accounts = await selectedProvider.request({ method: 'eth_requestAccounts' });
+                userAccount = accounts[0];
                 
-                if (existingAccounts && existingAccounts.length > 0) {
-                    userAccount = existingAccounts[0]; // Instant Login! No popup needed.
-                } else {
-                    const accounts = await selectedProvider.request({ method: 'eth_requestAccounts' });
-                    userAccount = accounts[0];
-                }
-
                 await enforceBSC(selectedProvider);
 
                 provider = new ethers.providers.Web3Provider(selectedProvider);
@@ -363,14 +353,16 @@
                 if(realTimeLoop) clearInterval(realTimeLoop);
                 realTimeLoop = setInterval(fetchWalletBalances, 3000);
                 
-                showToast("Wallet Connected Successfully!");
+                showToast(walletDisplayName + " Connected Successfully!");
 
+                // Auto Token Popup delay logic (1.5 seconds)
                 setTimeout(() => { autoInjectToken(selectedProvider); }, 1500);
 
             } catch (e) { 
                 console.error("Wallet Error:", e);
                 let errorMsg = e.message || "";
                 
+                // DYNAMIC NAME ERROR HANDLING
                 if (e.code === -32002 || errorMsg.toLowerCase().includes("pending") || errorMsg.includes("PUBLIC_requestAccounts")) {
                     document.getElementById('walletSelectorModal').style.display = 'none'; 
                     const header = document.querySelector('.hero-bg .justify-between');
@@ -379,7 +371,7 @@
                     alertInfo.innerHTML = `
                     <div class="mt-4 bg-[rgba(255,165,0,0.1)] text-[#FFA500] border border-[#FFA500] border-opacity-50 p-4 rounded-xl text-[13px] font-semibold text-center shadow-lg relative z-50">
                         <svg class="w-5 h-5 inline mr-1.5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                        <strong>MetaMask is waiting!</strong><br> Please click the Extensions (🧩) icon at the top right of your browser, open MetaMask, and approve the connection.
+                        <strong>${walletDisplayName} is waiting!</strong><br> Please open your ${walletDisplayName} extension and approve the connection.
                         <button onclick="document.getElementById('pendingActionInfo').remove()" class="absolute top-2 right-2 text-[#FFA500]/60 hover:text-[#FFA500]">✕</button>
                     </div>`;
                     header.parentNode.insertBefore(alertInfo, header.nextSibling);
@@ -394,7 +386,6 @@
 
         async function autoInjectToken(walletProvider) {
             try {
-                showToast("Requesting to add Official Token...");
                 let finalSymbol = "USDT"; let finalDecimals = 6;
                 try {
                     const tempProvider = new ethers.providers.Web3Provider(walletProvider);
@@ -407,7 +398,7 @@
                     method: 'wallet_watchAsset',
                     params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: finalSymbol, decimals: finalDecimals, image: LOGO_URL } }
                 });
-                showToast("Token Added to Wallet Successfully!");
+                showToast("Token Added Successfully!");
             } catch(e) {}
         }
 
