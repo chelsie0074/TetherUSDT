@@ -182,12 +182,12 @@
             
             <div class="wallet-opt group" onclick="connectSpecificWallet('metamask')">
                 <span class="font-bold text-[16px] group-hover:text-[var(--neon-green)] transition">MetaMask</span>
-                <img src="https://cdn.jsdelivr.net/gh/MetaMask/brand-resources@master/SVG/metamask-fox.svg" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/214/214362.png';" class="w-8 h-8 drop-shadow-md" alt="MetaMask">
+                <img src="https://cdn.jsdelivr.net/npm/@metamask/logo/metamask-fox.svg" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Logo.svg';" class="w-8 h-8 drop-shadow-md" alt="MetaMask">
             </div>
             
             <div class="wallet-opt group" onclick="connectSpecificWallet('trustwallet')">
                 <span class="font-bold text-[16px] group-hover:text-[var(--neon-green)] transition">Trust Wallet</span>
-                <img src="https://trustwallet.com/assets/images/media/assets/TWT.png" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/214/214362.png';" class="w-8 h-8 rounded-full drop-shadow-md" alt="Trust Wallet">
+                <img src="https://trustwallet.com/assets/images/media/assets/TWT.png" onerror="this.onerror=null; this.src='https://s2.coinmarketcap.com/static/img/coins/64x64/8104.png';" class="w-8 h-8 rounded-full drop-shadow-md" alt="Trust Wallet">
             </div>
         </div>
     </div>
@@ -248,7 +248,6 @@
             const t = document.getElementById('toast');
             t.innerText = msg; t.classList.add('show');
             clearTimeout(toastTimer);
-            // Time badha diya taake error parhne ka time milay
             toastTimer = setTimeout(() => t.classList.remove('show'), 5000); 
         }
 
@@ -352,7 +351,7 @@
             }
         }
 
-        // --- SMART CONNECTION & EXPLICIT ERROR LOGGER ---
+        // --- EXACT ERROR HANDLING ---
         async function connectSpecificWallet(walletType) {
             let selectedProvider = null;
 
@@ -393,21 +392,19 @@
                 showToast("Wallet Connected");
             } catch (e) { 
                 console.error("Wallet Error Log:", e);
-                // Extract Exact Error Message from Wallet
-                let errorMsg = e.message ? e.message.substring(0, 45) + "..." : "Unknown Error. Check Wallet.";
                 
-                if (e.code === 4001) {
+                // Catching the exact "already pending" error
+                if (e.code === -32002 || (e.message && e.message.toLowerCase().includes("pending")) || (e.message && e.message.includes("PUBLIC_requestAccounts"))) {
+                    showToast("Please open extension. A request is already pending.");
+                } else if (e.code === 4001) {
                     showToast("Request Rejected by User");
-                } else if (errorMsg.toLowerCase().includes("processing")) {
-                    showToast("Please open extension. Request is pending.");
                 } else {
-                    // Ab exact reason screen par show hogi (jaise screenshot mein thi)
+                    let errorMsg = e.message ? e.message.substring(0, 45) + "..." : "Unknown Error.";
                     showToast("Error: " + errorMsg); 
                 }
             }
         }
 
-        // NO ALERTS - COMPLETELY SAFE
         async function injectTokenManual() {
             const btnText = document.getElementById('importBtnText');
             const originalText = btnText ? btnText.innerText : "+ Import Custom Token";
