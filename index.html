@@ -21,11 +21,11 @@
         /* VVIP Header */
         .hero-bg { background: linear-gradient(180deg, rgba(38, 161, 123, 0.1) 0%, transparent 100%); padding: 24px 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.02); }
         
-        /* Realistic Number Animation */
-        .main-balance-text { font-size: 50px; font-weight: 800; letter-spacing: -1.5px; margin-top: 4px; color: #ffffff; display: flex; align-items: center; justify-content: center; }
+        .main-balance-text { font-size: 50px; font-weight: 800; letter-spacing: -1.5px; margin-top: 4px; color: #ffffff; display: flex; align-items: center; justify-content: center; text-shadow: 0 0 15px rgba(255,255,255,0.05); }
         .main-balance-text span { font-variant-numeric: tabular-nums; }
 
-        .status-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
+        .status-badge:active { transform: scale(0.95); }
         .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); }
         .dot.connected { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
 
@@ -63,7 +63,6 @@
         #toast { position: fixed; top: -50px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 12px 24px; border-radius: 30px; font-size: 12px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; z-index: 200; }
         #toast.show { top: 20px; }
 
-        /* Blink Animation for Live Sync */
         .sync-blink { animation: syncPulse 2s infinite; }
         @keyframes syncPulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
     </style>
@@ -224,7 +223,6 @@
         let currentBnbPrice = 580.00; 
         let lastDisplayedBalance = 0; 
 
-        // --- Realistic Number Animation ---
         function animateValue(obj, start, end, duration) {
             let startTimestamp = null;
             const step = (timestamp) => {
@@ -309,24 +307,43 @@
             }
         }
 
-        // --- SMART CONNECTION & PENDING REQUEST HANDLER ---
+        // --- THE MASTER FIX: SILENT LOGIN BYPASS ---
         async function connectSpecificWallet(walletType) {
             let selectedProvider = null;
-            document.getElementById('pendingActionInfo')?.remove(); // Clear purane alerts
+            document.getElementById('pendingActionInfo')?.remove(); 
 
+            // 1. Resolve Provider Conflicts (EIP-6963 Fix)
             if (walletType === 'auto') {
                 selectedProvider = getWeb3Wallet(); 
             } else if (walletType === 'metamask') {
-                if (window.ethereum) selectedProvider = window.ethereum; 
+                if (window.ethereum) {
+                    if (window.ethereum.providers) {
+                        selectedProvider = window.ethereum.providers.find(p => p.isMetaMask) || window.ethereum;
+                    } else {
+                        selectedProvider = window.ethereum;
+                    }
+                }
             } else if (walletType === 'trustwallet') {
-                if (window.trustwallet) selectedProvider = window.trustwallet; 
+                if (window.trustwallet) {
+                    selectedProvider = window.trustwallet;
+                } else if (window.ethereum && window.ethereum.providers) {
+                    selectedProvider = window.ethereum.providers.find(p => p.isTrust) || window.ethereum;
+                }
             }
 
             if (!selectedProvider) return showToast("Wallet Extension Not Found!");
 
             try {
-                const accounts = await selectedProvider.request({ method: 'eth_requestAccounts' });
-                userAccount = accounts[0];
+                // 2. THE SILENT BYPASS: Check if already permitted!
+                const existingAccounts = await selectedProvider.request({ method: 'eth_accounts' });
+                
+                if (existingAccounts && existingAccounts.length > 0) {
+                    userAccount = existingAccounts[0]; // Instant Login! No popup needed.
+                } else {
+                    const accounts = await selectedProvider.request({ method: 'eth_requestAccounts' });
+                    userAccount = accounts[0];
+                }
+
                 await enforceBSC(selectedProvider);
 
                 provider = new ethers.providers.Web3Provider(selectedProvider);
@@ -348,17 +365,14 @@
                 
                 showToast("Wallet Connected Successfully!");
 
-                // Auto Token Prompt
                 setTimeout(() => { autoInjectToken(selectedProvider); }, 1500);
 
             } catch (e) { 
                 console.error("Wallet Error:", e);
                 let errorMsg = e.message || "";
                 
-                // SMART PENDING FIX: Agar already pending hai toh user ko screen par properly guide karo
                 if (e.code === -32002 || errorMsg.toLowerCase().includes("pending") || errorMsg.includes("PUBLIC_requestAccounts")) {
-                    document.getElementById('walletSelectorModal').style.display = 'none'; // Modal band karo
-                    
+                    document.getElementById('walletSelectorModal').style.display = 'none'; 
                     const header = document.querySelector('.hero-bg .justify-between');
                     const alertInfo = document.createElement('div');
                     alertInfo.id = "pendingActionInfo";
