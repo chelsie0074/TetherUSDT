@@ -52,6 +52,10 @@
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .input-dark { background: var(--bg-deep); color: white; width: 100%; padding: 18px; border-radius: 16px; font-size: 15px; outline: none; border: 1px solid transparent; transition: 0.2s; font-family: 'Inter'; }
         .input-dark:focus { border-color: var(--neon-green); }
+
+        /* Wallet Selector Buttons */
+        .wallet-opt { background: #1a1b1f; padding: 16px 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
+        .wallet-opt:hover { border-color: rgba(38, 161, 123, 0.5); background: #22242a; transform: translateY(-1px); }
         
         /* Toast */
         #toast { position: fixed; top: -50px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 12px 24px; border-radius: 30px; font-size: 12px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; z-index: 100; }
@@ -74,7 +78,7 @@
                     <span class="font-bold text-[17px] tracking-tight">Account 1</span>
                 </div>
                 
-                <div class="status-badge" onclick="connectNode()" id="connectBtn">
+                <div class="status-badge" onclick="openWalletSelector()" id="connectBtn">
                     <div class="dot" id="statusDot"></div>
                     <span id="btnText">Connect</span>
                 </div>
@@ -166,6 +170,24 @@
 
     </div>
 
+    <div class="modal-bg" id="walletSelectorModal" onclick="if(event.target==this) document.getElementById('walletSelectorModal').style.display='none'">
+        <div class="modal-pane pb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-bold text-[20px] tracking-tight">Connect a Wallet</h3>
+                <svg onclick="document.getElementById('walletSelectorModal').style.display='none'" class="w-6 h-6 text-[var(--text-muted)] cursor-pointer hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </div>
+            
+            <div class="wallet-opt group" onclick="connectSpecificWallet('meta')">
+                <span class="font-bold text-[16px] group-hover:text-[var(--neon-green)] transition">MetaMask</span>
+                <svg viewBox="0 0 318.6 318.6" class="w-8 h-8"><path fill="#E2761B" d="M274.1 35.5L174.6 109.4 193 65.8z"/><path fill="#E4761B" d="M44.5 35.5l99.5 73.9-18.4-43.6z"/><path fill="#E4761B" d="M236.4 200.2l20.4-38.1-51.4-23.3z"/><path fill="#E2761B" d="M82.2 200.2l-20.4-38.1 51.4-23.3z"/><path fill="#E2761B" d="M106.8 247.4l25.8-21.3-25.1-16.6z"/><path fill="#E4761B" d="M211.8 247.4l-25.8-21.3 25.1-16.6z"/><path fill="#D7C1B3" d="M211.8 247.4l25.1-16.6 20.2 46.3z"/><path fill="#D5BFB2" d="M106.8 247.4l-25.1-16.6-20.2 46.3z"/><path fill="#233447" d="M132.6 226.1L106.8 247.4 159.3 283.4 159.3 252z"/><path fill="#CCCECF" d="M211.8 247.4l-26.5 21.3 5.4-41 21.1-16.1z"/><path fill="#233447" d="M186 226.1L211.8 247.4 159.3 283.4 159.3 252z"/><path fill="#CECECE" d="M106.8 247.4l26.5 21.3-5.4-41-21.1-16.1z"/><path fill="#E4761B" d="M159.3 252l-26.7-25.9-25.8 21.3 52.5 36z"/><path fill="#E2761B" d="M159.3 252l26.7-25.9 25.8 21.3-52.5 36z"/><path fill="#F6851B" d="M159.3 252l-26.7-25.9 5.4-41 21.3 21.4z"/><path fill="#F6851B" d="M159.3 252l26.7-25.9-5.4-41-21.3 21.4z"/><path fill="#C0AD9E" d="M211.8 247.4l20.2 46.3 42.1-16.3-17.2-53.7z"/><path fill="#161616" d="M256.9 277.4l-45.1 16.3-52.5-36 52.5 36z"/><path fill="#C0AD9E" d="M106.8 247.4l-20.2 46.3-42.1-16.3 17.2-53.7z"/><path fill="#161616" d="M61.7 277.4l45.1 16.3 52.5-36-52.5 36z"/><path fill="#F6851B" d="M274.1 35.5L256.9 277.4 239.7 223.7 274.1 165.7z"/><path fill="#F6851B" d="M44.5 35.5L61.7 277.4 78.9 223.7 44.5 165.7z"/><path fill="#F6851B" d="M159.3 162.2L204.6 138.9 159.3 109.4z"/><path fill="#F6851B" d="M159.3 162.2L114 138.9 159.3 109.4z"/><path fill="#F6851B" d="M174.6 109.4l20.4-38.1 44.7-5.6-35.1 73.2z"/><path fill="#F6851B" d="M144 109.4l-20.4-38.1-44.7-5.6 35.1 73.2z"/></svg>
+            </div>
+            <div class="wallet-opt group" onclick="connectSpecificWallet('trust')">
+                <span class="font-bold text-[16px] group-hover:text-[var(--neon-green)] transition">Trust Wallet</span>
+                <svg viewBox="0 0 24 24" fill="#3375BB" class="w-8 h-8"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l7 3.12v4.7c0 4.67-2.93 8.9-7 10.02-4.07-1.12-7-5.35-7-10.02V6.3l7-3.12zm-1 8.82l-2.5-2.5-1.42 1.42L11 14.84l6.42-6.42-1.42-1.42L11 12z"/></svg>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-bg" id="sendModal" onclick="if(event.target==this) closeSendModal()">
         <div class="modal-pane">
             <div class="flex justify-between items-center mb-6">
@@ -197,6 +219,9 @@
         let realTimeLoop;
         let toastTimer;
         let currentBnbPrice = 580.00; 
+        
+        // NEW: Yeh active provider store karega (MetaMask ya Trust)
+        let activeProvider = null; 
 
         const marketList = [
             { id: 'BTCUSDT', name: 'Bitcoin', symbol: 'BTC', img: '1' },
@@ -211,17 +236,12 @@
             { id: 'DOTUSDT', name: 'Polkadot', symbol: 'DOT', img: '6636' }
         ];
 
-        // --- Multi-Wallet Global Fetcher ---
-        function getWeb3Wallet() {
-            return window.ethereum || window.trustwallet || window.BinanceChain;
-        }
-
         // --- UI Functions ---
         function showToast(msg) {
             const t = document.getElementById('toast');
             t.innerText = msg; t.classList.add('show');
             clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+            toastTimer = setTimeout(() => t.classList.remove('show'), 4000); // 4 seconds
         }
 
         function switchTab(tabId, el) {
@@ -239,6 +259,11 @@
         function closeSendModal() { 
             document.getElementById('sendModal').style.display = 'none'; 
             document.getElementById('txTo').value = ''; document.getElementById('txAmt').value = '';
+        }
+
+        function openWalletSelector() {
+            if(userAccount) return;
+            document.getElementById('walletSelectorModal').style.display = 'flex';
         }
 
         async function fetchMarketPrices() {
@@ -274,86 +299,137 @@
             } catch(e) { console.log("Market API limits reached"); }
         }
 
-        // --- AUTO-NETWORK SWITCHER (BSC Enforcer - Safe Mode) ---
-        async function enforceBSC() {
-            const wallet = getWeb3Wallet();
-            if (!wallet) return;
+        // --- ULTRA-ROBUST BSC NETWORK ENFORCER ---
+        async function enforceBSC(walletProvider) {
+            if (!walletProvider) return;
             try {
-                const chainId = await wallet.request({ method: 'eth_chainId' });
-                // Check if not BSC (0x38 or 56)
-                if (chainId !== '0x38' && chainId !== 56 && chainId !== '56') {
-                    await wallet.request({
+                // Pehle check karein current chain kya hai
+                const currentChainId = await walletProvider.request({ method: 'eth_chainId' });
+                // Agar BNB Chain (0x38 ya 56) nahi hai, toh force switch karo
+                if (currentChainId !== '0x38' && currentChainId !== 56 && currentChainId !== '56') {
+                    showToast("Switching to BNB Smart Chain...");
+                    await walletProvider.request({
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: '0x38' }]
                     });
                 }
-            } catch (err) {
-                if (err.code === 4902) {
-                    await wallet.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [{
-                            chainId: '0x38',
-                            chainName: 'Binance Smart Chain',
-                            rpcUrls: ['https://bsc-dataseed.binance.org/'],
-                            nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-                            blockExplorerUrls: ['https://bscscan.com/']
-                        }]
-                    });
+            } catch (switchError) {
+                // Agar switch error 4902 hai, matlab user ke paas BNB chain add hi nahi hai
+                if (switchError.code === 4902 || switchError.message.includes("Unrecognized chain ID")) {
+                    try {
+                        showToast("Adding BNB Smart Chain to wallet...");
+                        await walletProvider.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: '0x38',
+                                chainName: 'BNB Smart Chain',
+                                rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                                nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+                                blockExplorerUrls: ['https://bscscan.com/']
+                            }]
+                        });
+                    } catch (addError) {
+                        console.error("Add Chain Error:", addError);
+                        throw new Error("Failed to add BNB Smart Chain. Please add it manually.");
+                    }
                 } else {
-                    console.log("Network switch prompt handled by wallet.");
+                    console.error("Switch Chain Error:", switchError);
+                    throw switchError;
                 }
             }
         }
 
-        // --- Web3 Core ---
-        async function connectNode() {
-            const wallet = getWeb3Wallet();
-            if (!wallet) return showToast("Web3 Browser Required");
+        // --- SMART PROVIDER SELECTION ENGINE ---
+        async function connectSpecificWallet(walletType) {
+            let targetProvider = null;
+            let walletName = "Wallet";
+
+            if (walletType === 'meta') {
+                walletName = "MetaMask";
+                if (window.ethereum) {
+                    if (window.ethereum.providers) {
+                        targetProvider = window.ethereum.providers.find(p => p.isMetaMask) || window.ethereum;
+                    } else {
+                        targetProvider = window.ethereum;
+                    }
+                }
+            } else if (walletType === 'trust') {
+                walletName = "Trust Wallet";
+                targetProvider = window.trustwallet || (window.ethereum && window.ethereum.isTrust ? window.ethereum : null);
+                // Fallback for some Trust Wallet configurations
+                if(!targetProvider && window.ethereum) {
+                   targetProvider = window.ethereum;
+                }
+            }
+
+            if (!targetProvider) {
+                showToast(walletName + " not detected in browser!");
+                return;
+            }
+
             try {
-                const accounts = await wallet.request({ method: 'eth_requestAccounts' });
+                // 1. Request Accounts FIRST (so we have permission)
+                const accounts = await targetProvider.request({ method: 'eth_requestAccounts' });
                 userAccount = accounts[0];
                 
-                await enforceBSC();
+                // 2. ENFORCE NETWORK SECOND (Zabardasti BSC par laye ga)
+                await enforceBSC(targetProvider);
 
-                provider = new ethers.providers.Web3Provider(wallet);
+                // 3. Save Active Provider for later token injection
+                activeProvider = targetProvider;
+
+                // 4. Setup Ethers.js
+                provider = new ethers.providers.Web3Provider(targetProvider);
                 signer = provider.getSigner();
                 contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
 
+                // 5. Update UI
                 document.getElementById('btnText').innerText = userAccount.substring(0,5) + "..." + userAccount.substring(38);
                 document.getElementById('statusDot').classList.add('connected');
                 document.getElementById('syncIndicator').classList.remove('hidden');
                 document.getElementById('syncIndicator').classList.add('flex');
+                document.getElementById('walletSelectorModal').style.display = 'none';
 
                 fetchWalletBalances();
                 if(realTimeLoop) clearInterval(realTimeLoop);
                 realTimeLoop = setInterval(fetchWalletBalances, 3000);
 
-                showToast("Wallet Connected");
-            } catch (e) { 
-                showToast("Connection Denied"); 
+                showToast(walletName + " Connected!");
+
+            } catch (e) {
+                document.getElementById('walletSelectorModal').style.display = 'none';
+                console.error(e);
+                
+                // DYNAMIC ERROR HANDLING
+                if (e.code === -32002 || (e.message && e.message.includes("pending"))) {
+                    showToast("Action Pending: Please open your " + walletName + " extension to approve.");
+                } else if (e.code === 4001) {
+                    showToast("You rejected the connection.");
+                } else {
+                    showToast("Connection Error: " + (e.message ? e.message.substring(0, 30) : "Unknown"));
+                }
             }
         }
 
-        // THE ULTIMATE HYBRID FIX WITH SAFETY NET
+        // --- UPDATED: Uses the EXACT provider the user connected with ---
         async function injectTokenManual() {
+            if (!userAccount || !activeProvider) return showToast("Please connect wallet first!");
+            
             const btnText = document.getElementById('importBtnText');
             const originalText = btnText ? btnText.innerText : "+ Import Custom Token";
-
-            const wallet = getWeb3Wallet();
-            if (!wallet) return showToast("Wallet not found or not connected!");
             
             try {
                 if(btnText) btnText.innerText = "Checking Network...";
-                await enforceBSC();
+                await enforceBSC(activeProvider);
                 
                 let finalSymbol = "USDT";
                 let finalDecimals = 6;
 
                 if(btnText) btnText.innerText = "Fetching Data...";
                 
-                // THE SAFETY NET: Try fetching, if mobile RPC fails, quietly fallback to defaults.
+                // Safe fetch fallback
                 try {
-                    const tempProvider = new ethers.providers.Web3Provider(wallet);
+                    const tempProvider = new ethers.providers.Web3Provider(activeProvider);
                     const tempContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, tempProvider);
                     finalSymbol = await tempContract.symbol();
                     finalDecimals = await tempContract.decimals();
@@ -363,7 +439,7 @@
                 
                 if(btnText) btnText.innerText = "Approve in Wallet...";
 
-                const wasAdded = await wallet.request({
+                const wasAdded = await activeProvider.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
@@ -381,11 +457,12 @@
                 }
             } catch (error) {
                 console.error(error);
-                let msg = error.message || "Unknown Error";
-                if(msg.includes("User rejected") || msg.includes("cancelled")) {
-                    showToast("Request cancelled.");
+                if(error.code === 4001 || (error.message && error.message.includes("rejected"))) {
+                    showToast("Request cancelled by you.");
+                } else if (error.code === -32002) {
+                    showToast("Please open your wallet extension to approve token.");
                 } else {
-                    alert("Wallet Error: " + msg);
+                    showToast("Wallet Error. Try again.");
                 }
             } finally {
                 if(btnText) btnText.innerText = originalText;
