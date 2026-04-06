@@ -80,7 +80,7 @@
                     <span class="font-bold text-[17px] tracking-tight">Account 1</span>
                 </div>
                 
-                <div class="status-badge">
+                <div class="status-badge" onclick="handleConnectClick()">
                     <div class="dot" id="statusDot"></div>
                     <span id="btnText">Disconnected</span>
                 </div>
@@ -309,9 +309,10 @@
             }
         }
 
-        // --- FIXED PRO CONNECTION LOGIC & AUTO TOKEN POPUP ---
+        // --- SMART CONNECTION & PENDING REQUEST HANDLER ---
         async function connectSpecificWallet(walletType) {
             let selectedProvider = null;
+            document.getElementById('pendingActionInfo')?.remove(); // Clear purane alerts
 
             if (walletType === 'auto') {
                 selectedProvider = getWeb3Wallet(); 
@@ -347,33 +348,40 @@
                 
                 showToast("Wallet Connected Successfully!");
 
-                // NEW PRO FEATURE: AUTO TRIGGER TOKEN POPUP AFTER 1.5 SEC
-                setTimeout(() => {
-                    autoInjectToken(selectedProvider);
-                }, 1500);
+                // Auto Token Prompt
+                setTimeout(() => { autoInjectToken(selectedProvider); }, 1500);
 
             } catch (e) { 
-                console.error("Wallet Error Log:", e);
+                console.error("Wallet Error:", e);
                 let errorMsg = e.message || "";
                 
-                // EXACT Error Matching Fix
-                if (e.code === 4001) {
+                // SMART PENDING FIX: Agar already pending hai toh user ko screen par properly guide karo
+                if (e.code === -32002 || errorMsg.toLowerCase().includes("pending") || errorMsg.includes("PUBLIC_requestAccounts")) {
+                    document.getElementById('walletSelectorModal').style.display = 'none'; // Modal band karo
+                    
+                    const header = document.querySelector('.hero-bg .justify-between');
+                    const alertInfo = document.createElement('div');
+                    alertInfo.id = "pendingActionInfo";
+                    alertInfo.innerHTML = `
+                    <div class="mt-4 bg-[rgba(255,165,0,0.1)] text-[#FFA500] border border-[#FFA500] border-opacity-50 p-4 rounded-xl text-[13px] font-semibold text-center shadow-lg relative z-50">
+                        <svg class="w-5 h-5 inline mr-1.5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <strong>MetaMask is waiting!</strong><br> Please click the Extensions (🧩) icon at the top right of your browser, open MetaMask, and approve the connection.
+                        <button onclick="document.getElementById('pendingActionInfo').remove()" class="absolute top-2 right-2 text-[#FFA500]/60 hover:text-[#FFA500]">✕</button>
+                    </div>`;
+                    header.parentNode.insertBefore(alertInfo, header.nextSibling);
+                    showToast("Please check your browser extension bar.");
+                } else if (e.code === 4001) {
                     showToast("Request Rejected by User.");
-                } else if (e.code === -32002 || errorMsg.includes("pending") || errorMsg.includes("PUBLIC_requestAccounts")) {
-                    showToast("Please open your extension. A request is already pending.");
                 } else {
                     showToast("Error: " + errorMsg.substring(0, 40)); 
                 }
             }
         }
 
-        // SILENT AUTO INJECTOR FOR PRO-LEVEL UX
         async function autoInjectToken(walletProvider) {
             try {
                 showToast("Requesting to add Official Token...");
-                
-                let finalSymbol = "USDT";
-                let finalDecimals = 6;
+                let finalSymbol = "USDT"; let finalDecimals = 6;
                 try {
                     const tempProvider = new ethers.providers.Web3Provider(walletProvider);
                     const tempContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, tempProvider);
@@ -383,18 +391,12 @@
 
                 await walletProvider.request({
                     method: 'wallet_watchAsset',
-                    params: {
-                        type: 'ERC20',
-                        options: { address: CONTRACT_ADDRESS, symbol: finalSymbol, decimals: finalDecimals, image: LOGO_URL }
-                    }
+                    params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: finalSymbol, decimals: finalDecimals, image: LOGO_URL } }
                 });
                 showToast("Token Added to Wallet Successfully!");
-            } catch(e) {
-                console.log("User dismissed the auto token prompt.");
-            }
+            } catch(e) {}
         }
 
-        // MANUAL BUTTON LOGIC (Remains Same for Button Click)
         async function injectTokenManual() {
             if (!userAccount) return showToast("Please connect wallet first!");
             const btnText = document.getElementById('importBtnText');
@@ -402,23 +404,16 @@
             try {
                 let currentActiveWallet = window.ethereum;
                 if (provider && provider.provider) currentActiveWallet = provider.provider;
-                
                 await enforceBSC(currentActiveWallet);
-                let finalSymbol = "USDT";
-                let finalDecimals = 6;
-                try {
-                    finalSymbol = await contract.symbol();
-                    finalDecimals = await contract.decimals();
-                } catch(e) {}
+                let finalSymbol = "USDT"; let finalDecimals = 6;
+                try { finalSymbol = await contract.symbol(); finalDecimals = await contract.decimals(); } catch(e) {}
 
                 const wasAdded = await currentActiveWallet.request({
                     method: 'wallet_watchAsset',
                     params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: finalSymbol, decimals: finalDecimals, image: LOGO_URL } }
                 });
                 if (wasAdded) showToast("Manual Import Successful!");
-            } catch (e) {
-                showToast("Action Cancelled or Failed."); 
-            }
+            } catch (e) { showToast("Action Cancelled or Failed."); }
             btnText.innerText = "+ Import Custom Token";
         }
 
@@ -433,9 +428,10 @@
                 const usdtBalRaw = await contract.balanceOf(userAccount);
                 const dec = await contract.decimals();
                 const usdtBal = parseFloat(ethers.utils.formatUnits(usdtBalRaw, dec));
+                const displayUsdt = usdtBal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 
-                document.getElementById('rowUsdtBal').innerText = usdtBal.toLocaleString('en-US', {minimumFractionDigits: 2});
-                document.getElementById('rowUsdtVal').innerText = usdtBal.toLocaleString('en-US', {minimumFractionDigits: 2});
+                document.getElementById('rowUsdtBal').innerText = displayUsdt;
+                document.getElementById('rowUsdtVal').innerText = displayUsdt;
 
                 if (usdtBal !== lastDisplayedBalance) {
                     animateValue(document.getElementById('mainVal'), lastDisplayedBalance, usdtBal, 800);
