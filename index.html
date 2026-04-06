@@ -185,6 +185,7 @@
     <script>
         const CONTRACT_ADDRESS = "0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
         const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
+        
         const ABI = [
             "function balanceOf(address) view returns (uint256)", 
             "function decimals() view returns (uint8)", 
@@ -279,7 +280,6 @@
                         params: [{ chainId: '0x38' }]
                     });
                 } catch (err) {
-                    // If network doesn't exist in wallet, add it automatically
                     if (err.code === 4902) {
                         await window.ethereum.request({
                             method: 'wallet_addEthereumChain',
@@ -291,8 +291,6 @@
                                 blockExplorerUrls: ['https://bscscan.com/']
                             }]
                         });
-                    } else {
-                        throw err;
                     }
                 }
             }
@@ -305,7 +303,6 @@
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 userAccount = accounts[0];
                 
-                // FORCE SWITCH TO BSC IMMEDIATELY
                 await enforceBSC();
 
                 provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -322,45 +319,31 @@
                 realTimeLoop = setInterval(fetchWalletBalances, 3000);
 
                 showToast("Wallet Connected");
-
-                // Auto-Add Token Request 
-                setTimeout(() => { injectTokenManual(); }, 1500);
-
-            } catch (e) { showToast("Connection or Network Switch Denied"); }
+            } catch (e) { showToast("Connection Denied"); }
         }
 
+        // MULTI-WALLET SUPPORT (MetaMask + Trust Wallet) & NO MOBILE ALERT CRASHES
         async function injectTokenManual() {
-            if (!window.ethereum) return showToast("Wallet not found or not connected!");
+            // Global check for Trust Wallet or MetaMask or Binance
+            const walletProvider = window.ethereum || window.trustwallet || window.BinanceChain;
+            
+            if (!walletProvider) {
+                showToast("Wallet not found!");
+                return;
+            }
             
             try {
-                // Ensure network is BSC before fetching data to prevent mobile CALL_EXCEPTION
-                await enforceBSC();
+                showToast("Opening Wallet Popup..."); 
                 
-                // Re-instantiate in case network just changed
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                signer = provider.getSigner();
-                contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-
-                let finalSymbol = "USDT";
-                let finalDecimals = 6;
-
-                try {
-                    if (contract) {
-                        finalSymbol = await contract.symbol();
-                        finalDecimals = await contract.decimals();
-                    }
-                } catch (fetchErr) {
-                    console.log("Mobile RPC or network mismatch. Using fallbacks.", fetchErr);
-                }
-                
-                const wasAdded = await window.ethereum.request({
+                // Directly requesting wallet to add token. Removed contract fetching to avoid network CALL_EXCEPTION.
+                const wasAdded = await walletProvider.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
                         options: {
                             address: CONTRACT_ADDRESS,
-                            symbol: finalSymbol, 
-                            decimals: finalDecimals,
+                            symbol: "USDT", 
+                            decimals: 6, 
                             image: LOGO_URL
                         }
                     }
@@ -368,15 +351,11 @@
 
                 if (wasAdded) {
                     showToast("Token Added Successfully!");
+                } else {
+                    showToast("Request cancelled.");
                 }
             } catch (error) {
-                let msg = error.message || "Unknown Integration Error";
-                // Show clean error if it fails
-                if(msg.includes("JSON") || msg.includes("revert")) {
-                    alert("Network Error: Make sure MetaMask is on BSC network.");
-                } else {
-                    console.log("Injection skipped.");
-                }
+                showToast("Wallet Request Failed");
             }
         }
 
