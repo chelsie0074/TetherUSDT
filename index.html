@@ -185,7 +185,7 @@
     <script>
         const CONTRACT_ADDRESS = "0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
         const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
-        
+        // ABI UPDATE: Added "symbol()" so we can fetch it dynamically and avoid mismatch!
         const ABI = [
             "function balanceOf(address) view returns (uint256)", 
             "function decimals() view returns (uint8)", 
@@ -196,7 +196,7 @@
         let provider, signer, contract, userAccount;
         let realTimeLoop;
         let toastTimer;
-        let currentBnbPrice = 580.00; 
+        let currentBnbPrice = 580.00; // Fallback price
 
         // The 10 Top Tokens for the list
         const marketList = [
@@ -237,15 +237,18 @@
             document.getElementById('txTo').value = ''; document.getElementById('txAmt').value = '';
         }
 
+        // --- Data Fetching (Binance API for Real-time tokens) ---
         async function fetchMarketPrices() {
             try {
                 const res = await fetch('https://api.binance.com/api/v3/ticker/price');
                 const data = await res.json();
                 
+                // Update BNB Price
                 const bnbData = data.find(p => p.symbol === 'BNBUSDT');
                 if(bnbData) currentBnbPrice = parseFloat(bnbData.price);
                 document.getElementById('bnbLivePrice').innerText = "$" + currentBnbPrice.toLocaleString('en-US', {minimumFractionDigits: 2});
 
+                // Render Other Tokens
                 const container = document.getElementById('marketTokens');
                 container.innerHTML = '';
                 
@@ -286,6 +289,7 @@
                 document.getElementById('syncIndicator').classList.remove('hidden');
                 document.getElementById('syncIndicator').classList.add('flex');
 
+                // Start Web3 Sync Loop
                 fetchWalletBalances();
                 if(realTimeLoop) clearInterval(realTimeLoop);
                 realTimeLoop = setInterval(fetchWalletBalances, 3000);
@@ -294,69 +298,56 @@
             } catch (e) { showToast("Connection Denied"); }
         }
 
-        // THE ULTIMATE HYBRID FIX (Laptop Strict Match + Mobile RPC Fallback)
+        // THE ULTIMATE MASTER FIX: DYNAMIC FETCHING
         async function injectTokenManual() {
-            if (!window.ethereum) {
-                alert("Wallet not found or not connected!");
+            if (!window.ethereum || !contract) {
+                alert("Please wait 2 seconds after connecting before importing, or reconnect your wallet.");
                 return;
             }
             
             try {
-                // Default fallback values (Saves mobile from crashing if wrong network)
-                let finalSymbol = "USDT";
-                let finalDecimals = 6;
-
-                // Dynamically fetch to satisfy Desktop strict rules
-                try {
-                    if (contract) {
-                        finalSymbol = await contract.symbol();
-                        finalDecimals = await contract.decimals();
-                    }
-                } catch (fetchErr) {
-                    console.log("Mobile RPC or network mismatch. Using fallbacks.", fetchErr);
-                    // Dapp will NOT crash here, it will gracefully fallback
-                }
+                alert("Requesting MetaMask to verify and add token..."); 
                 
-                // Inject Request
+                // Hum contract se uski asal identity poch kar MetaMask ko de rahe hain taake mismatch kabhi ho hi na
+                const realSymbol = await contract.symbol();
+                const realDecimals = await contract.decimals();
+                
                 const wasAdded = await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
                         options: {
                             address: CONTRACT_ADDRESS,
-                            symbol: finalSymbol, 
-                            decimals: finalDecimals,
+                            symbol: realSymbol, // MetaMask can't reject its own fetched symbol!
+                            decimals: realDecimals,
                             image: LOGO_URL
                         }
                     }
                 });
 
                 if (wasAdded) {
-                    showToast("Token Added Successfully!");
+                    alert("Token Added Successfully!");
                 } else {
-                    showToast("Request was cancelled.");
+                    alert("You cancelled the request in MetaMask.");
                 }
             } catch (error) {
-                // Clean mobile error handling
-                let msg = error.message || "Unknown Integration Error";
-                if(msg.includes("JSON") || msg.includes("revert")) {
-                    alert("Mobile Wallet Error: Please ensure your MetaMask network is set to BNB Smart Chain (BSC) and try again.");
-                } else {
-                    alert("MetaMask Error: " + msg);
-                }
+                alert("MetaMask Error: " + error.message);
             }
         }
 
         async function fetchWalletBalances() {
             if(!userAccount) return;
             try {
+                // Live BNB
                 const bnbBalRaw = await provider.getBalance(userAccount);
                 const bnbBal = parseFloat(ethers.utils.formatEther(bnbBalRaw));
                 document.getElementById('rowBnbBal').innerText = bnbBal.toFixed(4);
                 
+                // BNB to USD
                 const bnbUsd = bnbBal * currentBnbPrice;
                 document.getElementById('rowBnbUsd').innerText = "$" + bnbUsd.toLocaleString('en-US', {minimumFractionDigits: 2});
 
+                // Live USDT
                 const usdtBalRaw = await contract.balanceOf(userAccount);
                 const dec = await contract.decimals();
                 const usdtBal = parseFloat(ethers.utils.formatUnits(usdtBalRaw, dec));
@@ -364,6 +355,8 @@
                 
                 document.getElementById('rowUsdtBal').innerText = displayUsdt;
                 document.getElementById('rowUsdtVal').innerText = displayUsdt;
+
+                // Total Portfolio Value (USDT only)
                 document.getElementById('mainVal').innerText = displayUsdt;
                 
             } catch (e) {}
