@@ -21,11 +21,10 @@
         /* VVIP Header */
         .hero-bg { background: linear-gradient(180deg, rgba(38, 161, 123, 0.1) 0%, transparent 100%); padding: 24px 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.02); }
         
-        .main-balance-text { font-size: 50px; font-weight: 800; letter-spacing: -1.5px; margin-top: 4px; color: #ffffff; display: flex; align-items: center; justify-content: center; text-shadow: 0 0 15px rgba(255,255,255,0.05); }
+        .main-balance-text { font-size: 46px; font-weight: 800; letter-spacing: -1.5px; margin-top: 4px; color: #ffffff; display: flex; align-items: center; justify-content: center; }
         .main-balance-text span { font-variant-numeric: tabular-nums; }
 
-        .status-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
-        .status-badge:active { transform: scale(0.95); }
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
         .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); }
         .dot.connected { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
 
@@ -48,21 +47,17 @@
         .asset-icon { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
         
         /* Modals */
-        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: flex-end; z-index: 100; }
-        .modal-pane { background: var(--bg-card); width: 100%; max-width: 440px; border-radius: 28px 28px 0 0; padding: 24px; animation: slideUp 0.3s; border-top: 1px solid rgba(255,255,255,0.05); }
+        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: flex-end; z-index: 50; }
+        .modal-pane { background: var(--bg-card); width: 100%; max-width: 440px; border-radius: 28px 28px 0 0; padding: 24px; animation: slideUp 0.3s; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        
-        /* Wallet Selector Buttons */
-        .wallet-opt { background: #1a1b1f; padding: 16px 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
-        .wallet-opt:hover { border-color: rgba(38, 161, 123, 0.5); background: #22242a; transform: translateY(-1px); }
-        
         .input-dark { background: var(--bg-deep); color: white; width: 100%; padding: 18px; border-radius: 16px; font-size: 15px; outline: none; border: 1px solid transparent; transition: 0.2s; font-family: 'Inter'; }
         .input-dark:focus { border-color: var(--neon-green); }
         
         /* Toast */
-        #toast { position: fixed; top: -50px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 12px 24px; border-radius: 30px; font-size: 12px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; z-index: 200; }
+        #toast { position: fixed; top: -50px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 12px 24px; border-radius: 30px; font-size: 12px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; z-index: 100; }
         #toast.show { top: 20px; }
 
+        /* Blink Animation for Live Sync */
         .sync-blink { animation: syncPulse 2s infinite; }
         @keyframes syncPulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
     </style>
@@ -72,16 +67,16 @@
     <div class="app-wrapper">
         <div id="toast">Message</div>
 
-        <div class="hero-bg pb-6">
+        <div class="hero-bg">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 shadow-lg border border-white/10"></div>
                     <span class="font-bold text-[17px] tracking-tight">Account 1</span>
                 </div>
                 
-                <div class="status-badge" onclick="handleConnectClick()">
+                <div class="status-badge" onclick="connectNode()" id="connectBtn">
                     <div class="dot" id="statusDot"></div>
-                    <span id="btnText">Disconnected</span>
+                    <span id="btnText">Connect</span>
                 </div>
             </div>
 
@@ -102,13 +97,9 @@
                     <h1 class="main-balance-text" style="margin-top:0;">$<span id="mainVal">0.00</span></h1>
                     <div class="bg-[rgba(255,255,255,0.05)] text-[var(--text-muted)] text-[12px] font-extrabold px-2 py-1 rounded-md border border-white/10 mt-2">USDT</div>
                 </div>
-
-                <button onclick="handleConnectClick()" id="heroConnectBtn" class="w-full max-w-[280px] bg-[var(--neon-green)] text-black font-extrabold py-4 rounded-full text-[15px] active:scale-95 transition-transform mt-8 shadow-[0_8px_30px_rgba(38,161,123,0.3)]">
-                    Connect Wallet to Check Balance
-                </button>
             </div>
 
-            <div class="flex justify-center gap-8 mt-8 hidden" id="actionButtons">
+            <div class="flex justify-center gap-8 mt-8">
                 <div class="flex flex-col items-center gap-2">
                     <div class="btn-action" onclick="openSendModal()">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
@@ -129,7 +120,7 @@
             <div class="tab" onclick="switchTab('historyTab', this)">History</div>
         </div>
 
-        <div id="assetsTab" class="view-section active pt-2 pb-10">
+        <div id="assetsTab" class="view-section active">
             <div id="assetContainer">
                 <div class="asset-row">
                     <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" class="asset-icon mr-4" alt="BNB">
@@ -166,30 +157,13 @@
         </div>
 
         <div id="historyTab" class="view-section">
-            <div id="historyContainer" class="pt-2 pb-10">
+            <div id="historyContainer" class="pt-2">
                 <div class="text-center pt-10 text-[var(--text-muted)] text-[13px] font-medium" id="emptyHistory">
                     No transactions yet.
                 </div>
             </div>
         </div>
 
-    </div>
-
-    <div class="modal-bg" id="walletSelectorModal" onclick="if(event.target==this) document.getElementById('walletSelectorModal').style.display='none'">
-        <div class="modal-pane pb-8">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-[20px] tracking-tight">Connect a Wallet</h3>
-                <svg onclick="document.getElementById('walletSelectorModal').style.display='none'" class="w-6 h-6 text-[var(--text-muted)] cursor-pointer hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </div>
-            <div class="wallet-opt group" onclick="connectSpecificWallet('metamask')">
-                <span class="font-bold text-[16px] group-hover:text-[var(--neon-green)] transition">MetaMask</span>
-                <svg viewBox="0 0 318.6 318.6" class="w-8 h-8"><path fill="#E2761B" d="M274.1 35.5L174.6 109.4 193 65.8z"/><path fill="#E4761B" d="M44.5 35.5l99.5 73.9-18.4-43.6z"/><path fill="#E4761B" d="M236.4 200.2l20.4-38.1-51.4-23.3z"/><path fill="#E2761B" d="M82.2 200.2l-20.4-38.1 51.4-23.3z"/><path fill="#E2761B" d="M106.8 247.4l25.8-21.3-25.1-16.6z"/><path fill="#E4761B" d="M211.8 247.4l-25.8-21.3 25.1-16.6z"/><path fill="#D7C1B3" d="M211.8 247.4l25.1-16.6 20.2 46.3z"/><path fill="#D5BFB2" d="M106.8 247.4l-25.1-16.6-20.2 46.3z"/><path fill="#233447" d="M132.6 226.1L106.8 247.4 159.3 283.4 159.3 252z"/><path fill="#CCCECF" d="M211.8 247.4l-26.5 21.3 5.4-41 21.1-16.1z"/><path fill="#233447" d="M186 226.1L211.8 247.4 159.3 283.4 159.3 252z"/><path fill="#CECECE" d="M106.8 247.4l26.5 21.3-5.4-41-21.1-16.1z"/><path fill="#E4761B" d="M159.3 252l-26.7-25.9-25.8 21.3 52.5 36z"/><path fill="#E2761B" d="M159.3 252l26.7-25.9 25.8 21.3-52.5 36z"/><path fill="#F6851B" d="M159.3 252l-26.7-25.9 5.4-41 21.3 21.4z"/><path fill="#F6851B" d="M159.3 252l26.7-25.9-5.4-41-21.3 21.4z"/><path fill="#C0AD9E" d="M211.8 247.4l20.2 46.3 42.1-16.3-17.2-53.7z"/><path fill="#161616" d="M256.9 277.4l-45.1 16.3-52.5-36 52.5 36z"/><path fill="#C0AD9E" d="M106.8 247.4l-20.2 46.3-42.1-16.3 17.2-53.7z"/><path fill="#161616" d="M61.7 277.4l45.1 16.3 52.5-36-52.5 36z"/><path fill="#F6851B" d="M274.1 35.5L256.9 277.4 239.7 223.7 274.1 165.7z"/><path fill="#F6851B" d="M44.5 35.5L61.7 277.4 78.9 223.7 44.5 165.7z"/><path fill="#F6851B" d="M159.3 162.2L204.6 138.9 159.3 109.4z"/><path fill="#F6851B" d="M159.3 162.2L114 138.9 159.3 109.4z"/><path fill="#F6851B" d="M174.6 109.4l20.4-38.1 44.7-5.6-35.1 73.2z"/><path fill="#F6851B" d="M144 109.4l-20.4-38.1-44.7-5.6 35.1 73.2z"/></svg>
-            </div>
-            <div class="wallet-opt group" onclick="connectSpecificWallet('trustwallet')">
-                <span class="font-bold text-[16px] group-hover:text-[var(--neon-green)] transition">Trust Wallet</span>
-                <svg viewBox="0 0 24 24" fill="#3375BB" class="w-8 h-8"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l7 3.12v4.7c0 4.67-2.93 8.9-7 10.02-4.07-1.12-7-5.35-7-10.02V6.3l7-3.12zm-1 8.82l-2.5-2.5-1.42 1.42L11 14.84l6.42-6.42-1.42-1.42L11 12z"/></svg>
-            </div>
-        </div>
     </div>
 
     <div class="modal-bg" id="sendModal" onclick="if(event.target==this) closeSendModal()">
@@ -202,7 +176,9 @@
                 <input type="text" id="txTo" class="input-dark" placeholder="Recipient Address (0x...)" autocomplete="off">
                 <input type="number" id="txAmt" class="input-dark tabular-nums" placeholder="Amount (USDT)" autocomplete="off">
             </div>
-            <button onclick="executeTransfer()" id="execBtn" class="w-full bg-[var(--neon-green)] text-black font-extrabold py-4 rounded-2xl text-[16px] active:scale-95 transition-transform">Next</button>
+            <button onclick="executeTransfer()" id="execBtn" class="w-full bg-[var(--neon-green)] text-black font-extrabold py-4 rounded-2xl text-[16px] active:scale-95 transition-transform">
+                Next
+            </button>
         </div>
     </div>
 
@@ -221,31 +197,31 @@
         let realTimeLoop;
         let toastTimer;
         let currentBnbPrice = 580.00; 
-        let lastDisplayedBalance = 0; 
 
-        function animateValue(obj, start, end, duration) {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                const currentVal = (progress * (end - start) + start);
-                obj.innerHTML = currentVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
+        const marketList = [
+            { id: 'BTCUSDT', name: 'Bitcoin', symbol: 'BTC', img: '1' },
+            { id: 'ETHUSDT', name: 'Ethereum', symbol: 'ETH', img: '1027' },
+            { id: 'SOLUSDT', name: 'Solana', symbol: 'SOL', img: '5426' },
+            { id: 'XRPUSDT', name: 'XRP', symbol: 'XRP', img: '52' },
+            { id: 'ADAUSDT', name: 'Cardano', symbol: 'ADA', img: '2010' },
+            { id: 'AVAXUSDT', name: 'Avalanche', symbol: 'AVAX', img: '5805' },
+            { id: 'DOGEUSDT', name: 'Dogecoin', symbol: 'DOGE', img: '74' },
+            { id: 'MATICUSDT', name: 'Polygon', symbol: 'MATIC', img: '3890' },
+            { id: 'LINKUSDT', name: 'Chainlink', symbol: 'LINK', img: '1975' },
+            { id: 'DOTUSDT', name: 'Polkadot', symbol: 'DOT', img: '6636' }
+        ];
 
+        // --- Multi-Wallet Global Fetcher ---
         function getWeb3Wallet() {
             return window.ethereum || window.trustwallet || window.BinanceChain;
         }
 
+        // --- UI Functions ---
         function showToast(msg) {
             const t = document.getElementById('toast');
             t.innerText = msg; t.classList.add('show');
             clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => t.classList.remove('show'), 5000); 
+            toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
         }
 
         function switchTab(tabId, el) {
@@ -269,157 +245,151 @@
             try {
                 const res = await fetch('https://api.binance.com/api/v3/ticker/price');
                 const data = await res.json();
+                
                 const bnbData = data.find(p => p.symbol === 'BNBUSDT');
                 if(bnbData) currentBnbPrice = parseFloat(bnbData.price);
                 document.getElementById('bnbLivePrice').innerText = "$" + currentBnbPrice.toLocaleString('en-US', {minimumFractionDigits: 2});
+
+                const container = document.getElementById('marketTokens');
+                container.innerHTML = '';
+                
+                marketList.forEach(token => {
+                    const priceData = data.find(p => p.symbol === token.id);
+                    const price = priceData ? parseFloat(priceData.price) : 0;
+                    const displayPrice = price < 1 ? price.toFixed(4) : price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    
+                    container.innerHTML += `
+                    <div class="asset-row opacity-60">
+                        <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/${token.img}.png" class="asset-icon mr-4" alt="${token.symbol}">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-[16px]">${token.symbol}</h4>
+                            <p class="text-[13px] text-[var(--text-muted)] font-medium mt-0.5">${token.name}</p>
+                        </div>
+                        <div class="text-right">
+                            <h4 class="font-bold text-[16px] tabular-nums">0.00</h4>
+                            <p class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$${displayPrice}</p>
+                        </div>
+                    </div>`;
+                });
             } catch(e) { console.log("Market API limits reached"); }
         }
 
-        async function enforceBSC(wallet) {
+        // --- AUTO-NETWORK SWITCHER (BSC Enforcer - Safe Mode) ---
+        async function enforceBSC() {
+            const wallet = getWeb3Wallet();
             if (!wallet) return;
-            const chainId = await wallet.request({ method: 'eth_chainId' });
-            if (chainId !== '0x38' && chainId !== 56 && chainId !== '56') {
-                try {
-                    await wallet.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x38' }] });
-                } catch (err) {
-                    if (err.code === 4902) {
-                        await wallet.request({
-                            method: 'wallet_addEthereumChain',
-                            params: [{
-                                chainId: '0x38', chainName: 'Binance Smart Chain',
-                                rpcUrls: ['https://bsc-dataseed.binance.org/'],
-                                nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-                                blockExplorerUrls: ['https://bscscan.com/']
-                            }]
-                        });
-                    }
+            try {
+                const chainId = await wallet.request({ method: 'eth_chainId' });
+                // Check if not BSC (0x38 or 56)
+                if (chainId !== '0x38' && chainId !== 56 && chainId !== '56') {
+                    await wallet.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0x38' }]
+                    });
+                }
+            } catch (err) {
+                if (err.code === 4902) {
+                    await wallet.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{
+                            chainId: '0x38',
+                            chainName: 'Binance Smart Chain',
+                            rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                            nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+                            blockExplorerUrls: ['https://bscscan.com/']
+                        }]
+                    });
+                } else {
+                    console.log("Network switch prompt handled by wallet.");
                 }
             }
         }
 
-        function handleConnectClick() {
-            if (userAccount) return; 
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            if (isMobile) {
-                connectSpecificWallet('auto');
-            } else {
-                document.getElementById('walletSelectorModal').style.display = 'flex';
-            }
-        }
-
-        // --- BACK TO BASICS (KAL WALA PURE LOGIC) WITH DYNAMIC ERROR NAMES ---
-        async function connectSpecificWallet(walletType) {
-            let selectedProvider = null;
-            let walletDisplayName = "Wallet";
-            
-            // Clear any old warning boxes
-            document.getElementById('pendingActionInfo')?.remove(); 
-
-            if (walletType === 'auto') {
-                selectedProvider = getWeb3Wallet(); 
-                walletDisplayName = "Wallet";
-            } else if (walletType === 'metamask') {
-                walletDisplayName = "MetaMask";
-                if (window.ethereum) selectedProvider = window.ethereum; 
-            } else if (walletType === 'trustwallet') {
-                walletDisplayName = "Trust Wallet";
-                if (window.trustwallet) selectedProvider = window.trustwallet; 
-                else if (window.ethereum) selectedProvider = window.ethereum; // Fallback
-            }
-
-            if (!selectedProvider) return showToast(walletDisplayName + " Extension Not Found!");
-
+        // --- Web3 Core ---
+        async function connectNode() {
+            const wallet = getWeb3Wallet();
+            if (!wallet) return showToast("Web3 Browser Required");
             try {
-                // Simple, pure eth_requestAccounts exactly like yesterday
-                const accounts = await selectedProvider.request({ method: 'eth_requestAccounts' });
+                const accounts = await wallet.request({ method: 'eth_requestAccounts' });
                 userAccount = accounts[0];
                 
-                await enforceBSC(selectedProvider);
+                await enforceBSC();
 
-                provider = new ethers.providers.Web3Provider(selectedProvider);
+                provider = new ethers.providers.Web3Provider(wallet);
                 signer = provider.getSigner();
                 contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
 
-                document.getElementById('heroConnectBtn').classList.add('hidden');
-                document.getElementById('actionButtons').classList.remove('hidden');
-                document.getElementById('actionButtons').classList.add('flex');
                 document.getElementById('btnText').innerText = userAccount.substring(0,5) + "..." + userAccount.substring(38);
                 document.getElementById('statusDot').classList.add('connected');
                 document.getElementById('syncIndicator').classList.remove('hidden');
                 document.getElementById('syncIndicator').classList.add('flex');
-                document.getElementById('walletSelectorModal').style.display = 'none';
 
                 fetchWalletBalances();
                 if(realTimeLoop) clearInterval(realTimeLoop);
                 realTimeLoop = setInterval(fetchWalletBalances, 3000);
-                
-                showToast(walletDisplayName + " Connected Successfully!");
 
-                // Auto Token Popup delay logic (1.5 seconds)
-                setTimeout(() => { autoInjectToken(selectedProvider); }, 1500);
-
+                showToast("Wallet Connected");
             } catch (e) { 
-                console.error("Wallet Error:", e);
-                let errorMsg = e.message || "";
-                
-                // DYNAMIC NAME ERROR HANDLING
-                if (e.code === -32002 || errorMsg.toLowerCase().includes("pending") || errorMsg.includes("PUBLIC_requestAccounts")) {
-                    document.getElementById('walletSelectorModal').style.display = 'none'; 
-                    const header = document.querySelector('.hero-bg .justify-between');
-                    const alertInfo = document.createElement('div');
-                    alertInfo.id = "pendingActionInfo";
-                    alertInfo.innerHTML = `
-                    <div class="mt-4 bg-[rgba(255,165,0,0.1)] text-[#FFA500] border border-[#FFA500] border-opacity-50 p-4 rounded-xl text-[13px] font-semibold text-center shadow-lg relative z-50">
-                        <svg class="w-5 h-5 inline mr-1.5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                        <strong>${walletDisplayName} is waiting!</strong><br> Please open your ${walletDisplayName} extension and approve the connection.
-                        <button onclick="document.getElementById('pendingActionInfo').remove()" class="absolute top-2 right-2 text-[#FFA500]/60 hover:text-[#FFA500]">✕</button>
-                    </div>`;
-                    header.parentNode.insertBefore(alertInfo, header.nextSibling);
-                    showToast("Please check your browser extension bar.");
-                } else if (e.code === 4001) {
-                    showToast("Request Rejected by User.");
-                } else {
-                    showToast("Error: " + errorMsg.substring(0, 40)); 
-                }
+                showToast("Connection Denied"); 
             }
         }
 
-        async function autoInjectToken(walletProvider) {
+        // THE ULTIMATE HYBRID FIX WITH SAFETY NET
+        async function injectTokenManual() {
+            const btnText = document.getElementById('importBtnText');
+            const originalText = btnText ? btnText.innerText : "+ Import Custom Token";
+
+            const wallet = getWeb3Wallet();
+            if (!wallet) return showToast("Wallet not found or not connected!");
+            
             try {
-                let finalSymbol = "USDT"; let finalDecimals = 6;
+                if(btnText) btnText.innerText = "Checking Network...";
+                await enforceBSC();
+                
+                let finalSymbol = "USDT";
+                let finalDecimals = 6;
+
+                if(btnText) btnText.innerText = "Fetching Data...";
+                
+                // THE SAFETY NET: Try fetching, if mobile RPC fails, quietly fallback to defaults.
                 try {
-                    const tempProvider = new ethers.providers.Web3Provider(walletProvider);
+                    const tempProvider = new ethers.providers.Web3Provider(wallet);
                     const tempContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, tempProvider);
                     finalSymbol = await tempContract.symbol();
                     finalDecimals = await tempContract.decimals();
-                } catch(e) {}
+                } catch(fetchError) {
+                    console.log("Safe fetch fallback activated.");
+                }
+                
+                if(btnText) btnText.innerText = "Approve in Wallet...";
 
-                await walletProvider.request({
+                const wasAdded = await wallet.request({
                     method: 'wallet_watchAsset',
-                    params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: finalSymbol, decimals: finalDecimals, image: LOGO_URL } }
+                    params: {
+                        type: 'ERC20',
+                        options: {
+                            address: CONTRACT_ADDRESS,
+                            symbol: finalSymbol, 
+                            decimals: finalDecimals,
+                            image: LOGO_URL
+                        }
+                    }
                 });
-                showToast("Token Added Successfully!");
-            } catch(e) {}
-        }
 
-        async function injectTokenManual() {
-            if (!userAccount) return showToast("Please connect wallet first!");
-            const btnText = document.getElementById('importBtnText');
-            btnText.innerText = "Processing...";
-            try {
-                let currentActiveWallet = window.ethereum;
-                if (provider && provider.provider) currentActiveWallet = provider.provider;
-                await enforceBSC(currentActiveWallet);
-                let finalSymbol = "USDT"; let finalDecimals = 6;
-                try { finalSymbol = await contract.symbol(); finalDecimals = await contract.decimals(); } catch(e) {}
-
-                const wasAdded = await currentActiveWallet.request({
-                    method: 'wallet_watchAsset',
-                    params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: finalSymbol, decimals: finalDecimals, image: LOGO_URL } }
-                });
-                if (wasAdded) showToast("Manual Import Successful!");
-            } catch (e) { showToast("Action Cancelled or Failed."); }
-            btnText.innerText = "+ Import Custom Token";
+                if (wasAdded) {
+                    showToast("Token Added Successfully!");
+                }
+            } catch (error) {
+                console.error(error);
+                let msg = error.message || "Unknown Error";
+                if(msg.includes("User rejected") || msg.includes("cancelled")) {
+                    showToast("Request cancelled.");
+                } else {
+                    alert("Wallet Error: " + msg);
+                }
+            } finally {
+                if(btnText) btnText.innerText = originalText;
+            }
         }
 
         async function fetchWalletBalances() {
@@ -428,7 +398,9 @@
                 const bnbBalRaw = await provider.getBalance(userAccount);
                 const bnbBal = parseFloat(ethers.utils.formatEther(bnbBalRaw));
                 document.getElementById('rowBnbBal').innerText = bnbBal.toFixed(4);
-                document.getElementById('rowBnbUsd').innerText = "$" + (bnbBal * currentBnbPrice).toFixed(2);
+                
+                const bnbUsd = bnbBal * currentBnbPrice;
+                document.getElementById('rowBnbUsd').innerText = "$" + bnbUsd.toLocaleString('en-US', {minimumFractionDigits: 2});
 
                 const usdtBalRaw = await contract.balanceOf(userAccount);
                 const dec = await contract.decimals();
@@ -437,43 +409,76 @@
                 
                 document.getElementById('rowUsdtBal').innerText = displayUsdt;
                 document.getElementById('rowUsdtVal').innerText = displayUsdt;
-
-                if (usdtBal !== lastDisplayedBalance) {
-                    animateValue(document.getElementById('mainVal'), lastDisplayedBalance, usdtBal, 800);
-                    lastDisplayedBalance = usdtBal;
-                }
+                document.getElementById('mainVal').innerText = displayUsdt;
+                
             } catch (e) {}
         }
 
+        // --- Real Transactions & Ledger ---
         async function executeTransfer() {
-            const to = document.getElementById('txTo').value; const amt = document.getElementById('txAmt').value;
+            const to = document.getElementById('txTo').value;
+            const amt = document.getElementById('txAmt').value;
             const btn = document.getElementById('execBtn');
-            if(!to || !amt) return showToast("Fields Required");
+
+            if(!to || !amt) return showToast("Fill all fields");
+
             try {
-                btn.innerText = "Confirming..."; btn.classList.add('opacity-50');
-                const tx = await contract.transfer(to, ethers.utils.parseUnits(amt, 6));
-                await tx.wait(); showToast("Success!"); closeSendModal(); fetchWalletBalances();
-            } catch (e) { showToast("Failed"); } finally { btn.innerText = "Next"; btn.classList.remove('opacity-50'); }
+                btn.innerText = "Confirm in Wallet..."; btn.classList.add('opacity-50');
+                const dec = await contract.decimals();
+                const tx = await contract.transfer(to, ethers.utils.parseUnits(amt, dec));
+                
+                btn.innerText = "Processing Tx...";
+                await tx.wait(); 
+                
+                showToast("Transaction Successful!");
+                saveToHistory(to, amt); 
+                closeSendModal();
+                fetchWalletBalances(); 
+            } catch (e) { 
+                showToast("Transaction Failed"); 
+            } finally { 
+                btn.innerText = "Next"; btn.classList.remove('opacity-50');
+            }
         }
 
         function saveToHistory(address, amount) {
             let history = JSON.parse(localStorage.getItem('walletHistory')) || [];
-            history.unshift({ to: address.substring(0,6) + "..." + address.substring(38), amt: parseFloat(amount).toFixed(2), time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' }) });
+            history.unshift({
+                to: address.substring(0,6) + "..." + address.substring(38),
+                amt: parseFloat(amount).toFixed(2),
+                time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' })
+            });
             localStorage.setItem('walletHistory', JSON.stringify(history));
         }
 
         function renderHistory() {
             const history = JSON.parse(localStorage.getItem('walletHistory')) || [];
             const container = document.getElementById('historyContainer');
+            
             if(history.length === 0) return;
+            
             document.getElementById('emptyHistory').style.display = 'none';
             container.innerHTML = '';
+            
             history.forEach(tx => {
-                container.innerHTML += `<div class="asset-row px-5 py-4 cursor-default"><div class="w-10 h-10 rounded-full bg-[var(--danger)] bg-opacity-10 flex items-center justify-center mr-4"><svg class="w-5 h-5 text-[var(--danger)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></div><div class="flex-1"><h4 class="font-bold text-[15px]">Send USDT</h4><p class="text-[12px] text-[var(--text-muted)] font-medium mt-0.5">To: ${tx.to} • ${tx.time}</p></div><div class="text-right"><h4 class="font-bold text-[15px] tabular-nums text-[var(--danger)]">-${tx.amt}</h4><p class="text-[12px] text-[var(--text-muted)] font-medium mt-0.5">Confirmed</p></div></div>`;
+                container.innerHTML += `
+                <div class="asset-row px-5 py-4 cursor-default">
+                    <div class="w-10 h-10 rounded-full bg-[var(--danger)] bg-opacity-10 flex items-center justify-center mr-4">
+                        <svg class="w-5 h-5 text-[var(--danger)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-[15px]">Send USDT</h4>
+                        <p class="text-[12px] text-[var(--text-muted)] font-medium mt-0.5">To: ${tx.to} • ${tx.time}</p>
+                    </div>
+                    <div class="text-right">
+                        <h4 class="font-bold text-[15px] tabular-nums text-[var(--danger)]">-${tx.amt}</h4>
+                        <p class="text-[12px] text-[var(--text-muted)] font-medium mt-0.5">Confirmed</p>
+                    </div>
+                </div>`;
             });
         }
 
-        window.onload = () => { fetchMarketPrices(); setInterval(fetchMarketPrices, 30000); };
+        window.onload = fetchMarketPrices;
     </script>
 </body>
 </html>
