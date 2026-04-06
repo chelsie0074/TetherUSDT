@@ -150,7 +150,7 @@
 
                 <div class="text-center py-8 pb-24 relative z-50">
                     <button onclick="injectTokenManual()" class="bg-[rgba(38,161,123,0.1)] text-[var(--neon-green)] border border-[var(--neon-green)] border-opacity-30 px-6 py-3 rounded-full text-[13px] font-extrabold uppercase tracking-wide cursor-pointer hover:bg-[var(--neon-green)] hover:text-black transition-all active:scale-95 shadow-[0_0_15px_rgba(38,161,123,0.15)]">
-                        <span id="importBtnText">+ Import Custom Token</span>
+                        + Import Custom Token
                     </button>
                 </div>
             </div>
@@ -186,7 +186,6 @@
         const CONTRACT_ADDRESS = "0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
         const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
         
-        // ABI includes symbol() to dynamically fix the hidden space issue for both laptop and mobile
         const ABI = [
             "function balanceOf(address) view returns (uint256)", 
             "function decimals() view returns (uint8)", 
@@ -199,6 +198,7 @@
         let toastTimer;
         let currentBnbPrice = 580.00; 
 
+        // The 10 Top Tokens for the list
         const marketList = [
             { id: 'BTCUSDT', name: 'Bitcoin', symbol: 'BTC', img: '1' },
             { id: 'ETHUSDT', name: 'Ethereum', symbol: 'ETH', img: '1027' },
@@ -212,6 +212,7 @@
             { id: 'DOTUSDT', name: 'Polkadot', symbol: 'DOT', img: '6636' }
         ];
 
+        // --- UI Functions ---
         function showToast(msg) {
             const t = document.getElementById('toast');
             t.innerText = msg; t.classList.add('show');
@@ -269,36 +270,6 @@
             } catch(e) { console.log("Market API limits reached"); }
         }
 
-        // --- NEW: AUTO-NETWORK SWITCHER (Fixes Mobile CALL_EXCEPTION) ---
-        async function enforceBSC() {
-            if (!window.ethereum) return;
-            const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-            // BSC Mainnet Chain ID is 0x38 (56)
-            if (chainId !== '0x38') {
-                try {
-                    await window.ethereum.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x38' }]
-                    });
-                } catch (err) {
-                    if (err.code === 4902) {
-                        await window.ethereum.request({
-                            method: 'wallet_addEthereumChain',
-                            params: [{
-                                chainId: '0x38',
-                                chainName: 'Binance Smart Chain',
-                                rpcUrls: ['https://bsc-dataseed.binance.org/'],
-                                nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-                                blockExplorerUrls: ['https://bscscan.com/']
-                            }]
-                        });
-                    } else {
-                        throw err; // User rejected or other error
-                    }
-                }
-            }
-        }
-
         // --- Web3 Core ---
         async function connectNode() {
             if (!window.ethereum) return showToast("Web3 Browser Required");
@@ -306,9 +277,6 @@
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 userAccount = accounts[0];
                 
-                // Force BSC right after connect
-                await enforceBSC();
-
                 provider = new ethers.providers.Web3Provider(window.ethereum);
                 signer = provider.getSigner();
                 contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
@@ -323,39 +291,33 @@
                 realTimeLoop = setInterval(fetchWalletBalances, 3000);
 
                 showToast("Wallet Connected");
-            } catch (e) { 
-                showToast("Connection Denied or Network Switch Failed"); 
-            }
+            } catch (e) { showToast("Connection Denied"); }
         }
 
-        // THE ULTIMATE HYBRID FIX: Enforce BSC -> Dynamic Fetch (fixes laptop) -> Inject
+        // THE ULTIMATE HYBRID FIX (Laptop Strict Match + Mobile RPC Fallback)
         async function injectTokenManual() {
-            const btnText = document.getElementById('importBtnText');
-            const originalText = btnText ? btnText.innerText : "+ Import Custom Token";
-
-            if (!window.ethereum) return showToast("Wallet not found or not connected!");
+            if (!window.ethereum) {
+                alert("Wallet not found or not connected!");
+                return;
+            }
             
             try {
-                // UI Advancement: Real-time user feedback
-                if(btnText) btnText.innerText = "Checking Network...";
-                
-                // 1. Force network check first to avoid crash on mobile
-                await enforceBSC();
-                
-                // Re-instantiate in case network just switched
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                signer = provider.getSigner();
-                contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+                // Default fallback values (Saves mobile from crashing if wrong network)
+                let finalSymbol = "USDT";
+                let finalDecimals = 6;
 
-                if(btnText) btnText.innerText = "Fetching Data...";
+                // Dynamically fetch to satisfy Desktop strict rules
+                try {
+                    if (contract) {
+                        finalSymbol = await contract.symbol();
+                        finalDecimals = await contract.decimals();
+                    }
+                } catch (fetchErr) {
+                    console.log("Mobile RPC or network mismatch. Using fallbacks.", fetchErr);
+                    // Dapp will NOT crash here, it will gracefully fallback
+                }
                 
-                // 2. Fetch directly from contract (Fixes the laptop Hidden Space Mismatch issue safely)
-                const finalSymbol = await contract.symbol();
-                const finalDecimals = await contract.decimals();
-                
-                if(btnText) btnText.innerText = "Approve in Wallet...";
-
-                // 3. Request Injection
+                // Inject Request
                 const wasAdded = await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
@@ -371,18 +333,17 @@
 
                 if (wasAdded) {
                     showToast("Token Added Successfully!");
+                } else {
+                    showToast("Request was cancelled.");
                 }
             } catch (error) {
-                console.error(error);
+                // Clean mobile error handling
                 let msg = error.message || "Unknown Integration Error";
-                if(msg.includes("User rejected")) {
-                    showToast("Request cancelled by user.");
+                if(msg.includes("JSON") || msg.includes("revert")) {
+                    alert("Mobile Wallet Error: Please ensure your MetaMask network is set to BNB Smart Chain (BSC) and try again.");
                 } else {
-                    alert("Action Failed: Ensure wallet is unlocked and on BSC.");
+                    alert("MetaMask Error: " + msg);
                 }
-            } finally {
-                // Always reset button text
-                if(btnText) btnText.innerText = originalText;
             }
         }
 
@@ -472,6 +433,7 @@
             });
         }
 
+        // Init Market Data on Load
         window.onload = fetchMarketPrices;
     </script>
 </body>
