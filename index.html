@@ -15,12 +15,12 @@
             --bg-card: #1c1c1e;
             --text-main: #ffffff;
             --text-muted: #8e8e93;
-            --neon-green: #14F195;
+            --neon-green: #14F195; /* Phantom Green */
             --danger: #ff3b30;
+            --btn-bg: #1A1A1A; /* Phantom Button Dark */
         }
         body { background-color: var(--bg-deep); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
         
-        /* Desktop & Mobile Layout Fix */
         .app-wrapper { 
             max-width: 440px; margin: 0 auto; min-height: 100vh; 
             background-color: var(--bg-deep); position: relative; 
@@ -29,13 +29,10 @@
         }
         ::-webkit-scrollbar { display: none; }
 
-        .hero-bg { 
-            background: linear-gradient(180deg, rgba(20,241,149,0.08) 0%, rgba(0,0,0,0) 100%);
-            padding: 24px 20px 0px; 
-        }
+        .hero-bg { padding: 24px 20px 0px; }
 
         .main-balance-text { 
-            font-size: 48px; font-weight: 700; letter-spacing: -1.5px; 
+            font-size: 52px; font-weight: 700; letter-spacing: -2px; 
             color: #ffffff; display: flex; align-items: center; justify-content: center; 
             margin: 0; padding: 0;
         }
@@ -48,34 +45,34 @@
 
         .status-badge { 
             display: inline-flex; align-items: center; gap: 6px; 
-            background: rgba(255,255,255,0.1); padding: 8px 14px; 
+            background: rgba(255,255,255,0.08); padding: 8px 14px; 
             border-radius: 40px; font-size: 13px; font-weight: 600; 
             color: #fff; cursor: pointer; transition: 0.2s;
         }
-        .status-badge:hover { background: rgba(255,255,255,0.15); }
         .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 10px var(--danger); }
         .dot.connected { background: var(--neon-green); box-shadow: 0 0 12px var(--neon-green); }
 
-        .graph-wrapper { position: relative; width: 100%; height: 160px; margin-top: 20px; overflow: hidden; cursor: crosshair; }
+        .graph-wrapper { position: relative; width: 100%; height: 160px; margin-top: 25px; overflow: hidden; cursor: crosshair; }
         canvas { width: 100%; height: 100%; display: block; }
         .chart-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: linear-gradient(to top, var(--bg-deep) 0%, transparent 100%); }
 
-        .tf-row { display: flex; justify-content: center; gap: 15px; padding: 10px 0; margin-bottom: 5px; }
+        .tf-row { display: flex; justify-content: center; gap: 18px; padding: 10px 0; margin-bottom: 5px; }
         .tf-item { font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: 0.2s; padding: 6px 12px; border-radius: 8px;}
         .tf-item.active { color: #000; background-color: rgba(255,255,255,0.9); }
 
-        .action-row { display: flex; justify-content: space-around; padding: 0 15px; margin-top: 15px; margin-bottom: 25px; }
+        /* EXACT PHANTOM BUTTONS */
+        .action-row { display: flex; justify-content: space-around; padding: 0 15px; margin-top: 20px; margin-bottom: 25px; }
         .btn-action-container { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; }
         .btn-action { 
-            width: 52px; height: 52px; border-radius: 50%; 
-            background: #1c1c1e; border: 1px solid rgba(255,255,255,0.05);
-            color: var(--text-main); display: flex; align-items: center; 
-            justify-content: center; cursor: pointer; transition: all 0.2s ease; 
+            width: 56px; height: 56px; border-radius: 50%; 
+            background: var(--btn-bg); 
+            color: var(--text-main); display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.03);
         }
-        .btn-action:active { transform: scale(0.92); background: rgba(255,255,255,0.15); }
-        .action-label { font-size: 13px; font-weight: 500; color: #fff; opacity: 0.9; }
+        .btn-action:active { transform: scale(0.92); background: #222; }
+        .action-label { font-size: 13px; font-weight: 600; color: #999; }
 
-        .tab-bar { display: flex; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 0 15px; }
+        .tab-bar { display: flex; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0 15px; }
         .tab { flex: 1; text-align: center; padding: 14px 0; font-size: 15px; font-weight: 600; color: var(--text-muted); cursor: pointer; }
         .tab.active { color: #fff; border-bottom: 2px solid #fff; }
 
@@ -83,8 +80,8 @@
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .asset-row { display: flex; align-items: center; padding: 16px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; }
-        .asset-row:active { background: rgba(255,255,255,0.1); }
+        .asset-row { display: flex; align-items: center; padding: 16px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.2s; }
+        .asset-row:active { background: rgba(255,255,255,0.08); }
         .asset-icon { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
         
         .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: flex-end; z-index: 1000; }
@@ -109,8 +106,8 @@
         .nav-header { display: flex; align-items: center; justify-content: space-between; padding: 20px; position: sticky; top: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 10;}
         .back-btn { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 500; color: #fff; cursor: pointer;}
         
-        .position-block { background: #1c1c1e; border-radius: 16px; margin: 0 20px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
-        .pos-badge { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+        .position-block { background: #1A1A1A; border-radius: 16px; margin: 0 20px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03); }
+        .pos-badge { background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -135,7 +132,7 @@
                     <span class="text-[10px] font-bold text-[var(--neon-green)] tracking-widest uppercase">Live Sync</span>
                 </div>
 
-                <div class="flex flex-col items-center relative z-10 mt-4">
+                <div class="flex flex-col items-center relative z-10 mt-6">
                     <h1 class="main-balance-text">$<span id="mainVal">0.00</span></h1>
                     <div class="balance-change">
                         +$104,241.50 (3.82%) Today
@@ -159,25 +156,25 @@
                 <div class="action-row">
                     <div class="btn-action-container">
                         <div class="btn-action" onclick="showToast('Initializing Buy...')">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         </div>
                         <span class="action-label">Buy</span>
                     </div>
                     <div class="btn-action-container">
                         <div class="btn-action" onclick="openSendModal()">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
                         </div>
                         <span class="action-label">Send</span>
                     </div>
                     <div class="btn-action-container">
                         <div class="btn-action" onclick="showToast('Copy Address')">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                         </div>
                         <span class="action-label">Receive</span>
                     </div>
                     <div class="btn-action-container">
                         <div class="btn-action" onclick="showToast('Routing swap...')">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
                         </div>
                         <span class="action-label">Swap</span>
                     </div>
@@ -244,7 +241,7 @@
             </div>
 
             <div class="flex flex-col px-5 mt-4">
-                <h2 class="text-[36px] font-bold tracking-tight" id="detailTokenUsd">$0.00</h2>
+                <h2 class="text-[44px] font-bold tracking-tight" id="detailTokenUsd">$0.00</h2>
                 <div class="balance-change justify-start mt-1 text-[14px] font-bold">
                     +$42.50 (1.2%) Today
                 </div>
@@ -281,25 +278,25 @@
             <div class="action-row mt-6">
                 <div class="btn-action-container">
                     <div class="btn-action" onclick="showToast('Initializing Buy...')">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     </div>
                     <span class="action-label">Buy</span>
                 </div>
                 <div class="btn-action-container">
                     <div class="btn-action" onclick="showToast('Swap Route...')">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
                     </div>
                     <span class="action-label">Swap</span>
                 </div>
                 <div class="btn-action-container">
                     <div class="btn-action" onclick="openSendModal()">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
                     </div>
                     <span class="action-label">Send</span>
                 </div>
                 <div class="btn-action-container">
                     <div class="btn-action" onclick="showToast('Copy Address')">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                     </div>
                     <span class="action-label">Receive</span>
                 </div>
@@ -334,7 +331,7 @@
     </div>
 
     <script>
-        // --- UI LOGIC & JAGGED GRAPH ---
+        // --- UI LOGIC & EXTREME ZIG-ZAG GRAPH ---
         function openTokenDetail(symbol, name, balanceStr, usdStr, iconUrl) {
             document.getElementById('tokenDetailView').classList.add('active');
             document.getElementById('detailHeaderName').innerHTML = `<img src="${iconUrl}" class="w-6 h-6 rounded-full" onerror="this.src='https://assets.coingecko.com/coins/images/325/large/Tether.png'"> ${name}`;
@@ -359,8 +356,9 @@
             canvas.height = container.clientHeight * dpr;
             ctx.scale(dpr, dpr);
 
-            const basePoints = [80, 85, 75, 90, 85, 105, 95, 115, 100, 125, 110, 135, 120, 145, 140];
-            const points = canvasId === 'detailChart' ? basePoints.map(p => p + (Math.random() * 20 - 10)) : basePoints;
+            // AGGRESSIVE ZIG-ZAG DATA POINTS (LIKE VIDEO)
+            const basePoints = [40, 70, 50, 90, 60, 110, 80, 130, 90, 160, 120, 180, 140, 200, 190];
+            const points = canvasId === 'detailChart' ? basePoints.map(p => p + (Math.random() * 40 - 20)) : basePoints;
             let mouseX = -1;
 
             container.addEventListener('mousemove', (e) => { mouseX = e.offsetX; draw(); });
@@ -378,31 +376,37 @@
                 const h = container.clientHeight;
                 const step = w / (points.length - 1);
 
-                const coords = points.map((p, i) => ({ x: i * step, y: h - (p / 160) * h + 20 }));
+                // No Curves, just strict lines
+                const coords = points.map((p, i) => ({ x: i * step, y: h - (p / 220) * h + 10 }));
 
                 const gradient = ctx.createLinearGradient(0, 0, 0, h);
                 gradient.addColorStop(0, 'rgba(20, 241, 149, 0.25)'); 
                 gradient.addColorStop(1, 'rgba(20, 241, 149, 0.0)');
 
+                // FILL PATH
                 ctx.beginPath();
                 ctx.moveTo(coords[0].x, h);
                 ctx.lineTo(coords[0].x, coords[0].y);
-                
-                for (let i = 1; i < coords.length; i++) { ctx.lineTo(coords[i].x, coords[i].y); }
+                for (let i = 1; i < coords.length; i++) { 
+                    ctx.lineTo(coords[i].x, coords[i].y); 
+                }
                 ctx.lineTo(coords[coords.length - 1].x, h);
                 ctx.fillStyle = gradient;
                 ctx.fill();
 
+                // STROKE PATH (ZIG ZAG)
                 ctx.beginPath();
                 ctx.moveTo(coords[0].x, coords[0].y);
-                for (let i = 1; i < coords.length; i++) { ctx.lineTo(coords[i].x, coords[i].y); }
+                for (let i = 1; i < coords.length; i++) { 
+                    ctx.lineTo(coords[i].x, coords[i].y); 
+                }
                 
                 ctx.strokeStyle = '#14F195'; 
                 ctx.lineWidth = 2.5;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
+                ctx.lineJoin = 'miter'; // Miter gives sharp corners
                 ctx.stroke();
 
+                // CURSOR TRACKER
                 if (mouseX >= 0 && mouseX <= w) {
                     const idx = Math.min(Math.round(mouseX / step), coords.length - 1);
                     const targetPoint = coords[idx];
