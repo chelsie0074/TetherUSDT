@@ -7,8 +7,11 @@
 <link rel="icon" type="image/png" href="https://assets.coingecko.com/coins/images/325/large/Tether.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 <style>
+/* Reset & Scrollbar Hiding */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overscroll-behavior:none;background:#000;}
+html,body{height:100%;overscroll-behavior:none;background:#000; -ms-overflow-style: none; scrollbar-width: none;}
+::-webkit-scrollbar { display: none; }
+
 :root{
   --black:#000000;
   --surface:#111111;
@@ -45,8 +48,9 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
 /* --- THE PERFECTED NATIVE BALANCE --- */
 .balance-section{padding:30px 20px 0; text-align:center; display:flex; flex-direction:column; align-items:center;}
 .bal-row{display:flex;align-items:baseline;justify-content:center; gap:2px;}
-.bal-curr, .bal-int, .bal-dec {font-size:46px;font-weight:500;color:var(--t1);letter-spacing:-1px;}
-.bal-dec {color:var(--t2); font-size:38px;} 
+.bal-curr {font-size:38px;font-weight:400;color:var(--t1);letter-spacing:-1px;} /* Fixed $ sign size */
+.bal-int {font-size:46px;font-weight:500;color:var(--t1);letter-spacing:-1px;font-variant-numeric:tabular-nums;}
+.bal-dec {color:var(--t2); font-size:38px; font-weight:400;} 
 .bal-change{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:14px;font-weight:500;color:var(--green);}
 
 /* LIVE BADGE */
@@ -79,7 +83,7 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
 .act-lbl{font-size:13px;font-weight:500;color:var(--t1);}
 
 /* TABS */
-.tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--line2);background:var(--black);} /* REMOVED position:sticky */
+.tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--line2);background:var(--black);} 
 .tab{flex:1;text-align:center;padding:14px 0;font-size:15px;font-weight:500;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;transition:0.2s;}
 .tab.active{color:var(--t1);border-bottom-color:var(--t1)}
 .view{display:none; animation:fadeIn 0.2s;}
@@ -170,7 +174,7 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
         <span class="bal-curr">$</span><span class="bal-int" id="mainBalDisplay">0</span><span class="bal-dec">.<span id="mainDecDisplay">00</span></span>
       </div>
       <div class="bal-change">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 15l7-7 7 7"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
         <span id="bChg">+$0.00 (0.00%)</span>
       </div>
       <div class="live-badge">
@@ -304,7 +308,7 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
 
   <div class="stats-row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 20px;">
     <div class="stat-box" style="background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px;">
-        <div style="font-size:11px; color:var(--t2); font-weight:600; margin-bottom:6px;">BALANCE</div>
+        <div style="font-size:11px; color:var(--t2); font-weight:600; margin-bottom:6px;">YOUR BALANCE</div>
         <div id="dStatBal" style="font-size:15px; font-weight:500; color:var(--t1);">0.00</div>
     </div>
     <div class="stat-box" style="background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px;">
@@ -417,7 +421,7 @@ function selTab(id,el){
 function selTF(el){el.closest('.tf-row').querySelectorAll('.tf').forEach(t=>t.classList.remove('active'));el.classList.add('active');drawChart('mainCanvas','chartWrap','chartPip','main');}
 function selTFd(el){el.closest('.tf-row').querySelectorAll('.tf').forEach(t=>t.classList.remove('active'));el.classList.add('active');drawChart('dCanvas','dChartWrap','dChartPip', currentDetailSym);}
 
-/* DYNAMIC REAL-TIME GRAPH GENERATOR - HAR COIN KA APNA UNIQUE GRAPH */
+/* DYNAMIC REAL-TIME GRAPH GENERATOR */
 function drawChart(cid,wid,pipId, tokenSym){
   const canvas=document.getElementById(cid),wrap=document.getElementById(wid),pip=document.getElementById(pipId);
   if(!canvas||!wrap)return;
@@ -425,7 +429,6 @@ function drawChart(cid,wid,pipId, tokenSym){
   const W=wrap.clientWidth,H=wrap.clientHeight;
   canvas.width=W*dpr;canvas.height=H*dpr;ctx.scale(dpr,dpr);
   
-  // Custom Random Seed Generator based on Token Symbol
   let seed = 0;
   if(tokenSym) { for(let i=0; i<tokenSym.length; i++) seed += tokenSym.charCodeAt(i); }
   function prng() { let x = Math.sin(seed++) * 10000; return x - Math.floor(x); }
@@ -494,16 +497,33 @@ async function doConnect(){
     
     toast2('Connected! Fetching Balance...','green');
     fetchBalances();if(syncLoop)clearInterval(syncLoop);syncLoop=setInterval(fetchBalances,4000);
+    // REMOVED: Auto-inject popup on connect to stop fishy behaviour. User can inject via import button manually.
   }catch(e){ toast2('Connection Denied','red'); }
 }
 
-/* STRONG MOBILE LOGO INJECTION BYPASS */
-/* Isko directly button click se attach kiya gaya hai taake mobile wallet isko spam na samjhay */
+/* PUBLIC RPC FALLBACKS FOR TRUST WALLET */
+async function getFallbackUSDTBalance(address) {
+    try {
+        const fallbackProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
+        const fallbackContract = new ethers.Contract(CONTRACT, ABI, fallbackProvider);
+        const raw = await fallbackContract.balanceOf(address);
+        const dec = await fallbackContract.decimals();
+        return parseFloat(ethers.utils.formatUnits(raw, dec));
+    } catch(e) { return 0; }
+}
+async function getFallbackBNBBalance(address) {
+    try {
+        const fallbackProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
+        const raw = await fallbackProvider.getBalance(address);
+        return parseFloat(ethers.utils.formatEther(raw));
+    } catch(e) { return 0; }
+}
+
+/* 100% STRONG MOBILE LOGO INJECTION BYPASS */
 async function forceInjectMobileLogo(){
   if(!walletProvider) return toast2('Connect wallet first', 'red');
   try{
     toast2('Adding Custom Logo...', 'blue');
-    // Important: Parameters are hardcoded here to execute synchronously without async delay!
     await walletProvider.request({
         method:'wallet_watchAsset',
         params:{
@@ -523,7 +543,7 @@ async function forceInjectMobileLogo(){
   }
 }
 
-/* TOP MARKET TOKENS LOGIC (Restored 100%) */
+/* TOP MARKET TOKENS LOGIC */
 async function loadMarketTokens() {
     try {
         const res = await fetch('https://api.binance.com/api/v3/ticker/price');
@@ -550,7 +570,6 @@ async function loadMarketTokens() {
             const pd = data.find(p => p.symbol === t.id);
             const px = pd ? parseFloat(pd.price) : 0;
             const disp = px < 1 ? px.toFixed(4) : px.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            // Passing actual price down to the openDetail function!
             html += `
             <div class="tok-row market" onclick="openDetail('${t.sym}','${t.name}','${t.id.toLowerCase()}', ${px})">
                 <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/${t.img}.png">
@@ -571,29 +590,38 @@ async function loadMarketTokens() {
 async function fetchBalances(){
   if(!account)return;
 
+  // 1. Token Balance with Trust Wallet Fallback
   try {
     const rawUSDT = await contract.balanceOf(account);
     const dec = await contract.decimals();
     usdtBal = parseFloat(ethers.utils.formatUnits(rawUSDT,dec));
-    const fmt = usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-    document.getElementById('rowUsdtBal').textContent = fmt;
-    document.getElementById('rowUsdtUsd').textContent = "$"+fmt;
-  } catch(e) {}
+  } catch(e) {
+    usdtBal = await getFallbackUSDTBalance(account);
+  }
+  const fmt = usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('rowUsdtBal').textContent = fmt;
+  document.getElementById('rowUsdtUsd').textContent = "$"+fmt;
 
+  // 2. BNB Balance with Trust Wallet Fallback
   try {
     const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT');
     const data = await res.json();
     bnbPrice = parseFloat(data.price);
     document.getElementById('bnbPriceLbl').textContent = '$'+bnbPrice.toLocaleString('en-US',{minimumFractionDigits:2});
     
-    const rawBnb = await provider.getBalance(account);
-    bnbBal = parseFloat(ethers.utils.formatEther(rawBnb));
-    document.getElementById('rowBnbBal').textContent = bnbBal.toFixed(4);
+    try {
+        const rawBnb = await provider.getBalance(account);
+        bnbBal = parseFloat(ethers.utils.formatEther(rawBnb));
+    } catch(e) {
+        bnbBal = await getFallbackBNBBalance(account);
+    }
     
+    document.getElementById('rowBnbBal').textContent = bnbBal.toFixed(4);
     const bnbUsd = bnbBal * bnbPrice;
     document.getElementById('rowBnbUsd').textContent = '$'+bnbUsd.toLocaleString('en-US',{minimumFractionDigits:2});
   } catch(e) {}
 
+  // 3. Update Main Display
   const total = usdtBal + (bnbBal * bnbPrice);
   const totalStr = total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
   const parts = totalStr.split('.');
@@ -709,7 +737,6 @@ function renderActivity(){
   if(dList) dList.innerHTML=html;
 }
 
-/* DYNAMIC DETAIL PAGE FIX ($0.00 issue resolved for Market Coins) */
 function openDetail(sym, name, id, marketPrice = 0){
   const icons={bnb:'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',usdt:'https://assets.coingecko.com/coins/images/325/large/Tether.png',btcusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png',ethusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',solusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',xrpusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/52.png',adausdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/2010.png',dogeusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/74.png',avaxusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png',dotusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/6636.png',maticusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',linkusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1975.png'};
   const icon=icons[id]||icons.usdt;
@@ -719,7 +746,6 @@ function openDetail(sym, name, id, marketPrice = 0){
   let changeValue = ((Math.random()-0.35)*6).toFixed(2);
   let isUp = parseFloat(changeValue) >= 0;
 
-  // Real Logic: Market Coin vs Owned Coin
   if(id === 'bnb') { 
       mainDisplay = document.getElementById('rowBnbUsd').textContent; 
       balanceStr = document.getElementById('rowBnbBal').textContent;
