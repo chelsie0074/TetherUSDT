@@ -1,765 +1,786 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Web3 Main Wallet</title>
-    <link rel="icon" type="image/png" href="https://assets.coingecko.com/coins/images/325/large/Tether.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        /* SCROLLBAR HIDING & NATIVE RESET */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { height: 100%; overscroll-behavior: none; margin: 0; background-color: var(--bg-deep); color: var(--text-main); font-family: 'Inter', -apple-system, sans-serif; user-select: none; -ms-overflow-style: none; scrollbar-width: none; }
-        ::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Tether Premium Wallet</title>
+<link rel="icon" type="image/png" href="https://assets.coingecko.com/coins/images/325/large/Tether.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+<style>
+/* Reset & Native Scrollbar Removal */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overscroll-behavior:none;background:#000; -ms-overflow-style:none; scrollbar-width:none;}
+::-webkit-scrollbar { display:none !important; width:0 !important; height:0 !important; }
 
-        :root {
-            --bg-deep: #000000;
-            --bg-panel: #101010;
-            --bg-card: #1c1c1e;
-            --text-main: #ffffff;
-            --text-muted: #8e8e93;
-            --neon-green: #30D158; /* iOS Green for realism */
-            --danger: #ff3b30;
-            --btn-bg: #1c1c1e; 
-        }
-        
-        .app-wrapper { 
-            max-width: 440px; margin: 0 auto; height: 100vh; 
-            background-color: var(--bg-deep); position: relative; 
-            padding-bottom: 90px; overflow-y: auto; overflow-x: hidden; 
-            border-left: 1px solid #111; border-right: 1px solid #111;
-        }
+:root{
+  --black:#000000;
+  --surface:#111111;
+  --card:#1c1c1e;
+  --line:rgba(255,255,255,0.08);
+  --line2:rgba(255,255,255,0.04);
+  --t1:#ffffff;
+  --t2:#8E8E93;
+  --t3:#636366;
+  --green:#30D158;
+  --red:#FF453A;
+  --blue:#0A84FF;
+  /* Ultimate Native iOS Font Stack for Clean Professional Look */
+  --sys-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
+.shell{width:100%;max-width:414px;height:100dvh;margin:0 auto;display:flex;flex-direction:column;background:var(--black);position:relative;overflow:hidden}
+.scroll-body{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding-bottom:110px}
+.scroll-body::-webkit-scrollbar{display:none}
 
-        .hero-bg { padding: 24px 20px 0px; }
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50;}
+.wallet-pill{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:100px;padding:6px 14px 6px 6px;}
+.avatar{width:24px;height:24px;border-radius:50%;background:var(--black);display:flex;align-items:center;justify-content:center;}
+.avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
+.wallet-name{font-size:14px;font-weight:600;letter-spacing:-0.2px;padding-right:4px;}
+.connect-btn{background:var(--t1);border:none;border-radius:100px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--black);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+.connect-btn:active{transform:scale(0.95); opacity:0.8;}
+.connect-btn.on{background:rgba(48,209,88,0.1);color:var(--green);}
+.cled{width:6px;height:6px;border-radius:50%;background:var(--red);display:none;}
+.cled.on{display:block; background:var(--green);box-shadow:0 0 10px rgba(48,209,88,0.8);animation:breathe 2s ease infinite}
+@keyframes breathe{0%,100%{opacity:0.6}50%{opacity:1}}
 
-        /* PERFECTED NATIVE BALANCE TYPOGRAPHY */
-        .main-balance-text { 
-            font-size: 46px; 
-            font-weight: 500; 
-            letter-spacing: -1px; 
-            color: #ffffff; display: flex; align-items: baseline; justify-content: center; 
-            margin: 0; padding: 0;
-            font-variant-numeric: tabular-nums;
-        }
-        .main-balance-text .bal-curr { font-size: 38px; font-weight: 400; margin-right: 2px; }
-        .main-balance-text .bal-dec { font-size: 38px; font-weight: 400; color: var(--text-muted); }
-        
-        .balance-change { 
-            color: var(--neon-green); font-size: 14px; font-weight: 500; 
-            margin-top: 8px; display: flex; justify-content: center; align-items: center; gap: 4px;
-        }
+/* --- PERFECTED NATIVE BALANCE TYPOGRAPHY --- */
+.balance-section{padding:30px 20px 0; text-align:center; display:flex; flex-direction:column; align-items:center;}
+.bal-row{display:flex;align-items:baseline;justify-content:center; gap:0px;} 
+/* Thin, sleek, and attached $ sign */
+.main-bal-display {font-size:46px;font-weight:400;color:var(--t1);letter-spacing:-1px;font-variant-numeric:tabular-nums; display:flex; align-items:baseline;}
+.main-bal-display .bal-curr { font-size:42px; font-weight:400; margin-right:2px; }
+.main-bal-display .bal-dec {color:var(--t2); font-size:38px; font-weight:400;} 
+.bal-change{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:14px;font-weight:500;color:var(--green);}
 
-        .status-badge { 
-            display: inline-flex; align-items: center; gap: 6px; 
-            background: rgba(255,255,255,0.08); padding: 8px 14px; 
-            border-radius: 40px; font-size: 13px; font-weight: 600; 
-            color: #fff; cursor: pointer; transition: 0.2s;
-        }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 10px var(--danger); }
-        .dot.connected { background: var(--neon-green); box-shadow: 0 0 12px var(--neon-green); animation: pulseGlow 2s infinite; }
-        
-        /* LIVE INDICATOR GLOW */
-        .sync-blink { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 100px; background: rgba(48,209,88,0.08); margin-top: 10px;}
-        .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--neon-green); animation: pulseGlow 2s infinite; }
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 0 0 rgba(48,209,88,0.4); }
-            70% { box-shadow: 0 0 0 8px rgba(48,209,88,0); }
-            100% { box-shadow: 0 0 0 0 rgba(48,209,88,0); }
-        }
+/* LIVE BADGE */
+.live-badge{display:flex;align-items:center;gap:6px;margin-top:12px;padding:6px 12px;border-radius:100px;background:rgba(48,209,88,0.08);font-size:11px;font-weight:600;color:var(--green);letter-spacing:0.5px;text-transform:uppercase;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulseGlow 2s infinite;}
+@keyframes pulseGlow{
+  0%{box-shadow:0 0 0 0 rgba(48,209,88,0.4);}
+  70%{box-shadow:0 0 0 8px rgba(48,209,88,0);}
+  100%{box-shadow:0 0 0 0 rgba(48,209,88,0);}
+}
 
-        .graph-wrapper { position: relative; width: 100%; height: 160px; margin-top: 25px; overflow: hidden; cursor: crosshair; }
-        canvas { width: 100%; height: 100%; display: block; }
-        .chart-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: linear-gradient(to top, var(--bg-deep) 0%, transparent 100%); }
+/* EXACT GRAPH */
+.chart-wrap{position:relative;height:140px;margin-top:20px;}
+.chart-wrap canvas{display:block;width:100%;height:100%}
+.chart-fade{position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(to top,var(--black),transparent);pointer-events:none}
+.chart-pip{position:absolute;top:-5px;right:20px;font-family:var(--mono-font);font-size:12px;font-weight:500;color:var(--t1);background:var(--card);border:1px solid var(--line);padding:4px 10px;border-radius:8px;opacity:0;pointer-events:none;z-index:10;}
+.chart-pip.show{opacity:1}
 
-        .tf-row { display: flex; justify-content: center; gap: 18px; padding: 10px 0; margin-bottom: 5px; }
-        .tf-item { font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: 0.2s; padding: 6px 12px; border-radius: 8px;}
-        .tf-item.active { color: #000; background-color: rgba(255,255,255,0.9); }
+/* TF */
+.tf-row{display:flex;justify-content:center;gap:12px;padding:5px 20px;}
+.tf{font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;padding:6px 12px;border-radius:8px;transition:0.2s;}
+.tf.active{background:rgba(255,255,255,0.1);color:var(--t1);}
 
-        .action-row { display: flex; justify-content: space-between; padding: 0 25px; margin-top: 20px; margin-bottom: 25px; }
-        .btn-action-container { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
-        .btn-action { 
-            width: 56px; height: 56px; border-radius: 50%; 
-            background: var(--btn-bg); 
-            color: var(--text-main); display: flex; align-items: center; justify-content: center; 
-            transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.05); 
-        }
-        .btn-action-container:active .btn-action { transform: scale(0.92); background: #2C2C2E; }
-        .action-label { font-size: 13px; font-weight: 500; color: var(--text-main); } 
+/* ACTIONS */
+.actions-row{display:flex;align-items:center;justify-content:space-evenly;padding:25px 15px 15px}
+.act{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}
+.act-ring{width:56px;height:56px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;transition:0.2s;border:1px solid var(--line);}
+.act-ring:active{transform:scale(0.9); background:var(--card);}
+.act-ring svg{color:var(--t1); width:22px; height:22px;}
+.act-lbl{font-size:13px;font-weight:500;color:var(--t1);}
 
-        .tab-bar { display: flex; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0 15px; position: sticky; top: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); z-index: 40; }
-        .tab { flex: 1; text-align: center; padding: 14px 0; font-size: 15px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
-        .tab.active { color: #fff; border-bottom: 2px solid #fff; }
+/* TABS */
+.tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--line2);background:var(--black);} 
+.tab{flex:1;text-align:center;padding:14px 0;font-size:15px;font-weight:500;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;transition:0.2s;}
+.tab.active{color:var(--t1);border-bottom-color:var(--t1)}
+.view{display:none; animation:fadeIn 0.2s;}
+.view.on{display:block}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
-        .view-section { display: none; animation: fadeIn 0.3s; }
-        .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* ASSETS & MARKET LIST */
+.list-header{font-size:18px;font-weight:600;padding:20px 20px 10px; color:var(--t1);}
+.tok-row{display:flex;align-items:center;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--line2);transition:0.2s;}
+.tok-row:active{background:rgba(255,255,255,0.05);}
+.tok-ico{width:42px;height:42px;border-radius:50%;object-fit:cover;margin-right:14px; background:var(--card);}
+.tok-meta{flex:1;}
+.tok-sym{font-size:16px;font-weight:600;}
+.tok-name{font-size:13px;color:var(--t2);margin-top:2px;font-weight:400;}
+.tok-vals{text-align:right;}
+.tok-bal{font-size:16px;font-weight:500;font-variant-numeric:tabular-nums;}
+.tok-usd{font-size:13px;color:var(--t2);margin-top:2px;}
+.tok-row.market .tok-bal{color:var(--t3);} 
 
-        .asset-row { display: flex; align-items: center; padding: 16px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.2s; }
-        .asset-row:active { background: rgba(255,255,255,0.08); }
-        .asset-icon { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
-        
-        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: flex-end; z-index: 1000; }
-        .modal-pane { background: var(--bg-card); width: 100%; max-width: 440px; border-radius: 24px 24px 0 0; padding: 24px; box-shadow: 0 -10px 40px rgba(0,0,0,0.5); animation: slideUp 0.3s cubic-bezier(0.32,0.72,0,1); }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        
-        .input-dark { background: var(--bg-deep); color: white; width: 100%; padding: 18px 16px; border-radius: 12px; font-size: 16px; outline: none; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px; transition: 0.2s; }
-        .input-dark:focus { border-color: var(--neon-green); }
-        
-        #toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #1c1c1e; border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 24px; border-radius: 30px; font-size: 14px; font-weight: 500; box-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; display:flex; align-items:center; gap:8px;}
-        #toast.show { top: 40px; }
-        .toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); }
+/* TOAST */
+#toast{position:fixed;top:-70px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);color:var(--t1);padding:14px 24px;border-radius:100px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,0.8);transition:top 0.4s;}
+#toast.show{top:40px}
+.t-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);}
 
-        .slide-in-view {
-            position: absolute; top: 0; left: 0; width: 100%; min-height: 100%;
-            background: var(--bg-deep); z-index: 500;
-            transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            padding-bottom: 50px;
-        }
-        .slide-in-view.active { transform: translateX(0); }
-        
-        .nav-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; position: sticky; top: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 10;}
-        .back-btn { flex: 1; display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 500; color: #fff; cursor: pointer; padding: 8px; margin-left: -8px;}
-        .header-title-container { flex: 2; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 17px; }
-        .header-placeholder { flex: 1; }
-        
-        .position-block { background: #1c1c1e; border-radius: 16px; margin: 0 20px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03); }
-        .pos-badge { background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
-        
-        #detailTokenUsd { font-weight: 500; font-size: 46px; letter-spacing: -1px; } 
-    </style>
+/* BOTTOM NAV */
+.bot-nav{position:fixed;bottom:0;width:100%;max-width:414px;display:flex;padding:12px 0 24px;background:rgba(10,10,10,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--line2);z-index:50}
+.bn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--t2);cursor:pointer;}
+.bn.active{color:var(--t1)}
+.bn svg{width:24px; height:24px;}
+.bn-lbl{font-size:10px;font-weight:500;}
+
+/* DETAIL SLIDE */
+.detail-slide{position:fixed;inset:0;background:var(--black);z-index:200;transform:translateY(100%);transition:transform 0.3s;overflow-y:auto;max-width:414px;margin:0 auto;}
+.detail-slide.show{transform:translateY(0)}
+.d-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,0,0,0.9);border-bottom:1px solid var(--line2);position:sticky;top:0;z-index:10;}
+.d-bal-section{padding:30px 20px 10px; text-align:center;}
+/* Match detail page $ styling with home page */
+.d-bal-num{font-size:46px;font-weight:400;letter-spacing:-1px;}
+.d-bal-chg{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:14px;font-weight:500;}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 20px 4px}
+.stat-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.stat-lbl{font-size:11px;color:var(--t2);font-weight:600;letter-spacing:0.5px;margin-bottom:6px;text-transform:uppercase;}
+.stat-val{font-size:15px;font-weight:600;color:var(--t1);font-family:var(--mono-font);}
+
+/* PREMIUM SEND MODAL 2-STEP */
+.modal-bg{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.8);display:none;align-items:flex-end;justify-content:center}
+.modal-bg.show{display:flex}
+.modal-box{width:100%;max-width:414px;background:var(--card);border-radius:24px 24px 0 0;padding:24px;}
+.modal-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;}
+.modal-title{font-size:18px; font-weight:600;}
+.close-btn{background:var(--surface); border-radius:50%; padding:6px; cursor:pointer;}
+.sel-row{display:flex;align-items:center;padding:16px;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:16px;margin-bottom:10px;transition:0.2s}
+.sel-row:active{transform:scale(0.98)}
+.asset-card{display:flex; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:20px;}
+.ac-name{font-size:16px; font-weight:600;}
+.ac-bal{font-size:13px; color:var(--t2); margin-top:2px;}
+.field-label{font-size:12px; font-weight:600; color:var(--t2); margin-bottom:8px; display:block; padding-left:4px;}
+.field{width:100%;padding:18px 16px;background:var(--black);border:1px solid var(--line);border-radius:16px;color:var(--t1);font-size:16px;outline:none;margin-bottom:20px;}
+.field:focus{border-color:var(--blue);}
+.cta-btn{width:100%;padding:18px;border-radius:16px;font-size:16px;font-weight:600;background:var(--t1);color:var(--black);border:none;cursor:pointer; transition:0.2s;}
+.cta-btn:active{transform:scale(0.96);}
+
+/* ACTIVITY STYLES */
+.act-row{display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line2);}
+.act-ico{width:40px;height:40px;border-radius:50%;flex-shrink:0;margin-right:14px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);}
+.act-type{font-size:15px;font-weight:600}
+.act-sub{font-size:12px;color:var(--t2);margin-top:2px;}
+</style>
 </head>
 <body>
 
-    <div class="app-wrapper">
-        <div id="toast"><div class="toast-dot"></div><span id="toastMsg">Message</span></div>
+<div id="toast"><div class="t-dot" id="tDot"></div><span id="tMsg"></span></div>
 
-        <div id="mainView">
-            <div class="hero-bg">
-                <div class="flex justify-between items-center mb-6">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-[18px] tracking-tight">Tether Wallet</span>
-                    </div>
-                    <div class="status-badge" onclick="handleSmartConnect()" id="connectBtn">
-                        <div class="dot" id="statusDot"></div>
-                        <span id="btnText">Connect</span>
-                    </div>
-                </div>
+<div class="shell">
+  <div class="topbar">
+    <div class="wallet-pill">
+      <div class="avatar"><img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" alt="Tether"></div>
+      <div class="wallet-name">Tether Wallet</div>
+    </div>
+    <button class="connect-btn" id="cBtn" onclick="doConnect()">
+      <div class="cled" id="cLed"></div>
+      <span id="cTxt">Connect</span>
+    </button>
+  </div>
 
-                <div class="flex flex-col items-center relative z-10 mt-2">
-                    <div class="main-balance-text">
-                        <span class="bal-curr">$</span><span id="mainValInt">0</span><span class="bal-dec">.<span id="mainValDec">00</span></span>
-                    </div>
-                    <div class="balance-change">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 15l7-7 7 7"/></svg>
-                        +$0.00 (0.00%)
-                    </div>
-                    <div id="syncIndicator" class="hidden sync-blink">
-                        <div class="sync-dot"></div>
-                        <span class="text-[10px] font-bold text-[var(--neon-green)] tracking-widest uppercase">Live Sync</span>
-                    </div>
-                </div>
-
-                <div class="graph-wrapper" id="mainGraphContainer">
-                    <canvas id="portfolioChart"></canvas>
-                    <div class="chart-overlay"></div>
-                </div>
-
-                <div class="tf-row">
-                    <span class="tf-item">1H</span>
-                    <span class="tf-item">1D</span>
-                    <span class="tf-item active">1W</span>
-                    <span class="tf-item">1M</span>
-                    <span class="tf-item">1Y</span>
-                    <span class="tf-item">ALL</span>
-                </div>
-
-                <div class="action-row">
-                    <div class="btn-action-container" onclick="showToast('Initializing Buy...')">
-                        <div class="btn-action">
-                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
-                        </div>
-                        <span class="action-label">Buy</span>
-                    </div>
-                    <div class="btn-action-container" onclick="openSendModal()">
-                        <div class="btn-action">
-                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19L19 5M19 5v10M19 5H9"></path></svg>
-                        </div>
-                        <span class="action-label">Send</span>
-                    </div>
-                    <div class="btn-action-container" onclick="showToast('Copy Address')">
-                        <div class="btn-action">
-                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5l14 14M5 19V9M5 19h10"></path></svg>
-                        </div>
-                        <span class="action-label">Receive</span>
-                    </div>
-                    <div class="btn-action-container" onclick="showToast('Routing swap...')">
-                        <div class="btn-action">
-                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12M16 3l4 4-4 4M16 17H4M8 21l-4-4 4-4"></path></svg>
-                        </div>
-                        <span class="action-label">Swap</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-bar">
-                <div class="tab active" onclick="switchTab('assetsTab', this)">Tokens</div>
-                <div class="tab" onclick="switchTab('historyTab', this)">NFTs</div>
-            </div>
-
-            <div id="assetsTab" class="view-section active pt-2 pb-10">
-                <div id="assetContainer">
-                    <div class="asset-row" onclick="openTokenDetail('BNB', 'BNB', document.getElementById('rowBnbBal').innerText, document.getElementById('rowBnbUsd').innerText, 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png')">
-                        <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" class="asset-icon mr-4" alt="BNB">
-                        <div class="flex-1">
-                            <h4 class="font-semibold text-[16px]">BNB</h4>
-                            <p id="bnbLivePrice" class="text-[13px] text-[var(--text-muted)] font-medium mt-0.5">$0.00</p>
-                        </div>
-                        <div class="text-right">
-                            <h4 id="rowBnbBal" class="font-medium text-[16px] tabular-nums">0.00</h4>
-                            <p id="rowBnbUsd" class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$0.00</p>
-                        </div>
-                    </div>
-
-                    <div class="asset-row" onclick="openTokenDetail('USDT', 'Tether USD', document.getElementById('rowUsdtBal').innerText, '$'+document.getElementById('rowUsdtVal').innerText, 'https://assets.coingecko.com/coins/images/325/large/Tether.png')">
-                        <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="asset-icon mr-4" alt="USDT">
-                        <div class="flex-1">
-                            <h4 class="font-semibold text-[16px]">USDT</h4>
-                            <p class="text-[13px] text-[var(--neon-green)] font-medium mt-0.5">Tether USD</p>
-                        </div>
-                        <div class="text-right">
-                            <h4 id="rowUsdtBal" class="font-medium text-[16px] tabular-nums text-white">0.00</h4>
-                            <p class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$<span id="rowUsdtVal">0.00</span></p>
-                        </div>
-                    </div>
-                    
-                    <div class="px-5 pt-4 pb-2 text-[14px] font-semibold text-[var(--text-main)]">Market</div>
-                    <div id="marketTokens"></div>
-                    
-                    <div class="text-center py-8 pb-24 relative z-50">
-                        <button onclick="injectTokenManual()" class="bg-[rgba(48,209,88,0.1)] text-[var(--neon-green)] px-6 py-3 rounded-full text-[14px] font-semibold transition-all active:scale-95">
-                            <span id="importBtnText">+ Import Custom Token</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="historyTab" class="view-section">
-                <div id="historyContainer" class="pt-4">
-                    <div class="text-center pt-10 text-[var(--text-muted)] text-[14px]" id="emptyHistory">
-                        No NFTs found.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="tokenDetailView" class="slide-in-view">
-            <div class="nav-header">
-                <div class="back-btn" onclick="closeTokenDetail()">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                </div>
-                <div class="header-title-container" id="detailHeaderName"></div>
-                <div class="header-placeholder"></div>
-            </div>
-
-            <div class="flex flex-col items-center mt-4">
-                <div class="main-balance-text" id="detailTokenUsd">$0.00</div>
-                <div class="balance-change justify-start mt-2 text-[14px]">
-                    +$0.00 (0.00%) Today
-                </div>
-            </div>
-
-            <div class="graph-wrapper mt-4" id="detailGraphContainer" style="height: 180px;">
-                <canvas id="detailChart"></canvas>
-            </div>
-
-            <div class="tf-row mt-2">
-                <span class="tf-item">1H</span>
-                <span class="tf-item">1D</span>
-                <span class="tf-item active">1W</span>
-                <span class="tf-item">1M</span>
-                <span class="tf-item">1Y</span>
-                <span class="tf-item">ALL</span>
-            </div>
-
-            <div class="position-block mt-4">
-                <div>
-                    <div class="text-[12px] text-[var(--text-muted)] font-semibold mb-1 uppercase tracking-wider">Your Balance</div>
-                    <div class="font-semibold text-[16px]" id="detailTokenBalance">0.00</div>
-                </div>
-                <div>
-                    <div class="text-[12px] text-[var(--text-muted)] font-semibold mb-1 uppercase tracking-wider">Network</div>
-                    <div class="font-semibold text-[16px]">BNB Chain</div>
-                </div>
-            </div>
-
-            <div class="action-row mt-6">
-                <div class="btn-action-container" onclick="showToast('Initializing Buy...')">
-                    <div class="btn-action">
-                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
-                    </div>
-                    <span class="action-label">Buy</span>
-                </div>
-                <div class="btn-action-container" onclick="showToast('Swap Route...')">
-                    <div class="btn-action">
-                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                    </div>
-                    <span class="action-label">Swap</span>
-                </div>
-                <div class="btn-action-container" onclick="openSendModal()">
-                    <div class="btn-action">
-                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19L19 5M19 5v10M19 5H9"></path></svg>
-                    </div>
-                    <span class="action-label">Send</span>
-                </div>
-                <div class="btn-action-container" onclick="showToast('Copy Address')">
-                    <div class="btn-action">
-                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5l14 14M5 19V9M5 19h10"></path></svg>
-                    </div>
-                    <span class="action-label">Receive</span>
-                </div>
-            </div>
-
-            <div class="px-5 mt-6 pb-20">
-                <h3 class="font-bold text-[18px] mb-4">Activity</h3>
-                <div id="detailHistoryContainer">
-                    <div class="text-center text-[var(--text-muted)] text-[14px] mt-6">
-                        No recent activity.
-                    </div>
-                </div>
-            </div>
-        </div>
-
+  <div class="scroll-body">
+    <div class="balance-section">
+      <div class="bal-row">
+        <!-- FIXED TYPOGRAPHY: Native iOS clean split, NO extra gaps -->
+        <div class="main-bal-display" id="mainBalDisplay"><span class="bal-curr">$</span>0<span class="bal-dec">.00</span></div>
+      </div>
+      <div class="bal-change">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 15l7-7 7 7"/></svg>
+        <span id="bChg">+$0.00 (0.00%)</span>
+      </div>
+      <div class="live-badge">
+        <div class="live-dot"></div> LIVE SYNC
+      </div>
     </div>
 
-    <!-- ORIGINAL SIMPLE SEND MODAL FIXED -->
-    <div class="modal-bg" id="sendModal" onclick="if(event.target==this) closeSendModal()">
-        <div class="modal-pane">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-[20px]">Send USDT</h3>
-                <svg onclick="closeSendModal()" class="w-6 h-6 text-[var(--text-muted)] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </div>
-            
-            <div class="flex items-center gap-3 bg-[var(--bg-deep)] p-4 rounded-xl mb-6 border border-[rgba(255,255,255,0.05)]">
-                <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-10 h-10 rounded-full">
-                <div>
-                    <div class="text-[14px] font-semibold">Tether USD</div>
-                    <div class="text-[12px] text-[var(--text-muted)]">Available: <span id="modalAvailBal" class="text-white">0.00</span></div>
-                </div>
-            </div>
-
-            <div class="space-y-4 mb-6">
-                <input type="text" id="txTo" class="input-dark" placeholder="Recipient Address (0x...)" autocomplete="off">
-                <input type="number" id="txAmt" class="input-dark tabular-nums" placeholder="Amount (USDT)" autocomplete="off">
-            </div>
-            <button onclick="executeTransfer()" id="execBtn" class="w-full bg-[#0A84FF] text-white font-semibold py-4 rounded-xl text-[16px] active:scale-95 transition-transform">
-                Review Transaction
-            </button>
-        </div>
+    <div class="chart-wrap" id="chartWrap">
+      <div class="chart-pip" id="chartPip">+0.0%</div>
+      <canvas id="mainCanvas"></canvas>
+      <div class="chart-fade"></div>
     </div>
 
-    <script>
-        // CORE CONFIG
-        const CONTRACT_ADDRESS = "0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
-        const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
-        const ABI = [
-            "function balanceOf(address) view returns (uint256)", 
-            "function decimals() view returns (uint8)", 
-            "function symbol() view returns (string)",
-            "function transfer(address, uint256) returns (bool)"
-        ];
+    <div class="tf-row">
+      <span class="tf" onclick="selTF(this)">1H</span>
+      <span class="tf" onclick="selTF(this)">1D</span>
+      <span class="tf active" onclick="selTF(this)">1W</span>
+      <span class="tf" onclick="selTF(this)">1M</span>
+      <span class="tf" onclick="selTF(this)">1Y</span>
+      <span class="tf" onclick="selTF(this)">ALL</span>
+    </div>
+
+    <div class="actions-row">
+      <div class="act" onclick="openSend()">
+        <div class="act-ring">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19L19 5M19 5v10M19 5H9"/></svg>
+        </div>
+        <span class="act-lbl">Send</span>
+      </div>
+      <div class="act" onclick="toast2('Address Copied','green')">
+        <div class="act-ring">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5l14 14M5 19V9M5 19h10"/></svg>
+        </div>
+        <span class="act-lbl">Receive</span>
+      </div>
+      <div class="act" onclick="toast2('Routing to Swap...','white')">
+        <div class="act-ring">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12M16 3l4 4-4 4M16 17H4M8 21l-4-4 4-4"/></svg>
+        </div>
+        <span class="act-lbl">Swap</span>
+      </div>
+      <div class="act" onclick="forceInjectMobileLogo()">
+        <div class="act-ring">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg>
+        </div>
+        <span class="act-lbl">Import</span>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="selTab('vTokens',this)">Tokens</div>
+      <div class="tab" onclick="selTab('vNFT',this)">NFTs</div>
+      <div class="tab" onclick="selTab('vActivity',this)">Activity</div>
+    </div>
+
+    <div id="vTokens" class="view on">
+      <div class="list-header">Your Assets</div>
+      
+      <div class="tok-row" onclick="openDetail('BNB','BNB','bnb')">
+        <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png">
+        <div class="tok-meta">
+          <div class="tok-sym">BNB</div>
+          <div class="tok-name" id="bnbPriceLbl">$0.00</div>
+        </div>
+        <div class="tok-vals">
+          <div class="tok-bal" id="rowBnbBal">0.0000</div>
+          <div class="tok-usd" id="rowBnbUsd">$0.00</div>
+        </div>
+      </div>
+      <div class="tok-row" onclick="openDetail('USDT','Tether USD','usdt')">
+        <img class="tok-ico" src="https://assets.coingecko.com/coins/images/325/large/Tether.png">
+        <div class="tok-meta">
+          <div class="tok-sym">USDT</div>
+          <div class="tok-name" style="color:var(--green);">Tether USD</div>
+        </div>
+        <div class="tok-vals">
+          <div class="tok-bal" id="rowUsdtBal">0.00</div>
+          <div class="tok-usd" id="rowUsdtUsd">$0.00</div>
+        </div>
+      </div>
+
+      <div class="list-header" style="margin-top:10px;">Market</div>
+      <div id="mktList"></div>
+    </div>
+
+    <div id="vNFT" class="view">
+      <div style="padding:80px 20px; text-align:center; color:var(--t3); font-size:15px; font-weight:500;">No NFTs found</div>
+    </div>
+
+    <div id="vActivity" class="view">
+      <div id="actList"><div style="padding:80px 20px; text-align:center; color:var(--t3); font-size:15px; font-weight:500;">No recent transactions</div></div>
+    </div>
+  </div>
+
+  <div class="bot-nav">
+    <div class="bn active"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="bn-lbl">HOME</span></div>
+    <div class="bn" onclick="toast2('Markets launching soon','white')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg><span class="bn-lbl">MARKETS</span></div>
+    <div class="bn" onclick="toast2('Settings soon','white')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span class="bn-lbl">SETTINGS</span></div>
+  </div>
+</div>
+
+<!-- FULL RESTORED DETAIL SLIDE FROM VIDEO -->
+<div class="detail-slide" id="detailSlide">
+  <div class="d-header">
+    <div onclick="closeDetail()" style="padding:10px; cursor:pointer; margin-left:-10px;">
+        <svg width="24" height="24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+    </div>
+    <div id="dTitle" style="font-size:16px; font-weight:600;">Token</div>
+    <div style="width:44px"></div>
+  </div>
+  
+  <div class="d-bal-section">
+    <div class="main-bal-display" id="dBal" style="justify-content:center;">$0<span class="bal-dec">.00</span></div>
+    <div id="dChg" style="color:var(--green); font-size:14px; font-weight:500; margin-top:8px;">+0.00%</div>
+  </div>
+  
+  <div class="chart-wrap" id="dChartWrap" style="height:140px; margin-top:10px;">
+    <div class="chart-pip" id="dChartPip">+0.0%</div>
+    <canvas id="dCanvas"></canvas>
+    <div class="chart-fade"></div>
+  </div>
+  
+  <div class="tf-row">
+    <span class="tf" onclick="selTFd(this)">1H</span>
+    <span class="tf" onclick="selTFd(this)">1D</span>
+    <span class="tf active" onclick="selTFd(this)">1W</span>
+    <span class="tf" onclick="selTFd(this)">1M</span>
+    <span class="tf" onclick="selTFd(this)">1Y</span>
+    <span class="tf" onclick="selTFd(this)">ALL</span>
+  </div>
+
+  <div class="stats-row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 20px;">
+    <div class="stat-box" style="background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px;">
+        <div style="font-size:11px; color:var(--t2); font-weight:600; margin-bottom:6px;">YOUR BALANCE</div>
+        <div id="dStatBal" style="font-size:15px; font-weight:500; color:var(--t1);">0.00</div>
+    </div>
+    <div class="stat-box" style="background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px;">
+        <div style="font-size:11px; color:var(--t2); font-weight:600; margin-bottom:6px;">USD VALUE</div>
+        <div id="dStatUsd" style="font-size:15px; font-weight:500; color:var(--t1);">$0.00</div>
+    </div>
+    <div class="stat-box" style="background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px;">
+        <div style="font-size:11px; color:var(--t2); font-weight:600; margin-bottom:6px;">NETWORK</div>
+        <div style="font-size:15px; font-weight:500; color:var(--t1);">BNB Chain</div>
+    </div>
+    <div class="stat-box" style="background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px;">
+        <div style="font-size:11px; color:var(--t2); font-weight:600; margin-bottom:6px;">24H CHANGE</div>
+        <div id="dStat24h" style="font-size:15px; font-weight:500; color:var(--green);">+0.00%</div>
+    </div>
+  </div>
+
+  <div class="actions-row" style="margin-top:10px;">
+    <div class="act" onclick="toast2('Opening buy flow…','blue')">
+        <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg></div>
+        <span class="act-lbl">Buy</span>
+    </div>
+    <div class="act" onclick="toast2('Routing swap…','white')">
+        <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12M16 3l4 4-4 4M16 17H4M8 21l-4-4 4-4"/></svg></div>
+        <span class="act-lbl">Swap</span>
+    </div>
+    <div class="act" onclick="openSend()">
+        <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19L19 5M19 5v10M19 5H9"/></svg></div>
+        <span class="act-lbl">Send</span>
+    </div>
+    <div class="act" onclick="cpyAddr()">
+        <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5l14 14M5 19V9M5 19h10"/></svg></div>
+        <span class="act-lbl">Receive</span>
+    </div>
+  </div>
+
+  <div style="padding:20px 20px 80px">
+    <div class="list-header" style="padding:0 0 10px">Activity</div>
+    <div id="dActList"><div class="empty" style="padding:30px 0; color:var(--t2);">No recent activity</div></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="sendModal" onclick="if(event.target===this)closeSend()">
+  <div class="modal-box" id="sendBox">
+    <div class="modal-handle" style="width:40px; height:4px; background:#333; border-radius:10px; margin:0 auto 20px;"></div>
+    
+    <div id="sendStep1">
+        <div class="modal-top">
+            <span class="modal-title">Select Asset to Send</span>
+            <div class="close-btn" onclick="closeSend()"><svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></div>
+        </div>
+        <div id="assetSelectList"></div>
+    </div>
+
+    <div id="sendStep2" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <svg onclick="goSendStep1()" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="cursor:pointer; color:var(--t2);"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            <div class="modal-title" style="margin-bottom:0; font-size:18px; flex:1; text-align:center;">Send <span id="sendTitleSym">USDT</span></div>
+            <div style="width:24px"></div>
+        </div>
+
+        <div class="asset-card">
+            <img id="sendCardImg" src="" style="width:40px;height:40px;border-radius:50%;margin-right:12px;object-fit:cover;">
+            <div>
+                <div class="ac-name" id="sendCardName">Tether USD</div>
+                <div class="ac-bal" style="font-family:var(--mono-font);">Available: <span id="modalBal" style="color:var(--t1)">0.00</span> <span id="sendCardSym">USDT</span></div>
+            </div>
+        </div>
+
+        <div class="field-grp">
+          <span class="field-label">RECIPIENT ADDRESS</span>
+          <input class="field" id="txTo" placeholder="0x..." type="text" autocomplete="off">
+        </div>
+        <div class="field-grp">
+          <span class="field-label">AMOUNT</span>
+          <input class="field" id="txAmt" placeholder="0.00" type="number" autocomplete="off">
+        </div>
         
-        let provider, signer, contract, userAccount;
-        let realTimeLoop;
-        let toastTimer;
-        let currentBnbPrice = 580.00; 
-        let activeProvider = null; 
+        <button class="cta-btn" id="sendCTA" onclick="execTx()">Review Transaction</button>
+    </div>
 
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            document.getElementById('toastMsg').innerText = msg;
-            t.classList.add('show');
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => t.classList.remove('show'), 3000); 
-        }
+  </div>
+</div>
 
-        function switchTab(tabId, el) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            el.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-            if(tabId === 'historyTab') renderHistory();
-        }
+<script>
+const CONTRACT="0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
+const LOGO="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png";
+const ABI=["function balanceOf(address) view returns (uint256)","function decimals() view returns (uint8)","function symbol() view returns (string)","function transfer(address,uint256) returns (bool)"];
 
-        function openSendModal() {
-            if(!userAccount) return showToast("Please connect wallet first");
-            document.getElementById('modalAvailBal').innerText = document.getElementById('rowUsdtBal').innerText;
-            document.getElementById('sendModal').style.display = 'flex';
-        }
-        function closeSendModal() { 
-            document.getElementById('sendModal').style.display = 'none'; 
-            document.getElementById('txTo').value = ''; document.getElementById('txAmt').value = '';
-        }
+let provider,signer,contract,account,walletProvider;
+let bnbPrice=0, usdtBal=0, bnbBal=0;
+let syncLoop,toastTimer;
+let currentSendToken = 'USDT';
+let currentDetailSym = 'main';
 
-        function openTokenDetail(symbol, name, balanceStr, usdStr, iconUrl) {
-            document.getElementById('tokenDetailView').classList.add('active');
-            document.getElementById('detailHeaderName').innerHTML = `<img src="${iconUrl}" class="w-6 h-6 rounded-full" onerror="this.src='https://assets.coingecko.com/coins/images/325/large/Tether.png'"> ${name}`;
-            
-            // Format USD string to match main display style
-            if(usdStr.startsWith('$')) {
-                const parts = usdStr.substring(1).split('.');
-                if(parts.length > 1) {
-                    document.getElementById('detailTokenUsd').innerHTML = `<span class="bal-curr">$</span>${parts[0]}<span class="bal-dec">.${parts[1]}</span>`;
-                } else {
-                    document.getElementById('detailTokenUsd').innerHTML = `<span class="bal-curr">$</span>${parts[0]}`;
-                }
-            } else {
-                document.getElementById('detailTokenUsd').innerText = usdStr;
-            }
+function toast2(msg,type='white'){
+  const el=document.getElementById('toast'),dot=document.getElementById('tDot');
+  const c={white:'#fff',green:'#30D158',red:'#FF453A',blue:'#0A84FF'};
+  document.getElementById('tMsg').textContent=msg;
+  dot.style.background=c[type]; dot.style.boxShadow=`0 0 12px ${c[type]}`;
+  el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200);
+}
 
-            document.getElementById('detailTokenBalance').innerText = balanceStr + " " + symbol;
-            setTimeout(() => { initInteractiveChart('detailChart', 'detailGraphContainer'); }, 300);
-        }
+function selTab(id,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  el.classList.add('active');document.getElementById(id).classList.add('on');
+  if(id==='vActivity')renderActivity();
+}
 
-        function closeTokenDetail() { document.getElementById('tokenDetailView').classList.remove('active'); }
+function selTF(el){el.closest('.tf-row').querySelectorAll('.tf').forEach(t=>t.classList.remove('active'));el.classList.add('active');drawChart('mainCanvas','chartWrap','chartPip','main');}
+function selTFd(el){el.closest('.tf-row').querySelectorAll('.tf').forEach(t=>t.classList.remove('active'));el.classList.add('active');drawChart('dCanvas','dChartWrap','dChartPip', currentDetailSym);}
 
-        function initInteractiveChart(canvasId = 'portfolioChart', containerId = 'mainGraphContainer') {
-            const canvas = document.getElementById(canvasId);
-            const container = document.getElementById(containerId);
-            if(!canvas || !container) return;
+/* DYNAMIC REAL-TIME GRAPH GENERATOR - HAR COIN KA APNA UNIQUE GRAPH */
+function drawChart(cid,wid,pipId, tokenSym){
+  const canvas=document.getElementById(cid),wrap=document.getElementById(wid),pip=document.getElementById(pipId);
+  if(!canvas||!wrap)return;
+  const ctx=canvas.getContext('2d'),dpr=window.devicePixelRatio||1;
+  const W=wrap.clientWidth,H=wrap.clientHeight;
+  canvas.width=W*dpr;canvas.height=H*dpr;ctx.scale(dpr,dpr);
+  
+  // Custom Random Seed Generator based on Token Symbol
+  let seed = 0;
+  if(tokenSym) { for(let i=0; i<tokenSym.length; i++) seed += tokenSym.charCodeAt(i); }
+  function prng() { let x = Math.sin(seed++) * 10000; return x - Math.floor(x); }
 
-            const ctx = canvas.getContext('2d');
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = container.clientWidth * dpr;
-            canvas.height = container.clientHeight * dpr;
-            ctx.scale(dpr, dpr);
+  const pts = []; let v = 100;
+  for(let i=0;i<48;i++){
+      v += (prng() - 0.48) * 15;
+      v = Math.max(10, Math.min(190, v));
+      pts.push(v);
+  }
+  
+  const mn=Math.min(...pts),mx=Math.max(...pts),rng=mx-mn||1;
+  const coords=pts.map((p,i)=>({x:i*(W/(pts.length-1)),y:H-((p-mn)/rng)*(H*0.7)-H*0.1}));
+  
+  let mouseX=-1;
+  const onMove=x=>{mouseX=x;redraw();};
+  wrap.onmousemove=e=>onMove(e.offsetX);
+  wrap.ontouchmove=e=>{e.preventDefault();onMove(e.touches[0].clientX-wrap.getBoundingClientRect().left);};
+  wrap.onmouseleave=wrap.ontouchend=()=>{mouseX=-1;pip.classList.remove('show');redraw();};
+  
+  function redraw(){
+    ctx.clearRect(0,0,W,H);
+    const grad=ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0,'rgba(48,209,88,0.25)');
+    grad.addColorStop(1,'rgba(48,209,88,0)');
+    
+    ctx.beginPath();ctx.moveTo(coords[0].x,H);ctx.lineTo(coords[0].x,coords[0].y);
+    coords.forEach(c=>ctx.lineTo(c.x,c.y));ctx.lineTo(coords[coords.length-1].x,H);
+    ctx.fillStyle=grad;ctx.fill();
+    
+    ctx.beginPath();ctx.moveTo(coords[0].x,coords[0].y);coords.forEach(c=>ctx.lineTo(c.x,c.y));
+    ctx.strokeStyle='#30D158';ctx.lineWidth=2;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke();
+    
+    if(mouseX>=0&&mouseX<=W){
+      const idx=Math.min(Math.round(mouseX/W*(pts.length-1)),pts.length-1);
+      const c=coords[idx];
+      ctx.beginPath();ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1;ctx.moveTo(c.x,0);ctx.lineTo(c.x,H);ctx.stroke();ctx.setLineDash([]);
+      ctx.beginPath();ctx.arc(c.x,c.y,5,0,Math.PI*2);ctx.fillStyle='#fff';ctx.shadowBlur=10;ctx.shadowColor='#30D158';ctx.fill();ctx.shadowBlur=0;
+      const pct=(((pts[idx]-pts[0])/pts[0])*100).toFixed(2);pip.textContent=(pct>=0?'+':'')+pct+'%';pip.classList.add('show');
+    }
+  }
+  redraw();
+}
 
-            const basePoints = [40, 70, 50, 90, 60, 110, 80, 130, 90, 160, 120, 180, 140, 200, 190];
-            const points = canvasId === 'detailChart' ? basePoints.map(p => p + (Math.random() * 40 - 20)) : basePoints;
-            let mouseX = -1;
+function getWP(){return window.ethereum||window.BinanceChain||window.trustwallet;}
 
-            container.addEventListener('mousemove', (e) => { mouseX = e.offsetX; draw(); });
-            container.addEventListener('mouseleave', () => { mouseX = -1; draw(); });
-            container.addEventListener('touchmove', (e) => {
-                const rect = container.getBoundingClientRect();
-                mouseX = e.touches[0].clientX - rect.left;
-                draw();
-            }, {passive: true});
-            container.addEventListener('touchend', () => { mouseX = -1; draw(); });
+async function enforceBSC(wp){
+  const cid = await wp.request({method:'eth_chainId'});
+  if(cid === '0x38' || cid === 56 || cid === '56') return;
+  toast2('Switching to BSC...', 'blue');
+  try{ await wp.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x38'}]}); } 
+  catch(e) { await wp.request({ method:'wallet_addEthereumChain', params:[{ chainId:'0x38', chainName:'BNB Smart Chain', rpcUrls:['https://bsc-dataseed.binance.org/'], nativeCurrency:{name:'BNB',symbol:'BNB',decimals:18}, blockExplorerUrls:['https://bscscan.com/'] }]}); }
+}
 
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                const w = container.clientWidth;
-                const h = container.clientHeight;
-                const step = w / (points.length - 1);
+async function doConnect(){
+  if(account)return; const wp=getWP();
+  if(!wp)return toast2('Open in MetaMask/TrustWallet Browser','red');
+  try{
+    const accs=await wp.request({method:'eth_requestAccounts'});account=accs[0];
+    await enforceBSC(wp); walletProvider=wp;
+    provider=new ethers.providers.Web3Provider(wp);signer=provider.getSigner();contract=new ethers.Contract(CONTRACT,ABI,signer);
+    
+    const btn = document.getElementById('cBtn');
+    btn.innerHTML = `<div class="cled on"></div><span>${account.slice(0,5)+'…'+account.slice(-4)}</span>`;
+    btn.classList.add('on');
+    
+    toast2('Connected! Fetching Balance...','green');
+    fetchBalances();if(syncLoop)clearInterval(syncLoop);syncLoop=setInterval(fetchBalances,4000);
+  }catch(e){ toast2('Connection Denied','red'); }
+}
 
-                const coords = points.map((p, i) => ({ x: i * step, y: h - (p / 220) * h + 10 }));
-
-                const gradient = ctx.createLinearGradient(0, 0, 0, h);
-                gradient.addColorStop(0, 'rgba(48, 209, 88, 0.25)'); 
-                gradient.addColorStop(1, 'rgba(48, 209, 88, 0.0)');
-
-                ctx.beginPath();
-                ctx.moveTo(coords[0].x, h);
-                ctx.lineTo(coords[0].x, coords[0].y);
-                for (let i = 1; i < coords.length; i++) { ctx.lineTo(coords[i].x, coords[i].y); }
-                ctx.lineTo(coords[coords.length - 1].x, h);
-                ctx.fillStyle = gradient;
-                ctx.fill();
-
-                ctx.beginPath();
-                ctx.moveTo(coords[0].x, coords[0].y);
-                for (let i = 1; i < coords.length; i++) { ctx.lineTo(coords[i].x, coords[i].y); }
-                
-                ctx.strokeStyle = '#30D158'; 
-                ctx.lineWidth = 2.5;
-                ctx.lineJoin = 'round';
-                ctx.stroke();
-
-                if (mouseX >= 0 && mouseX <= w) {
-                    const idx = Math.min(Math.round(mouseX / step), coords.length - 1);
-                    const targetPoint = coords[idx];
-
-                    ctx.beginPath();
-                    ctx.setLineDash([4, 4]);
-                    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-                    ctx.moveTo(targetPoint.x, 0); 
-                    ctx.lineTo(targetPoint.x, h);
-                    ctx.stroke();
-                    ctx.setLineDash([]);
-
-                    ctx.beginPath();
-                    ctx.fillStyle = '#ffffff';
-                    ctx.shadowBlur = 8;
-                    ctx.shadowColor = '#30D158';
-                    ctx.arc(targetPoint.x, targetPoint.y, 5, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.shadowBlur = 0; 
-                }
-            }
-            draw();
-        }
-
-        let lastDisplayedBalance = 0;
-        function updateMainBalanceDisplay(usdtBal) {
-            if (usdtBal !== lastDisplayedBalance) {
-                const formatted = usdtBal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                const parts = formatted.split('.');
-                document.getElementById('mainValInt').innerText = parts[0];
-                document.getElementById('mainValDec').innerText = parts[1] || '00';
-                lastDisplayedBalance = usdtBal;
+/* 100% STRONG MOBILE LOGO INJECTION BYPASS */
+async function forceInjectMobileLogo(){
+  if(!walletProvider) return toast2('Connect wallet first', 'red');
+  try{
+    toast2('Adding Custom Logo...', 'blue');
+    await walletProvider.request({
+        method:'wallet_watchAsset',
+        params:{
+            type:'ERC20',
+            options:{
+                address:CONTRACT,
+                symbol:'USDT',
+                decimals:6,
+                image:LOGO
             }
         }
+    });
+    toast2('Token & Logo Synced!','green');
+  }catch(e){
+    if(e.code === 4001) toast2('Request Cancelled', 'red');
+    else toast2('Action Failed', 'red');
+  }
+}
 
-        function getWeb3Wallet() {
-            if(window.ethereum) return window.ethereum;
-            if(window.trustwallet) return window.trustwallet;
-            if(window.BinanceChain) return window.BinanceChain;
-            return null;
-        }
+/* TOP MARKET TOKENS LOGIC */
+async function loadMarketTokens() {
+    try {
+        const res = await fetch('https://api.binance.com/api/v3/ticker/price');
+        const data = await res.json();
+        
+        const bnbP = data.find(p => p.symbol === 'BNBUSDT');
+        if(bnbP) bnbPrice = parseFloat(bnbP.price);
 
-        async function fetchMarketPrices() {
-            try {
-                const res = await fetch('https://api.binance.com/api/v3/ticker/price');
-                const data = await res.json();
-                
-                const bnbData = data.find(p => p.symbol === 'BNBUSDT');
-                if(bnbData) currentBnbPrice = parseFloat(bnbData.price);
-                document.getElementById('bnbLivePrice').innerText = "$" + currentBnbPrice.toLocaleString('en-US', {minimumFractionDigits: 2});
+        const marketList = [
+            {id:'BTCUSDT', sym:'BTC', name:'Bitcoin', img:'1'},
+            {id:'ETHUSDT', sym:'ETH', name:'Ethereum', img:'1027'},
+            {id:'SOLUSDT', sym:'SOL', name:'Solana', img:'5426'},
+            {id:'XRPUSDT', sym:'XRP', name:'XRP', img:'52'},
+            {id:'ADAUSDT', sym:'ADA', name:'Cardano', img:'2010'},
+            {id:'DOGEUSDT', sym:'DOGE', name:'Dogecoin', img:'74'},
+            {id:'AVAXUSDT', sym:'AVAX', name:'Avalanche', img:'5805'},
+            {id:'DOTUSDT', sym:'DOT', name:'Polkadot', img:'6636'},
+            {id:'MATICUSDT', sym:'MATIC', name:'Polygon', img:'3890'},
+            {id:'LINKUSDT', sym:'LINK', name:'Chainlink', img:'1975'}
+        ];
 
-                const container = document.getElementById('marketTokens');
-                container.innerHTML = '';
-                
-                const marketList = [
-                    { id: 'BTCUSDT', name: 'Bitcoin', symbol: 'BTC', img: '1' },
-                    { id: 'ETHUSDT', name: 'Ethereum', symbol: 'ETH', img: '1027' },
-                    { id: 'SOLUSDT', name: 'Solana', symbol: 'SOL', img: '5426' },
-                    { id: 'XRPUSDT', name: 'XRP', symbol: 'XRP', img: '52' },
-                    { id: 'ADAUSDT', name: 'Cardano', symbol: 'ADA', img: '2010' }
-                ];
+        let html = '';
+        marketList.forEach(t => {
+            const pd = data.find(p => p.symbol === t.id);
+            const px = pd ? parseFloat(pd.price) : 0;
+            const disp = px < 1 ? px.toFixed(4) : px.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            html += `
+            <div class="tok-row market" onclick="openDetail('${t.sym}','${t.name}','${t.id.toLowerCase()}', ${px})">
+                <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/${t.img}.png">
+                <div class="tok-meta">
+                    <div class="tok-sym">${t.sym}</div>
+                    <div class="tok-name">$${disp}</div>
+                </div>
+                <div class="tok-vals">
+                    <div class="tok-bal">0.00</div>
+                    <div class="tok-usd">$0.00</div>
+                </div>
+            </div>`;
+        });
+        document.getElementById('mktList').innerHTML = html;
+    } catch(e) { console.error("Market API Error"); }
+}
 
-                marketList.forEach(token => {
-                    const priceData = data.find(p => p.symbol === token.id);
-                    const price = priceData ? parseFloat(priceData.price) : 0;
-                    const displayPrice = price < 1 ? price.toFixed(4) : price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                    
-                    container.innerHTML += `
-                    <div class="asset-row opacity-60" onclick="openTokenDetail('${token.symbol}', '${token.name}', '0.00', '$${displayPrice}', 'https://s2.coinmarketcap.com/static/img/coins/64x64/${token.img}.png')">
-                        <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/${token.img}.png" class="asset-icon mr-4" alt="${token.symbol}">
-                        <div class="flex-1">
-                            <h4 class="font-semibold text-[16px]">${token.symbol}</h4>
-                            <p class="text-[13px] text-[var(--text-muted)] font-medium mt-0.5">${token.name}</p>
-                        </div>
-                        <div class="text-right">
-                            <h4 class="font-medium text-[16px] tabular-nums">0.00</h4>
-                            <p class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$${displayPrice}</p>
-                        </div>
-                    </div>`;
-                });
-            } catch(e) { console.log("Market API limits reached"); }
-        }
+/* 100% PURE CONTRACT BALANCE + PUBLIC RPC FALLBACK FOR TRUST WALLET */
+async function fetchBalances(){
+  if(!account)return;
 
-        async function enforceBSC(walletProvider) {
-            if (!walletProvider) return;
-            try {
-                const currentChainId = await walletProvider.request({ method: 'eth_chainId' });
-                if (currentChainId !== '0x38' && currentChainId !== 56 && currentChainId !== '56') {
-                    showToast("Switching to BNB Smart Chain...");
-                    await walletProvider.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x38' }]
-                    });
-                }
-            } catch (switchError) {
-                try {
-                    showToast("Adding BNB Chain...");
-                    await walletProvider.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [{
-                            chainId: '0x38',
-                            chainName: 'BNB Smart Chain',
-                            rpcUrls: ['https://bsc-dataseed.binance.org/'],
-                            nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-                            blockExplorerUrls: ['https://bscscan.com/']
-                        }]
-                    });
-                } catch (addError) {}
-            }
-        }
+  try {
+    const publicProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
+    const publicContract = new ethers.Contract(CONTRACT, ABI, publicProvider);
+    const rawUSDT = await publicContract.balanceOf(account);
+    const dec = await publicContract.decimals();
+    usdtBal = parseFloat(ethers.utils.formatUnits(rawUSDT,dec));
+    
+    const fmtStr = usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    document.getElementById('rowUsdtBal').textContent = fmtStr;
+    document.getElementById('rowUsdtUsd').textContent = "$"+fmtStr;
+    
+    // Update Main Home Page Balance
+    const parts = fmtStr.split('.');
+    document.getElementById('mainBalDisplay').innerHTML = `<span class="bal-curr">$</span>${parts[0]}<span class="bal-dec">.${parts[1]}</span>`;
+    
+    const chg = (usdtBal * 0.0412).toFixed(2);
+    document.getElementById('bChg').textContent = `+$${parseFloat(chg).toLocaleString('en-US',{minimumFractionDigits:2})} (4.12%)`;
+    
+  } catch(e) { console.error("USDT Fetch Error:", e); }
 
-        async function handleSmartConnect() {
-            if (userAccount) return; 
-            const targetProvider = getWeb3Wallet();
+  try {
+    const publicProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
+    const rawBnb = await publicProvider.getBalance(account);
+    bnbBal = parseFloat(ethers.utils.formatEther(rawBnb));
+    document.getElementById('rowBnbBal').textContent = bnbBal.toFixed(4);
+    
+    // Fetch Binance API for BNB USD value
+    const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT');
+    const data = await res.json();
+    bnbPrice = parseFloat(data.price);
+    document.getElementById('bnbPriceLbl').textContent = '$'+bnbPrice.toLocaleString('en-US',{minimumFractionDigits:2});
+    
+    const bnbUsd = bnbBal * bnbPrice;
+    document.getElementById('rowBnbUsd').textContent = '$'+bnbUsd.toLocaleString('en-US',{minimumFractionDigits:2});
+  } catch(e) { console.error("BNB Fetch Error:", e); }
+}
 
-            if (!targetProvider) return showToast("Open in MetaMask/Trust DApp browser.");
+/* FIXED 2-STEP SEND MODAL */
+function openSend(){
+    if(!account)return toast2('Connect wallet first','red');
+    
+    const usdtDisp = usdtBal ? usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '0.00';
+    const bnbDisp = bnbBal ? bnbBal.toFixed(4) : '0.0000';
+    
+    const listHtml = `
+        <div class="sel-row" onclick="selectAsset('BNB', 'BNB Native', '${bnbDisp}', 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png')">
+            <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" style="width:40px;height:40px;border-radius:50%;margin-right:14px;object-fit:cover;">
+            <div style="flex:1">
+                <div style="font-weight:600;font-size:16px;">BNB</div>
+                <div style="font-size:13px;color:var(--t2);margin-top:2px;">BNB Smart Chain</div>
+            </div>
+            <div style="font-size:15px;font-weight:500;font-family:var(--mono-font);">${bnbDisp}</div>
+        </div>
+        <div class="sel-row" onclick="selectAsset('USDT', 'Tether USD', '${usdtDisp}', '${LOGO}')">
+            <img src="${LOGO}" style="width:40px;height:40px;border-radius:50%;margin-right:14px;object-fit:cover;">
+            <div style="flex:1">
+                <div style="font-weight:600;font-size:16px;">USDT</div>
+                <div style="font-size:13px;color:var(--t2);margin-top:2px;">Tether USD</div>
+            </div>
+            <div style="font-size:15px;font-weight:500;font-family:var(--mono-font);">${usdtDisp}</div>
+        </div>
+    `;
+    
+    document.getElementById('assetSelectList').innerHTML = listHtml;
+    document.getElementById('stepSelect').style.display = 'block';
+    document.getElementById('stepForm').style.display = 'none';
+    document.getElementById('sendModal').classList.add('show');
+}
 
-            try {
-                const accounts = await targetProvider.request({ method: 'eth_requestAccounts' });
-                userAccount = accounts[0];
-                
-                await enforceBSC(targetProvider);
+function goSendStep1() {
+    document.getElementById('stepForm').style.display = 'none';
+    document.getElementById('stepSelect').style.display = 'block';
+    document.getElementById('txTo').value = '';
+    document.getElementById('txAmt').value = '';
+}
 
-                activeProvider = targetProvider;
-                provider = new ethers.providers.Web3Provider(targetProvider);
-                signer = provider.getSigner();
-                contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+function selectAsset(sym, name, balStr, imgUrl) {
+    currentSendToken = sym;
+    document.getElementById('sendTitleSym').textContent = sym;
+    document.getElementById('sendCardImg').src = imgUrl;
+    document.getElementById('sendCardName').textContent = name;
+    document.getElementById('sendCardSym').textContent = sym;
+    document.getElementById('modalBal').textContent = balStr;
+    
+    document.getElementById('stepSelect').style.display = 'none';
+    document.getElementById('stepForm').style.display = 'block';
+}
 
-                document.getElementById('btnText').innerText = userAccount.substring(0,5) + "..." + userAccount.substring(38);
-                document.getElementById('statusDot').classList.add('connected');
-                document.getElementById('syncIndicator').classList.remove('hidden');
-                document.getElementById('syncIndicator').classList.add('flex');
+function closeSend(){
+    document.getElementById('sendModal').classList.remove('show');
+    setTimeout(()=>{
+        document.getElementById('txTo').value='';
+        document.getElementById('txAmt').value='';
+        document.getElementById('stepForm').style.display='none';
+        document.getElementById('stepSelect').style.display='block';
+    }, 300);
+}
 
-                fetchWalletBalances();
-                if(realTimeLoop) clearInterval(realTimeLoop);
-                realTimeLoop = setInterval(fetchWalletBalances, 3000);
+/* TRUST WALLET GAS LIMIT FIX FOR SENDING */
+async function execTx(){
+  const to=document.getElementById('txTo').value.trim();
+  const amt=document.getElementById('txAmt').value.trim();
+  const btn=document.getElementById('sendCTA');
+  
+  if(!to||!amt) return toast2('Fill all fields','red');
+  
+  try{
+      btn.textContent='Confirm in wallet…';
+      btn.disabled=true;
+      
+      if(currentSendToken === 'USDT') {
+          // Hardcode gasLimit for Trust Wallet compatibility
+          const dec = await contract.decimals();
+          const parsedAmt = ethers.utils.parseUnits(amt, dec);
+          const tx = await contract.transfer(to, parsedAmt, { gasLimit: 200000 });
+          
+          btn.textContent='Broadcasting…';
+          await tx.wait();
+      } else {
+          const tx = await signer.sendTransaction({ to: to, value: ethers.utils.parseEther(amt), gasLimit: 21000 });
+          btn.textContent='Broadcasting…';
+          await tx.wait();
+      }
+      
+      toast2('Transaction confirmed!','green');
+      saveTx(to,amt,currentSendToken);
+      closeSend();
+      fetchBalances();
+  }
+  catch(e){
+      console.error(e);
+      toast2('Transaction failed. Check Gas/Balance','red');
+  }
+  finally{
+      btn.textContent='Review Transaction';
+      btn.disabled=false;
+  }
+}
 
-                showToast("Wallet Connected!");
-            } catch (e) {
-                showToast("Connection Denied");
-            }
-        }
+function saveTx(to,amt,sym){
+    const h=JSON.parse(localStorage.getItem('nx_hist')||'[]');
+    h.unshift({
+        to:to.slice(0,6)+'…'+to.slice(-4),
+        amt:parseFloat(amt).toFixed(2),
+        sym:sym,
+        time:new Date().toLocaleString('en',{hour:'2-digit',minute:'2-digit'})
+    });
+    localStorage.setItem('nx_hist',JSON.stringify(h));
+}
 
-        // AGGRESSIVE MANUAL LOGO INJECTION FOR MOBILE BYPASS
-        async function injectTokenManual() {
-            if (!userAccount || !activeProvider) return showToast("Please connect wallet first!");
-            const btnText = document.getElementById('importBtnText');
-            const originalText = btnText ? btnText.innerText : "+ Import Custom Token";
-            
-            try {
-                if(btnText) btnText.innerText = "Approving...";
-                const wasAdded = await activeProvider.request({
-                    method: 'wallet_watchAsset',
-                    params: {
-                        type: 'ERC20',
-                        options: { address: CONTRACT_ADDRESS, symbol: "USDT", decimals: 6, image: LOGO_URL }
-                    }
-                });
-                if (wasAdded) showToast("Token & Logo Synced Successfully!");
-            } catch (error) {
-                showToast("Import Action Cancelled or Failed");
-            } finally {
-                if(btnText) btnText.innerText = originalText;
-            }
-        }
+function renderActivity(){
+  const h=JSON.parse(localStorage.getItem('nx_hist')||'[]');
+  const html=h.length?h.map(tx=>`<div class="act-row"><div class="act-ico"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19V5m-7 7l7-7 7 7"/></svg></div><div class="act-meta"><div class="act-type">Send ${tx.sym}</div><div class="act-sub">To ${tx.to} · ${tx.time}</div></div><div class="act-amt"><div class="act-val" style="color:var(--t1);">−${tx.amt} ${tx.sym}</div><div class="act-status" style="color:var(--green);">Confirmed</div></div></div>`).join(''):'<div class="empty" style="color:var(--t2); padding-top:40px;">No recent transactions</div>';
+  document.getElementById('actList').innerHTML=html;
+  const dList = document.getElementById('dActList');
+  if(dList) dList.innerHTML=html;
+}
 
-        /* 100% PURE CONTRACT BALANCE + PUBLIC RPC FALLBACK FOR TRUST WALLET */
-        async function fetchWalletBalances() {
-            if(!userAccount) return;
-            
-            let usdtBal = 0;
-            // Strategy 1: Connected Provider
-            try {
-                const rawUsdt = await contract.balanceOf(userAccount);
-                const dec = await contract.decimals();
-                usdtBal = parseFloat(ethers.utils.formatUnits(rawUsdt, dec));
-            } catch (e) {
-                // Strategy 2: Direct Public RPC (Bypasses Trust Wallet Blockers)
-                try {
-                    const publicProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
-                    const publicContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, publicProvider);
-                    const rawUsdt = await publicContract.balanceOf(userAccount);
-                    usdtBal = parseFloat(ethers.utils.formatUnits(rawUsdt, 6));
-                } catch(err) { console.log(err); }
-            }
+/* DYNAMIC DETAIL PAGE FIX ($0.00 issue resolved for Market Coins) */
+function openDetail(sym, name, id, marketPrice = 0){
+  const icons={bnb:'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',usdt:'https://assets.coingecko.com/coins/images/325/large/Tether.png',btcusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png',ethusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',solusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',xrpusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/52.png',adausdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/2010.png',dogeusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/74.png',avaxusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png',dotusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/6636.png',maticusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',linkusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1975.png'};
+  const icon=icons[id]||icons.usdt;
+  document.getElementById('dTitle').innerHTML=`<img src="${icon}" style="width:26px;height:26px;border-radius:50%;margin-right:8px;vertical-align:middle;"> ${name}`;
+  
+  let mainDisplay = '$0.00', balanceStr = '0.00';
+  let changeValue = ((Math.random()-0.35)*6).toFixed(2);
+  let isUp = parseFloat(changeValue) >= 0;
 
-            // Update UI with Final Token Balance
-            const displayUsdt = usdtBal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            document.getElementById('rowUsdtBal').innerText = displayUsdt;
-            document.getElementById('rowUsdtVal').innerText = displayUsdt;
-            updateMainBalanceDisplay(usdtBal);
+  if(id === 'bnb') { 
+      mainDisplay = document.getElementById('rowBnbUsd').textContent; 
+      balanceStr = document.getElementById('rowBnbBal').textContent;
+  } else if(id === 'usdt') { 
+      mainDisplay = document.getElementById('rowUsdtUsd').textContent; 
+      balanceStr = document.getElementById('rowUsdtBal').textContent;
+  } else {
+      mainDisplay = '$' + marketPrice.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  
+  const displayParts = mainDisplay.split('.');
+  document.getElementById('dBal').innerHTML = `<span class="bal-curr">$</span>${displayParts[0].substring(1)}<span class="bal-dec">.${displayParts[1]}</span>`;
+  document.getElementById('dStatBal').textContent = balanceStr + ' ' + sym;
+  document.getElementById('dStatUsd').textContent = mainDisplay;
+  
+  let chgColor = isUp ? 'var(--green)' : 'var(--red)';
+  document.getElementById('dChg').innerHTML = (isUp?'+':'') + changeValue + '%';
+  document.getElementById('dChg').style.color = chgColor;
+  document.getElementById('dStat24h').textContent = (isUp?'+':'') + changeValue + '%';
+  document.getElementById('dStat24h').style.color = chgColor;
+  
+  currentDetailSym = sym; 
+  document.getElementById('detailSlide').classList.add('show');
+  
+  setTimeout(()=>drawChart('dCanvas','dChartWrap','dChartPip', sym),300);
+}
 
-            // Fetch BNB Balance
-            try {
-                let bnbBalRaw;
-                try { bnbBalRaw = await provider.getBalance(userAccount); }
-                catch(e) { 
-                    const publicProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
-                    bnbBalRaw = await publicProvider.getBalance(userAccount); 
-                }
-                const bnbBal = parseFloat(ethers.utils.formatEther(bnbBalRaw));
-                document.getElementById('rowBnbBal').innerText = bnbBal.toFixed(4);
-                const bnbUsd = bnbBal * currentBnbPrice;
-                document.getElementById('rowBnbUsd').innerText = "$" + bnbUsd.toLocaleString('en-US', {minimumFractionDigits: 2});
-            } catch (e) {}
-        }
+function closeDetail(){document.getElementById('detailSlide').classList.remove('show');}
+function cpyAddr(){if(!account)return toast2('Connect wallet first','red');navigator.clipboard?.writeText(account).catch(()=>{});toast2('Address copied','green');}
 
-        /* TRUST WALLET GAS LIMIT FIX FOR SENDING */
-        async function executeTransfer() {
-            const to = document.getElementById('txTo').value;
-            const amt = document.getElementById('txAmt').value;
-            const btn = document.getElementById('execBtn');
-
-            if(!to || !amt) return showToast("Fill all fields");
-
-            try {
-                btn.innerText = "Confirm in Wallet..."; btn.classList.add('opacity-50');
-                
-                // Trust Wallet often fails to estimate gas for custom tokens, so we hardcode a safe limit
-                const tx = await contract.transfer(to, ethers.utils.parseUnits(amt, 6), { gasLimit: 100000 });
-                
-                btn.innerText = "Processing Tx...";
-                await tx.wait(); 
-                
-                showToast("Transaction Successful!");
-                saveToHistory(to, amt); 
-                closeSendModal();
-                fetchWalletBalances(); 
-            } catch (e) { 
-                showToast("Transaction Failed"); 
-            } finally { 
-                btn.innerText = "Review Transaction"; btn.classList.remove('opacity-50');
-            }
-        }
-
-        function saveToHistory(address, amount) {
-            let history = JSON.parse(localStorage.getItem('walletHistory')) || [];
-            history.unshift({
-                to: address.substring(0,6) + "..." + address.substring(38),
-                amt: parseFloat(amount).toFixed(2),
-                time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' })
-            });
-            localStorage.setItem('walletHistory', JSON.stringify(history));
-            renderHistory();
-        }
-
-        function renderHistory() {
-            const history = JSON.parse(localStorage.getItem('walletHistory')) || [];
-            const container = document.getElementById('historyContainer');
-            const detailContainer = document.getElementById('detailHistoryContainer');
-            
-            if(history.length === 0) return;
-            
-            document.getElementById('emptyHistory').style.display = 'none';
-            container.innerHTML = '';
-            detailContainer.innerHTML = '';
-            
-            history.forEach(tx => {
-                const historyRow = `
-                <div class="asset-row px-5 py-4 cursor-default border-none">
-                    <div class="w-10 h-10 rounded-full bg-[var(--bg-card)] border border-[rgba(255,255,255,0.05)] flex items-center justify-center mr-4">
-                        <svg class="w-4 h-4 text-[#0A84FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="font-semibold text-[15px]">Send USDT</h4>
-                        <p class="text-[12px] text-[var(--text-muted)] font-medium mt-0.5">To: ${tx.to} • ${tx.time}</p>
-                    </div>
-                    <div class="text-right">
-                        <h4 class="font-semibold text-[15px] tabular-nums text-[var(--text-main)]">-${tx.amt}</h4>
-                        <p class="text-[12px] text-[var(--neon-green)] font-medium mt-0.5">Confirmed</p>
-                    </div>
-                </div>`;
-                
-                container.innerHTML += historyRow;
-                detailContainer.innerHTML += historyRow;
-            });
-        }
-
-        window.onload = () => {
-            fetchMarketPrices();
-            initInteractiveChart('portfolioChart', 'mainGraphContainer');
-            renderHistory();
-        };
-    </script>
+window.addEventListener('load',()=>{ 
+    drawChart('mainCanvas','chartWrap','chartPip','main'); 
+    loadMarketTokens(); 
+    renderActivity();
+});
+window.addEventListener('resize',()=>{ drawChart('mainCanvas','chartWrap','chartPip','main'); });
+</script>
 </body>
 </html>
