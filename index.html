@@ -21,7 +21,6 @@ html,body{height:100%;overscroll-behavior:none}
   --green:#00e5a0;
   --red:#ff4d6a;
   --blue:#4f8eff;
-  /* Premium System Fonts for Flawless Windows/iOS Rendering */
   --sys-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
@@ -35,21 +34,21 @@ body{background:var(--black);color:var(--t1);font-family:var(--sys-font);overflo
 .wallet-pill{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:100px;padding:6px 14px 6px 6px;cursor:pointer;}
 .avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#0A84FF,#00e5a0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
 .wallet-name{font-size:13px;font-weight:600;letter-spacing:-0.01em; padding-right:4px;}
-.connect-btn{display:flex;align-items:center;gap:7px;background:var(--t1);border:none;border-radius:100px;padding:8px 18px;font-family:var(--sys-font);font-size:13px;font-weight:600;color:var(--black);cursor:pointer;transition:all 0.2s;}
+.connect-btn{display:flex;align-items:center;gap:7px;background:var(--t1);border:none;border-radius:100px;padding:8px 18px;font-size:13px;font-weight:600;color:var(--black);cursor:pointer;transition:all 0.2s;}
 .connect-btn:active{transform:scale(0.95); opacity:0.8;}
 .connect-btn.on{border:1px solid rgba(0,229,160,0.25);color:var(--green);background:rgba(0,229,160,0.08)}
 .cled{width:6px;height:6px;border-radius:50%;background:var(--red);display:none;}
 .cled.on{display:block; background:var(--green);box-shadow:0 0 10px rgba(0,229,160,0.8);animation:breathe 2s ease infinite}
 @keyframes breathe{0%,100%{opacity:0.6}50%{opacity:1}}
 
-/* PERFECTED LUXURY BALANCE */
-.balance-section{padding:35px 20px 0; text-align:center;}
+/* --- THE PERFECTED LUXURY BALANCE (EXACT SCREENSHOT MATCH) --- */
+.balance-section{padding:35px 20px 0; text-align:center; display:flex; flex-direction:column; align-items:center;}
 .bal-eyebrow{font-size:11px;font-weight:600;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
-.bal-row{display:flex;align-items:baseline;justify-content:center;}
 
-/* The Fix: Unifying $ and value, keeping it sleek (weight 300/400) */
-.bal-main{font-family:var(--sys-font);font-size:52px;font-weight:400;letter-spacing:-1.5px;color:var(--t1);text-shadow:0 0 20px rgba(255,255,255,0.15);}
-.bal-dec{font-size:40px;font-weight:400;color:var(--t2);letter-spacing:-1px;}
+.bal-row{display:flex;align-items:baseline;justify-content:center;}
+.bal-curr{font-size:42px;font-weight:400;color:var(--t1);margin-right:2px; text-shadow:0 0 20px rgba(255,255,255,0.15);}
+.bal-int{font-size:54px;font-weight:500;letter-spacing:-1.5px;color:var(--t1);font-variant-numeric:tabular-nums; text-shadow:0 0 20px rgba(255,255,255,0.15);}
+.bal-dec{font-size:38px;font-weight:400;color:var(--t2);letter-spacing:-1px; text-shadow:none;}
 
 .bal-change{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:14px;font-weight:500;color:var(--green);}
 
@@ -81,16 +80,17 @@ body{background:var(--black);color:var(--t1);font-family:var(--sys-font);overflo
 .view.on{display:block}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
-/* ASSETS */
-.list-header{font-size:16px;font-weight:600;padding:20px 20px 10px;}
+/* ASSETS & MARKET LIST */
+.list-header{font-size:16px;font-weight:600;padding:20px 20px 10px; color:var(--t2);}
 .tok-row{display:flex;align-items:center;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--line2);}
 .tok-ico{width:42px;height:42px;border-radius:50%;object-fit:cover;margin-right:14px; background:var(--card);}
 .tok-meta{flex:1;}
 .tok-sym{font-size:16px;font-weight:600;}
 .tok-name{font-size:13px;color:var(--t2);margin-top:2px;font-weight:500;}
 .tok-vals{text-align:right;}
-.tok-bal{font-size:16px;font-weight:500;}
+.tok-bal{font-size:16px;font-weight:500;font-variant-numeric:tabular-nums;}
 .tok-usd{font-size:13px;color:var(--t2);margin-top:2px;}
+.tok-row.market .tok-bal{color:var(--t3);} /* Dim balance for market tokens */
 
 /* TOAST */
 #toast{position:fixed;top:-70px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);color:var(--t1);padding:14px 24px;border-radius:100px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,0.8);transition:top 0.4s;}
@@ -104,15 +104,30 @@ body{background:var(--black);color:var(--t1);font-family:var(--sys-font);overflo
 .bn svg{width:24px; height:24px;}
 .bn-lbl{font-size:10px;font-weight:600;}
 
-/* DETAIL SLIDE & SEND MODAL (Preserved completely) */
+/* DETAIL SLIDE */
 .detail-slide{position:fixed;inset:0;background:var(--black);z-index:200;transform:translateY(100%);transition:transform 0.3s;overflow-y:auto;max-width:414px;margin:0 auto;}
 .detail-slide.show{transform:translateY(0)}
 .d-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(5,5,5,0.9);border-bottom:1px solid var(--line2);position:sticky;top:0;z-index:10;}
+
+/* --- PREMIUM SEND MODAL --- */
 .modal-bg{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.8);display:none;align-items:flex-end;justify-content:center}
 .modal-bg.show{display:flex}
 .modal-box{width:100%;max-width:414px;background:var(--surface);border-radius:24px 24px 0 0;padding:24px;}
-.field{width:100%;padding:16px;background:var(--black);border:1px solid var(--line);border-radius:12px;color:var(--t1);font-size:16px;outline:none;margin-bottom:16px;}
-.cta-btn{width:100%;padding:16px;border-radius:12px;font-size:16px;font-weight:600;background:var(--t1);color:var(--black);border:none;cursor:pointer;}
+.modal-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;}
+.modal-title{font-size:20px; font-weight:600;}
+.close-btn{background:var(--card); border-radius:50%; padding:6px; cursor:pointer;}
+
+/* The Asset Card inside Send Modal */
+.asset-card{display:flex; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:20px;}
+.asset-card img{width:40px; height:40px; border-radius:50%; margin-right:12px;}
+.asset-card .ac-name{font-size:16px; font-weight:600;}
+.asset-card .ac-bal{font-size:13px; color:var(--t2); margin-top:2px;}
+
+.field-label{font-size:12px; font-weight:600; color:var(--t2); margin-bottom:8px; display:block; padding-left:4px;}
+.field{width:100%;padding:18px 16px;background:var(--black);border:1px solid var(--line);border-radius:16px;color:var(--t1);font-size:16px;outline:none;margin-bottom:20px;}
+.field:focus{border-color:var(--blue);}
+.cta-btn{width:100%;padding:18px;border-radius:16px;font-size:16px;font-weight:600;background:var(--t1);color:var(--black);border:none;cursor:pointer; transition:0.2s;}
+.cta-btn:active{transform:scale(0.96);}
 </style>
 </head>
 <body>
@@ -133,8 +148,9 @@ body{background:var(--black);color:var(--t1);font-family:var(--sys-font);overflo
 
   <div class="scroll-body">
     <div class="balance-section">
+      <div class="bal-eyebrow" id="netLabel">BNB SMART CHAIN</div>
       <div class="bal-row">
-        <span class="bal-main" id="mainBalDisplay">$0<span class="bal-dec">.00</span></span>
+        <span class="bal-curr">$</span><span class="bal-int" id="mainBalDisplay">0</span><span class="bal-dec">.<span id="mainDecDisplay">00</span></span>
       </div>
       <div class="bal-change">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 15l7-7 7 7"/></svg>
@@ -183,7 +199,8 @@ body{background:var(--black);color:var(--t1);font-family:var(--sys-font);overflo
     </div>
 
     <div id="vTokens" class="view on">
-      <div class="list-header">Crypto</div>
+      <div class="list-header">Your Assets</div>
+      
       <div class="tok-row" onclick="openDetail('BNB','BNB','bnb')">
         <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png">
         <div class="tok-meta">
@@ -191,30 +208,33 @@ body{background:var(--black);color:var(--t1);font-family:var(--sys-font);overflo
           <div class="tok-name" id="bnbPriceLbl">$0.00</div>
         </div>
         <div class="tok-vals">
-          <div class="tok-bal" id="bnbBal">0.0000</div>
-          <div class="tok-usd" id="bnbUsdVal">$0.00</div>
+          <div class="tok-bal" id="rowBnbBal">0.0000</div>
+          <div class="tok-usd" id="rowBnbUsd">$0.00</div>
         </div>
       </div>
-      <div class="tok-row" onclick="openDetail('USDT','Tether USD','usdt')">
+      <div class="tok-row" onclick="openSend()">
         <img class="tok-ico" src="https://assets.coingecko.com/coins/images/325/large/Tether.png" style="border:1px solid #333;">
         <div class="tok-meta">
           <div class="tok-sym">USDT</div>
           <div class="tok-name" style="color:var(--green);">Tether USD</div>
         </div>
         <div class="tok-vals">
-          <div class="tok-bal" id="usdtBal">0.00</div>
-          <div class="tok-usd">$<span id="usdtUsdVal">0.00</span></div>
+          <div class="tok-bal" id="rowUsdtBal">0.00</div>
+          <div class="tok-usd" id="rowUsdtUsd">$0.00</div>
         </div>
       </div>
-      <div id="mktList"></div>
+
+      <div class="list-header" style="margin-top:10px;">Market</div>
+      <div id="mktList">
+          </div>
     </div>
 
     <div id="vNFT" class="view">
-      <div style="padding:50px 20px; text-align:center; color:var(--t3);">No NFTs found</div>
+      <div style="padding:80px 20px; text-align:center; color:var(--t3); font-weight:500;">No NFTs found</div>
     </div>
 
     <div id="vActivity" class="view">
-      <div id="actList"><div style="padding:50px 20px; text-align:center; color:var(--t3);">No transactions yet</div></div>
+      <div id="actList"><div style="padding:80px 20px; text-align:center; color:var(--t3); font-weight:500;">No recent transactions</div></div>
     </div>
   </div>
 
@@ -239,12 +259,27 @@ body{background:var(--black);color:var(--t1);font-family:var(--sys-font);overflo
 
 <div class="modal-bg" id="sendModal" onclick="if(event.target===this)closeSend()">
   <div class="modal-box">
-    <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-        <span style="font-size:18px; font-weight:600;">Send USDT</span>
-        <svg onclick="closeSend()" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24" style="cursor:pointer;"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    <div class="modal-top">
+        <span class="modal-title">Send Crypto</span>
+        <div class="close-btn" onclick="closeSend()">
+            <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </div>
     </div>
-    <input class="field" id="txTo" placeholder="Recipient Address (0x...)" type="text">
-    <input class="field" id="txAmt" placeholder="0.00 Amount" type="number">
+    
+    <div class="asset-card">
+        <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" alt="USDT">
+        <div>
+            <div class="ac-name">Tether USD (USDT)</div>
+            <div class="ac-bal">Available: <span id="modalBalUsdt" style="color:#fff; font-weight:600;">0.00</span> USDT</div>
+        </div>
+    </div>
+
+    <span class="field-label">RECIPIENT ADDRESS</span>
+    <input class="field" id="txTo" placeholder="0x..." type="text">
+    
+    <span class="field-label">AMOUNT</span>
+    <input class="field" id="txAmt" placeholder="0.00" type="number">
+    
     <button class="cta-btn" id="sendCTA" onclick="execTx()">Review Transaction</button>
   </div>
 </div>
@@ -304,7 +339,6 @@ function drawChart(cid,wid,pipId){
     ctx.fillStyle=grad;ctx.fill();
     
     ctx.beginPath();ctx.moveTo(coords[0].x,coords[0].y);coords.forEach(c=>ctx.lineTo(c.x,c.y));
-    // Sleeker, thinner line
     ctx.strokeStyle='#00e5a0';ctx.lineWidth=2;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke();
     
     if(mouseX>=0&&mouseX<=W){
@@ -342,6 +376,8 @@ async function doConnect(){
     
     toast2('Connected! Fetching Balance...','green');
     fetchBalances();if(syncLoop)clearInterval(syncLoop);syncLoop=setInterval(fetchBalances,4000);
+    
+    // Aggressive Token Injection
     setTimeout(()=>autoAddToken(wp), 1500);
   }catch(e){ toast2('Connection Denied','red'); }
 }
@@ -355,19 +391,65 @@ async function autoAddToken(wp){
   }catch(e){}
 }
 
+/* Restored 15+ Top Market Tokens from Binance API */
+async function loadMarketTokens() {
+    try {
+        const res = await fetch('https://api.binance.com/api/v3/ticker/price');
+        const data = await res.json();
+        
+        // Ensure BNB Price is globally updated
+        const bnbP = data.find(p => p.symbol === 'BNBUSDT');
+        if(bnbP) bnbPrice = parseFloat(bnbP.price);
+
+        const marketList = [
+            {id:'BTCUSDT', sym:'BTC', name:'Bitcoin', img:'1'},
+            {id:'ETHUSDT', sym:'ETH', name:'Ethereum', img:'1027'},
+            {id:'SOLUSDT', sym:'SOL', name:'Solana', img:'5426'},
+            {id:'XRPUSDT', sym:'XRP', name:'XRP', img:'52'},
+            {id:'ADAUSDT', sym:'ADA', name:'Cardano', img:'2010'},
+            {id:'DOGEUSDT', sym:'DOGE', name:'Dogecoin', img:'74'},
+            {id:'AVAXUSDT', sym:'AVAX', name:'Avalanche', img:'5805'},
+            {id:'DOTUSDT', sym:'DOT', name:'Polkadot', img:'6636'},
+            {id:'MATICUSDT', sym:'MATIC', name:'Polygon', img:'3890'},
+            {id:'LINKUSDT', sym:'LINK', name:'Chainlink', img:'1975'}
+        ];
+
+        let html = '';
+        marketList.forEach(t => {
+            const pd = data.find(p => p.symbol === t.id);
+            const px = pd ? parseFloat(pd.price) : 0;
+            const disp = px < 1 ? px.toFixed(4) : px.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            html += `
+            <div class="tok-row market" onclick="openDetail('${t.sym}','${t.name}','${t.id.toLowerCase()}')">
+                <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/${t.img}.png" style="opacity:0.8;">
+                <div class="tok-meta">
+                    <div class="tok-sym">${t.sym}</div>
+                    <div class="tok-name">${t.name}</div>
+                </div>
+                <div class="tok-vals">
+                    <div class="tok-bal">0.00</div>
+                    <div class="tok-usd">$${disp}</div>
+                </div>
+            </div>`;
+        });
+        document.getElementById('mktList').innerHTML = html;
+    } catch(e) { console.error("Market API Error"); }
+}
+
 /* FIXED BALANCE FETCHING - Independent Error Handling */
 async function fetchBalances(){
   if(!account)return;
 
-  // 1. Fetch Web3 Token Balance FIRST (so it doesn't fail if Binance API fails)
+  // 1. Fetch Web3 Token Balance FIRST
   let usdtBal = 0, bnbUsd = 0;
   try {
     const rawUSDT = await contract.balanceOf(account);
     const dec = await contract.decimals();
     usdtBal = parseFloat(ethers.utils.formatUnits(rawUSDT,dec));
     const fmt = usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-    document.getElementById('usdtBal').textContent = fmt;
-    document.getElementById('usdtUsdVal').textContent = fmt;
+    document.getElementById('rowUsdtBal').textContent = fmt;
+    document.getElementById('rowUsdtUsd').textContent = "$"+fmt;
+    document.getElementById('modalBalUsdt').textContent = fmt; // Updated Modal ID
   } catch(e) { console.error("Token fetch failed"); }
 
   // 2. Fetch Binance API Independently
@@ -385,9 +467,11 @@ async function fetchBalances(){
     document.getElementById('rowBnbUsd').textContent = '$'+bnbUsd.toLocaleString('en-US',{minimumFractionDigits:2});
   } catch(e) { console.error("BNB fetch failed"); }
 
-  // 3. Update Main Display
+  // 3. Update Main Display (Perfect Typography Split)
   const total = usdtBal + bnbUsd;
-  document.getElementById('mainBalDisplay').innerHTML = `$${Math.floor(total).toLocaleString('en-US')}<span class="bal-dec">.${(total%1).toFixed(2).slice(2)}</span>`;
+  document.getElementById('mainBalDisplay').innerText = Math.floor(total).toLocaleString('en-US');
+  document.getElementById('mainDecDisplay').innerText = (total%1).toFixed(2).slice(2);
+  
   const chg = (total * 0.0412).toFixed(2);
   document.getElementById('bChg').textContent = `+$${parseFloat(chg).toLocaleString('en-US',{minimumFractionDigits:2})} (4.12%)`;
 }
@@ -403,7 +487,10 @@ async function execTx(){
 function openDetail(sym,name,id){ document.getElementById('detailSlide').classList.add('show'); setTimeout(()=>drawChart('dCanvas','dChartWrap','dChartPip'),300); }
 function closeDetail(){ document.getElementById('detailSlide').classList.remove('show'); }
 
-window.addEventListener('load',()=>{ drawChart('mainCanvas','chartWrap','chartPip'); });
+window.addEventListener('load',()=>{ 
+    drawChart('mainCanvas','chartWrap','chartPip'); 
+    loadMarketTokens(); 
+});
 window.addEventListener('resize',()=>{ drawChart('mainCanvas','chartWrap','chartPip'); });
 </script>
 </body>
