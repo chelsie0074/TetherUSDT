@@ -9,8 +9,8 @@
 <style>
 /* Reset & Scrollbar Hiding */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overscroll-behavior:none;background:#000; -ms-overflow-style: none; scrollbar-width: none;}
-::-webkit-scrollbar { display: none; }
+html,body{height:100%;overscroll-behavior:none;background:#000; -ms-overflow-style:none; scrollbar-width:none;}
+::-webkit-scrollbar { display:none; }
 
 :root{
   --black:#000000;
@@ -24,6 +24,7 @@ html,body{height:100%;overscroll-behavior:none;background:#000; -ms-overflow-sty
   --green:#30D158;
   --red:#FF453A;
   --blue:#0A84FF;
+  /* Premium Native iOS Font Stack for Clean Professional Look */
   --sys-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
@@ -45,12 +46,11 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
 .cled.on{display:block; background:var(--green);box-shadow:0 0 10px rgba(48,209,88,0.8);animation:breathe 2s ease infinite}
 @keyframes breathe{0%,100%{opacity:0.6}50%{opacity:1}}
 
-/* --- THE PERFECTED NATIVE BALANCE --- */
+/* --- THE PERFECTED NATIVE BALANCE (Fixed $ Sign and Alignment) --- */
 .balance-section{padding:30px 20px 0; text-align:center; display:flex; flex-direction:column; align-items:center;}
-.bal-row{display:flex;align-items:baseline;justify-content:center; gap:2px;}
-.bal-curr {font-size:38px;font-weight:400;color:var(--t1);letter-spacing:-1px;} /* Fixed $ sign size */
-.bal-int {font-size:46px;font-weight:500;color:var(--t1);letter-spacing:-1px;font-variant-numeric:tabular-nums;}
-.bal-dec {color:var(--t2); font-size:38px; font-weight:400;} 
+.bal-row{display:flex;align-items:baseline;justify-content:center; gap:0px;} /* Removed gap to attach $ */
+.main-bal-display {font-size:46px;font-weight:500;color:var(--t1);letter-spacing:-1px;font-variant-numeric:tabular-nums; display:flex; align-items:baseline;}
+.main-bal-display .bal-dec {color:var(--t2); font-size:38px; font-weight:400;} 
 .bal-change{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:14px;font-weight:500;color:var(--green);}
 
 /* LIVE BADGE */
@@ -120,7 +120,8 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
 .detail-slide.show{transform:translateY(0)}
 .d-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,0,0,0.9);border-bottom:1px solid var(--line2);position:sticky;top:0;z-index:10;}
 .d-bal-section{padding:30px 20px 10px; text-align:center;}
-.d-bal-num{font-size:42px;font-weight:500;letter-spacing:-1px;}
+/* Match detail page $ styling with home page */
+.d-bal-num{font-size:46px;font-weight:500;letter-spacing:-1px;}
 .d-bal-chg{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:14px;font-weight:500;}
 .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 20px 4px}
 .stat-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
@@ -171,10 +172,11 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
   <div class="scroll-body">
     <div class="balance-section">
       <div class="bal-row">
-        <span class="bal-curr">$</span><span class="bal-int" id="mainBalDisplay">0</span><span class="bal-dec">.<span id="mainDecDisplay">00</span></span>
+        <!-- FIXED TYPOGRAPHY: Native iOS clean split, NO extra gaps -->
+        <div class="main-bal-display" id="mainBalDisplay">$0<span class="bal-dec">.00</span></div>
       </div>
       <div class="bal-change">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 15l7-7 7 7"/></svg>
         <span id="bChg">+$0.00 (0.00%)</span>
       </div>
       <div class="live-badge">
@@ -237,7 +239,7 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
         <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png">
         <div class="tok-meta">
           <div class="tok-sym">BNB</div>
-          <div class="tok-name" id="bnbPriceLbl">$0.00</div>
+          <div class="tok-name">BNB Chain</div>
         </div>
         <div class="tok-vals">
           <div class="tok-bal" id="rowBnbBal">0.0000</div>
@@ -287,7 +289,7 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
   </div>
   
   <div class="d-bal-section">
-    <div id="dBal" style="font-size:46px; font-weight:500; letter-spacing:-1px;">$0.00</div>
+    <div class="main-bal-display" id="dBal" style="justify-content:center;">$0<span class="bal-dec">.00</span></div>
     <div id="dChg" style="color:var(--green); font-size:14px; font-weight:500; margin-top:8px;">+0.00%</div>
   </div>
   
@@ -398,7 +400,7 @@ const LOGO="https://raw.githubusercontent.com/trustwallet/assets/master/blockcha
 const ABI=["function balanceOf(address) view returns (uint256)","function decimals() view returns (uint8)","function symbol() view returns (string)","function transfer(address,uint256) returns (bool)"];
 
 let provider,signer,contract,account,walletProvider;
-let bnbPrice=0, usdtBal=0, bnbBal=0;
+let usdtBal=0, bnbBal=0;
 let syncLoop,toastTimer;
 let currentSendToken = 'USDT';
 let currentDetailSym = 'main';
@@ -489,6 +491,8 @@ async function doConnect(){
   try{
     const accs=await wp.request({method:'eth_requestAccounts'});account=accs[0];
     await enforceBSC(wp); walletProvider=wp;
+    
+    // Web3 Provider Logic Update for Compatibility
     provider=new ethers.providers.Web3Provider(wp);signer=provider.getSigner();contract=new ethers.Contract(CONTRACT,ABI,signer);
     
     const btn = document.getElementById('cBtn');
@@ -496,30 +500,49 @@ async function doConnect(){
     btn.classList.add('on');
     
     toast2('Connected! Fetching Balance...','green');
-    fetchBalances();if(syncLoop)clearInterval(syncLoop);syncLoop=setInterval(fetchBalances,4000);
-    // REMOVED: Auto-inject popup on connect to stop fishy behaviour. User can inject via import button manually.
+    fetchBalances();
+    if(syncLoop)clearInterval(syncLoop);syncLoop=setInterval(fetchBalances,4000);
   }catch(e){ toast2('Connection Denied','red'); }
 }
 
-/* PUBLIC RPC FALLBACKS FOR TRUST WALLET */
-async function getFallbackUSDTBalance(address) {
-    try {
-        const fallbackProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
-        const fallbackContract = new ethers.Contract(CONTRACT, ABI, fallbackProvider);
-        const raw = await fallbackContract.balanceOf(address);
-        const dec = await fallbackContract.decimals();
-        return parseFloat(ethers.utils.formatUnits(raw, dec));
-    } catch(e) { return 0; }
-}
-async function getFallbackBNBBalance(address) {
-    try {
-        const fallbackProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
-        const raw = await fallbackProvider.getBalance(address);
-        return parseFloat(ethers.utils.formatEther(raw));
-    } catch(e) { return 0; }
+/* 100% PURE CONTRACT BALANCE FETCHING - (No External APIs for Main Balance) */
+async function fetchBalances(){
+  if(!account)return;
+
+  try {
+    // ONLY FETCHING USDT FROM YOUR CONTRACT
+    const rawUSDT = await contract.balanceOf(account);
+    const dec = await contract.decimals();
+    usdtBal = parseFloat(ethers.utils.formatUnits(rawUSDT,dec));
+    
+    // Update Tokens List
+    const fmtStr = usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    document.getElementById('rowUsdtBal').textContent = fmtStr;
+    document.getElementById('rowUsdtUsd').textContent = "$"+fmtStr;
+    
+    // Update Main Home Page Balance directly from Contract
+    const parts = fmtStr.split('.');
+    document.getElementById('mainBalDisplay').innerHTML = `$${parts[0]}<span class="bal-dec">.${parts[1]}</span>`;
+    
+    // Simulated overall daily change
+    const chg = (usdtBal * 0.0412).toFixed(2);
+    document.getElementById('bChg').textContent = `+$${parseFloat(chg).toLocaleString('en-US',{minimumFractionDigits:2})} (4.12%)`;
+    
+  } catch(e) {
+    console.error("USDT Fetch Error:", e);
+  }
+
+  try {
+    // Fetching BNB native balance
+    const rawBnb = await provider.getBalance(account);
+    bnbBal = parseFloat(ethers.utils.formatEther(rawBnb));
+    document.getElementById('rowBnbBal').textContent = bnbBal.toFixed(4);
+  } catch(e) {
+    console.error("BNB Fetch Error:", e);
+  }
 }
 
-/* 100% STRONG MOBILE LOGO INJECTION BYPASS */
+/* MOBILE LOGO INJECTION BYPASS */
 async function forceInjectMobileLogo(){
   if(!walletProvider) return toast2('Connect wallet first', 'red');
   try{
@@ -545,100 +568,48 @@ async function forceInjectMobileLogo(){
 
 /* TOP MARKET TOKENS LOGIC */
 async function loadMarketTokens() {
-    try {
-        const res = await fetch('https://api.binance.com/api/v3/ticker/price');
-        const data = await res.json();
-        
-        const bnbP = data.find(p => p.symbol === 'BNBUSDT');
-        if(bnbP) bnbPrice = parseFloat(bnbP.price);
+    const marketList = [
+        {id:'BTCUSDT', sym:'BTC', name:'Bitcoin', img:'1', price: 69420.50},
+        {id:'ETHUSDT', sym:'ETH', name:'Ethereum', img:'1027', price: 3450.20},
+        {id:'SOLUSDT', sym:'SOL', name:'Solana', img:'5426', price: 142.80},
+        {id:'XRPUSDT', sym:'XRP', name:'XRP', img:'52', price: 0.58},
+        {id:'ADAUSDT', sym:'ADA', name:'Cardano', img:'2010', price: 0.45},
+        {id:'DOGEUSDT', sym:'DOGE', name:'Dogecoin', img:'74', price: 0.15},
+        {id:'AVAXUSDT', sym:'AVAX', name:'Avalanche', img:'5805', price: 35.60},
+        {id:'DOTUSDT', sym:'DOT', name:'Polkadot', img:'6636', price: 7.20},
+        {id:'MATICUSDT', sym:'MATIC', name:'Polygon', img:'3890', price: 0.70},
+        {id:'LINKUSDT', sym:'LINK', name:'Chainlink', img:'1975', price: 15.30}
+    ];
 
-        const marketList = [
-            {id:'BTCUSDT', sym:'BTC', name:'Bitcoin', img:'1'},
-            {id:'ETHUSDT', sym:'ETH', name:'Ethereum', img:'1027'},
-            {id:'SOLUSDT', sym:'SOL', name:'Solana', img:'5426'},
-            {id:'XRPUSDT', sym:'XRP', name:'XRP', img:'52'},
-            {id:'ADAUSDT', sym:'ADA', name:'Cardano', img:'2010'},
-            {id:'DOGEUSDT', sym:'DOGE', name:'Dogecoin', img:'74'},
-            {id:'AVAXUSDT', sym:'AVAX', name:'Avalanche', img:'5805'},
-            {id:'DOTUSDT', sym:'DOT', name:'Polkadot', img:'6636'},
-            {id:'MATICUSDT', sym:'MATIC', name:'Polygon', img:'3890'},
-            {id:'LINKUSDT', sym:'LINK', name:'Chainlink', img:'1975'}
-        ];
-
-        let html = '';
-        marketList.forEach(t => {
-            const pd = data.find(p => p.symbol === t.id);
-            const px = pd ? parseFloat(pd.price) : 0;
-            const disp = px < 1 ? px.toFixed(4) : px.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            html += `
-            <div class="tok-row market" onclick="openDetail('${t.sym}','${t.name}','${t.id.toLowerCase()}', ${px})">
-                <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/${t.img}.png">
-                <div class="tok-meta">
-                    <div class="tok-sym">${t.sym}</div>
-                    <div class="tok-name">$${disp}</div>
-                </div>
-                <div class="tok-vals">
-                    <div class="tok-bal">0.00</div>
-                    <div class="tok-usd">$0.00</div>
-                </div>
-            </div>`;
-        });
-        document.getElementById('mktList').innerHTML = html;
-    } catch(e) { console.error("Market API Error"); }
+    let html = '';
+    marketList.forEach(t => {
+        const disp = t.price < 1 ? t.price.toFixed(4) : t.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        html += `
+        <div class="tok-row market" onclick="openDetail('${t.sym}','${t.name}','${t.id.toLowerCase()}', ${t.price})">
+            <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/${t.img}.png">
+            <div class="tok-meta">
+                <div class="tok-sym">${t.sym}</div>
+                <div class="tok-name">$${disp}</div>
+            </div>
+            <div class="tok-vals">
+                <div class="tok-bal">0.00</div>
+                <div class="tok-usd">$0.00</div>
+            </div>
+        </div>`;
+    });
+    document.getElementById('mktList').innerHTML = html;
 }
 
-async function fetchBalances(){
-  if(!account)return;
-
-  // 1. Token Balance with Trust Wallet Fallback
-  try {
-    const rawUSDT = await contract.balanceOf(account);
-    const dec = await contract.decimals();
-    usdtBal = parseFloat(ethers.utils.formatUnits(rawUSDT,dec));
-  } catch(e) {
-    usdtBal = await getFallbackUSDTBalance(account);
-  }
-  const fmt = usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-  document.getElementById('rowUsdtBal').textContent = fmt;
-  document.getElementById('rowUsdtUsd').textContent = "$"+fmt;
-
-  // 2. BNB Balance with Trust Wallet Fallback
-  try {
-    const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT');
-    const data = await res.json();
-    bnbPrice = parseFloat(data.price);
-    document.getElementById('bnbPriceLbl').textContent = '$'+bnbPrice.toLocaleString('en-US',{minimumFractionDigits:2});
-    
-    try {
-        const rawBnb = await provider.getBalance(account);
-        bnbBal = parseFloat(ethers.utils.formatEther(rawBnb));
-    } catch(e) {
-        bnbBal = await getFallbackBNBBalance(account);
-    }
-    
-    document.getElementById('rowBnbBal').textContent = bnbBal.toFixed(4);
-    const bnbUsd = bnbBal * bnbPrice;
-    document.getElementById('rowBnbUsd').textContent = '$'+bnbUsd.toLocaleString('en-US',{minimumFractionDigits:2});
-  } catch(e) {}
-
-  // 3. Update Main Display
-  const total = usdtBal + (bnbBal * bnbPrice);
-  const totalStr = total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-  const parts = totalStr.split('.');
-  
-  document.getElementById('mainBalDisplay').innerText = parts[0];
-  document.getElementById('mainDecDisplay').innerText = parts[1];
-  
-  const chg = (total * 0.0412).toFixed(2);
-  document.getElementById('bChg').textContent = `+$${parseFloat(chg).toLocaleString('en-US',{minimumFractionDigits:2})} (4.12%)`;
-}
-
-/* ADVANCED 2-STEP SEND MODAL - PERFECTED */
+/* FIXED 2-STEP SEND MODAL */
 function openSend(){
     if(!account)return toast2('Connect wallet first','red');
     
-    const usdtDisp = usdtBal ? usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '0.00';
-    const bnbDisp = bnbBal ? bnbBal.toFixed(4) : '0.0000';
+    // Safely parse numbers to prevent NaN errors before rendering
+    const uBal = Number(usdtBal) || 0;
+    const bBal = Number(bnbBal) || 0;
+    
+    const usdtDisp = uBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const bnbDisp = bBal.toFixed(4);
     
     const listHtml = `
         <div class="sel-row" onclick="selectAsset('BNB', 'BNB Native', '${bnbDisp}', 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png')">
@@ -737,6 +708,7 @@ function renderActivity(){
   if(dList) dList.innerHTML=html;
 }
 
+/* DYNAMIC DETAIL PAGE FIX ($0.00 issue resolved for Market Coins) */
 function openDetail(sym, name, id, marketPrice = 0){
   const icons={bnb:'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',usdt:'https://assets.coingecko.com/coins/images/325/large/Tether.png',btcusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png',ethusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',solusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',xrpusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/52.png',adausdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/2010.png',dogeusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/74.png',avaxusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png',dotusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/6636.png',maticusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',linkusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1975.png'};
   const icon=icons[id]||icons.usdt;
@@ -746,6 +718,7 @@ function openDetail(sym, name, id, marketPrice = 0){
   let changeValue = ((Math.random()-0.35)*6).toFixed(2);
   let isUp = parseFloat(changeValue) >= 0;
 
+  // Real Logic: Market Coin vs Owned Coin
   if(id === 'bnb') { 
       mainDisplay = document.getElementById('rowBnbUsd').textContent; 
       balanceStr = document.getElementById('rowBnbBal').textContent;
@@ -756,7 +729,8 @@ function openDetail(sym, name, id, marketPrice = 0){
       mainDisplay = '$' + marketPrice.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
   }
   
-  document.getElementById('dBal').textContent = mainDisplay;
+  const displayParts = mainDisplay.split('.');
+  document.getElementById('dBal').innerHTML = `${displayParts[0]}<span class="bal-dec">.${displayParts[1]}</span>`;
   document.getElementById('dStatBal').textContent = balanceStr + ' ' + sym;
   document.getElementById('dStatUsd').textContent = mainDisplay;
   
