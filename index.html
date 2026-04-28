@@ -3,784 +3,454 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Web3 Main Wallet</title>
-    <link rel="icon" type="image/png" href="https://assets.coingecko.com/coins/images/325/large/Tether.png">
+    <title>Nexus Premium Wallet</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-deep: #000000;
-            --bg-panel: #101010;
-            --bg-card: #1c1c1e;
-            --text-main: #ffffff;
-            --text-muted: #8e8e93;
-            --neon-green: #14F195; /* Phantom Green */
-            --danger: #ff3b30;
-            --btn-bg: #232325; /* Professional embedded button color */
+            --bg-base: #000000;
+            --bg-card: #111112;
+            --bg-surface: #1C1C1E;
+            --text-primary: #FFFFFF;
+            --text-secondary: #8E8E93;
+            --accent-green: #30D158;
+            --accent-blue: #0A84FF;
+            --border-subtle: rgba(255,255,255,0.06);
         }
-        body { background-color: var(--bg-deep); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
         
-        .app-wrapper { 
-            max-width: 440px; margin: 0 auto; min-height: 100vh; 
-            background-color: var(--bg-deep); position: relative; 
-            padding-bottom: 90px; overflow-x: hidden; 
-            border-left: 1px solid #111; border-right: 1px solid #111;
-        }
-        ::-webkit-scrollbar { display: none; }
-
-        .hero-bg { padding: 24px 20px 0px; }
-
-        /* FIXED: Thinner, larger, more realistic balance text */
-        .main-balance-text { 
-            font-size: 54px; 
-            font-weight: 500; /* Changed from 700 to 500 for that sleek native look */
-            letter-spacing: -1.5px; 
-            color: #ffffff; display: flex; align-items: center; justify-content: center; 
-            margin: 0; padding: 0;
-        }
-        .main-balance-text span { font-variant-numeric: tabular-nums; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background-color: var(--bg-base); color: var(--text-primary); font-family: 'Inter', sans-serif; overflow: hidden; }
         
-        .balance-change { 
-            color: var(--neon-green); font-size: 15px; font-weight: 600; 
-            margin-top: 4px; display: flex; justify-content: center; align-items: center; gap: 4px;
-        }
+        .app-container { max-width: 414px; margin: 0 auto; height: 100vh; position: relative; background: var(--bg-base); overflow-y: auto; overflow-x: hidden; padding-bottom: 90px; }
+        .app-container::-webkit-scrollbar { display: none; }
 
-        .status-badge { 
-            display: inline-flex; align-items: center; gap: 6px; 
-            background: rgba(255,255,255,0.08); padding: 8px 14px; 
-            border-radius: 40px; font-size: 13px; font-weight: 600; 
-            color: #fff; cursor: pointer; transition: 0.2s;
-        }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 10px var(--danger); }
-        .dot.connected { background: var(--neon-green); box-shadow: 0 0 12px var(--neon-green); }
+        /* HEADER */
+        .glass-header { position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); }
+        .wallet-pill { display: flex; align-items: center; gap: 8px; background: var(--bg-surface); padding: 6px 12px 6px 6px; border-radius: 100px; }
+        .avatar { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #0A84FF, #30D158); }
+        .connect-btn { font-size: 13px; font-weight: 600; background: var(--text-primary); color: var(--bg-base); padding: 8px 16px; border-radius: 100px; transition: 0.2s; cursor: pointer; }
+        .connect-btn:active { transform: scale(0.95); opacity: 0.8; }
+        .connect-btn.connected { background: rgba(48, 209, 88, 0.15); color: var(--accent-green); }
 
-        .graph-wrapper { position: relative; width: 100%; height: 160px; margin-top: 25px; overflow: hidden; cursor: crosshair; }
-        canvas { width: 100%; height: 100%; display: block; }
-        .chart-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: linear-gradient(to top, var(--bg-deep) 0%, transparent 100%); }
+        /* LUXURY BALANCE SECTION */
+        .balance-section { padding: 30px 20px 10px; text-align: center; }
+        .bal-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; letter-spacing: 0.5px; }
+        /* Ultra premium thin font for balance */
+        .bal-value { font-size: 52px; font-weight: 400; letter-spacing: -2px; margin: 4px 0; font-variant-numeric: tabular-nums; display: flex; justify-content: center; align-items: baseline; gap: 2px; }
+        .bal-value span { font-size: 38px; color: var(--text-secondary); }
+        .bal-change { font-size: 14px; font-weight: 500; color: var(--accent-green); display: flex; justify-content: center; gap: 4px; }
 
-        .tf-row { display: flex; justify-content: center; gap: 18px; padding: 10px 0; margin-bottom: 5px; }
-        .tf-item { font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: 0.2s; padding: 6px 12px; border-radius: 8px;}
-        .tf-item.active { color: #000; background-color: rgba(255,255,255,0.9); }
+        /* INTERACTIVE CHART */
+        .chart-container { position: relative; height: 160px; width: 100%; margin-top: 20px; cursor: crosshair; }
+        canvas { width: 100%; height: 100%; }
+        .chart-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; background: linear-gradient(to top, var(--bg-base), transparent); pointer-events: none; }
+        .chart-pip { position: absolute; top: -10px; right: 20px; background: var(--bg-surface); padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--text-primary); opacity: 0; transition: 0.2s; pointer-events: none; border: 1px solid var(--border-subtle); }
+        .chart-pip.show { opacity: 1; }
 
-        /* FIXED: Professional Embedded Buttons (No borders, solid dark gray) */
-        .action-row { display: flex; justify-content: space-between; padding: 0 25px; margin-top: 20px; margin-bottom: 25px; }
-        .btn-action-container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .btn-action { 
-            width: 60px; height: 60px; border-radius: 50%; 
-            background: var(--btn-bg); /* Native dark gray */
-            color: var(--text-main); display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; transition: all 0.2s ease; border: none; /* Removed borders completely */
-        }
-        .btn-action:active { transform: scale(0.92); background: #333336; }
-        .action-label { font-size: 14px; font-weight: 500; color: #a0a0a5; } /* Subtler label color */
+        /* ACTIONS */
+        .action-row { display: flex; justify-content: space-evenly; padding: 20px; }
+        .action-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+        .action-btn { width: 56px; height: 56px; border-radius: 50%; background: var(--bg-surface); display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .action-item:active .action-btn { transform: scale(0.9); background: #2C2C2E; }
+        .action-lbl { font-size: 12px; font-weight: 500; color: var(--text-primary); }
 
-        .tab-bar { display: flex; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0 15px; }
-        .tab { flex: 1; text-align: center; padding: 14px 0; font-size: 15px; font-weight: 600; color: var(--text-muted); cursor: pointer; }
-        .tab.active { color: #fff; border-bottom: 2px solid #fff; }
+        /* ASSET LIST */
+        .tab-header { font-size: 18px; font-weight: 600; padding: 10px 20px; border-bottom: 1px solid var(--border-subtle); }
+        .asset-row { display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.03); cursor: pointer; transition: 0.2s; }
+        .asset-row:active { background: rgba(255,255,255,0.05); }
+        .asset-icon { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-subtle); }
+        .asset-info { flex: 1; margin-left: 14px; }
+        .asset-name { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; }
+        .asset-sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+        .asset-bal { text-align: right; }
+        .asset-bal-main { font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
+        .asset-bal-usd { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
 
-        .view-section { display: none; animation: fadeIn 0.3s; }
-        .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* SLIDE OVER MODALS */
+        .slide-modal { position: fixed; inset: 0; background: var(--bg-base); z-index: 100; transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.32,0.72,0,1); display: flex; flex-direction: column; }
+        .slide-modal.active { transform: translateX(0); }
+        .modal-header { display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-subtle); }
+        .back-btn { padding: 8px; margin-left: -8px; cursor: pointer; }
+        .modal-title { flex: 1; text-align: center; font-size: 16px; font-weight: 600; padding-right: 24px; }
 
-        .asset-row { display: flex; align-items: center; padding: 16px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.2s; }
-        .asset-row:active { background: rgba(255,255,255,0.08); }
-        .asset-icon { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+        .input-elegant { width: 100%; background: var(--bg-surface); border: 1px solid transparent; padding: 18px 16px; border-radius: 16px; color: #fff; font-size: 24px; font-weight: 500; text-align: center; outline: none; transition: 0.2s; margin-bottom: 12px; }
+        .input-elegant:focus { border-color: var(--accent-blue); background: var(--bg-card); }
+        .input-elegant::placeholder { color: #4A4A4C; }
         
-        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: flex-end; z-index: 1000; }
-        .modal-pane { background: var(--bg-card); width: 100%; max-width: 440px; border-radius: 20px 20px 0 0; padding: 24px; box-shadow: 0 -10px 40px rgba(0,0,0,0.5); }
-        .input-dark { background: var(--bg-deep); color: white; width: 100%; padding: 16px; border-radius: 12px; font-size: 16px; outline: none; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px; transition: 0.2s; }
-        .input-dark:focus { border-color: var(--neon-green); }
-        
-        #toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 14px 24px; border-radius: 30px; font-size: 14px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; }
-        #toast.show { top: 40px; }
+        .input-sub { width: 100%; background: var(--bg-surface); border: none; padding: 16px; border-radius: 12px; color: #fff; font-size: 14px; outline: none; margin-bottom: 24px; }
 
-        .sync-blink { animation: syncPulse 2s infinite; }
-        @keyframes syncPulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+        .btn-primary { background: var(--text-primary); color: var(--bg-base); width: 100%; padding: 18px; border-radius: 16px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; border: none; }
+        .btn-primary:active { transform: scale(0.96); opacity: 0.8; }
+        .btn-primary:disabled { opacity: 0.5; pointer-events: none; }
 
-        .slide-in-view {
-            position: absolute; top: 0; left: 0; width: 100%; min-height: 100%;
-            background: var(--bg-deep); z-index: 500;
-            transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            padding-bottom: 50px;
-        }
-        .slide-in-view.active { transform: translateX(0); }
-        
-        /* FIXED: Token detail header layout */
-        .nav-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; position: sticky; top: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 10;}
-        .back-btn { flex: 1; display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 500; color: #fff; cursor: pointer;}
-        .header-title-container { flex: 2; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 17px; }
-        .header-placeholder { flex: 1; } /* For perfect centering */
-        
-        .position-block { background: #1c1c1e; border-radius: 16px; margin: 0 20px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03); }
-        .pos-badge { background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
-        
-        #detailTokenUsd { font-weight: 500; font-size: 48px; letter-spacing: -1.5px; } /* Sleeker detail balance */
+        /* TOAST */
+        #toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; z-index: 1000; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #toast.show { top: 50px; }
+        .t-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
+
+        /* BOTTOM NAV */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 414px; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-around; padding: 12px 0 24px; z-index: 40; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-secondary); cursor: pointer; }
+        .nav-item.active { color: var(--text-primary); }
+        .nav-item svg { width: 24px; height: 24px; }
+        .nav-lbl { font-size: 10px; font-weight: 500; }
     </style>
 </head>
 <body>
 
-    <div class="app-wrapper">
-        <div id="toast">Message</div>
+    <div id="toast">
+        <div class="t-dot" id="tDot"></div>
+        <span id="tMsg">Success</span>
+    </div>
 
-        <div id="mainView">
-            <div class="hero-bg">
-                <div class="flex justify-between items-center mb-6">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-[20px] tracking-tight">Main Wallet 1</span>
-                    </div>
-                    <div class="status-badge" onclick="handleSmartConnect()" id="connectBtn">
-                        <div class="dot" id="statusDot"></div>
-                        <span id="btnText">Connect</span>
-                    </div>
-                </div>
-
-                <div id="syncIndicator" class="hidden justify-center items-center gap-1.5 sync-blink mb-4">
-                    <div class="w-1.5 h-1.5 rounded-full bg-[var(--neon-green)]"></div>
-                    <span class="text-[10px] font-bold text-[var(--neon-green)] tracking-widest uppercase">Live Sync</span>
-                </div>
-
-                <div class="flex flex-col items-center relative z-10 mt-6">
-                    <h1 class="main-balance-text">$<span id="mainVal">0.00</span></h1>
-                    <div class="balance-change">
-                        +$104,241.50 (3.82%) Today
-                    </div>
-                </div>
-
-                <div class="graph-wrapper" id="mainGraphContainer">
-                    <canvas id="portfolioChart"></canvas>
-                    <div class="chart-overlay"></div>
-                </div>
-
-                <div class="tf-row">
-                    <span class="tf-item">1H</span>
-                    <span class="tf-item">1D</span>
-                    <span class="tf-item active">1W</span>
-                    <span class="tf-item">1M</span>
-                    <span class="tf-item">1Y</span>
-                    <span class="tf-item">ALL</span>
-                </div>
-
-                <div class="action-row">
-                    <div class="btn-action-container">
-                        <div class="btn-action" onclick="showToast('Initializing Buy...')">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        </div>
-                        <span class="action-label">Buy</span>
-                    </div>
-                    <div class="btn-action-container">
-                        <div class="btn-action" onclick="openSendModal()">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                        </div>
-                        <span class="action-label">Send</span>
-                    </div>
-                    <div class="btn-action-container">
-                        <div class="btn-action" onclick="showToast('Copy Address')">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-                        </div>
-                        <span class="action-label">Receive</span>
-                    </div>
-                    <div class="btn-action-container">
-                        <div class="btn-action" onclick="showToast('Routing swap...')">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                        </div>
-                        <span class="action-label">Swap</span>
-                    </div>
-                </div>
+    <div class="app-container">
+        
+        <div class="glass-header">
+            <div class="wallet-pill">
+                <div class="avatar"></div>
+                <div class="text-[13px] font-semibold tracking-tight pr-2">Main Wallet</div>
             </div>
+            <div class="connect-btn" id="connectBtn" onclick="handleSmartConnect()">Connect</div>
+        </div>
 
-            <div class="tab-bar">
-                <div class="tab active" onclick="switchTab('assetsTab', this)">Tokens</div>
-                <div class="tab" onclick="switchTab('historyTab', this)">NFTs</div>
+        <div class="balance-section">
+            <div class="bal-label" id="netLabel">BNB SMART CHAIN</div>
+            <div class="bal-value">$<span class="text-white" id="bInt">0</span><span id="bDec">.00</span></div>
+            <div class="bal-change"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 19V5M5 12l7-7 7 7"/></svg> <span id="bChg">+$0.00 (0.00%)</span></div>
+        </div>
+
+        <div class="chart-container" id="chartContainer">
+            <div class="chart-pip" id="chartPip">+0.0%</div>
+            <canvas id="mainChart"></canvas>
+            <div class="chart-overlay"></div>
+        </div>
+
+        <div class="action-row">
+            <div class="action-item" onclick="openSendModal()">
+                <div class="action-btn"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19V5m-7 7l7-7 7 7"/></svg></div>
+                <span class="action-lbl">Send</span>
             </div>
-
-            <div id="assetsTab" class="view-section active pt-2 pb-10">
-                <div id="assetContainer">
-                    <div class="asset-row" onclick="openTokenDetail('BNB', 'BNB', document.getElementById('rowBnbBal').innerText, document.getElementById('rowBnbUsd').innerText, 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png')">
-                        <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" class="asset-icon mr-4" alt="BNB" onerror="this.src='https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png'">
-                        <div class="flex-1">
-                            <h4 class="font-bold text-[17px]">BNB</h4>
-                            <p id="bnbLivePrice" class="text-[14px] text-[var(--text-muted)] font-medium mt-0.5">$0.00</p>
-                        </div>
-                        <div class="text-right">
-                            <h4 id="rowBnbBal" class="font-bold text-[17px] tabular-nums">0.00</h4>
-                            <p id="rowBnbUsd" class="text-[14px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$0.00</p>
-                        </div>
-                    </div>
-
-                    <div class="asset-row" onclick="openTokenDetail('USDT', 'Tether USD', document.getElementById('rowUsdtBal').innerText, '$'+document.getElementById('rowUsdtVal').innerText, 'https://assets.coingecko.com/coins/images/325/large/Tether.png')">
-                        <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="asset-icon mr-4" alt="USDT" onerror="this.src='https://cryptologos.cc/logos/tether-usdt-logo.png'">
-                        <div class="flex-1">
-                            <h4 class="font-bold text-[17px]">USDT</h4>
-                            <p class="text-[14px] text-[var(--text-muted)] font-medium mt-0.5">Tether USD</p>
-                        </div>
-                        <div class="text-right">
-                            <h4 id="rowUsdtBal" class="font-bold text-[17px] tabular-nums text-white">0.00</h4>
-                            <p class="text-[14px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$<span id="rowUsdtVal">0.00</span></p>
-                        </div>
-                    </div>
-                    <div id="marketTokens"></div>
-                    <div class="text-center py-8 pb-24 relative z-50">
-                        <button onclick="injectTokenManual()" class="bg-transparent text-[var(--neon-green)] px-6 py-3 rounded-full text-[15px] font-bold transition-all active:opacity-50">
-                            <span id="importBtnText">+ Import Custom Token</span>
-                        </button>
-                    </div>
-                </div>
+            <div class="action-item" onclick="showToast('Address Copied!', 'blue')">
+                <div class="action-btn"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg></div>
+                <span class="action-lbl">Receive</span>
             </div>
-
-            <div id="historyTab" class="view-section">
-                <div id="historyContainer" class="pt-4">
-                    <div class="text-center pt-10 text-[var(--text-muted)] text-[14px]" id="emptyHistory">
-                        No NFTs found.
-                    </div>
-                </div>
+            <div class="action-item" onclick="showToast('Routing to DEX...', 'green')">
+                <div class="action-btn"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg></div>
+                <span class="action-lbl">Swap</span>
+            </div>
+            <div class="action-item" onclick="injectLogoToMobileWallet()">
+                <div class="action-btn"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg></div>
+                <span class="action-lbl">Import</span>
             </div>
         </div>
 
-        <div id="tokenDetailView" class="slide-in-view">
-            <div class="nav-header">
-                <div class="back-btn" onclick="closeTokenDetail()">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                </div>
-                <div class="header-title-container" id="detailHeaderName">
-                    </div>
-                <div class="header-placeholder"></div>
+        <div class="tab-header mt-2">Crypto</div>
+        
+        <div class="asset-row" onclick="showToast('BNB Native Coin', 'white')">
+            <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" class="asset-icon">
+            <div class="asset-info">
+                <div class="asset-name">BNB</div>
+                <div class="asset-sub" id="bnbPriceLbl">$0.00</div>
             </div>
-
-            <div class="flex flex-col px-5 mt-4">
-                <h2 class="tracking-tight" id="detailTokenUsd">$0.00</h2>
-                <div class="balance-change justify-start mt-1 text-[14px] font-bold">
-                    +$42.50 (1.2%) Today
-                </div>
+            <div class="asset-bal">
+                <div class="asset-bal-main" id="rowBnbBal">0.00</div>
+                <div class="asset-bal-usd" id="rowBnbUsd">$0.00</div>
             </div>
+        </div>
 
-            <div class="graph-wrapper mt-4" id="detailGraphContainer" style="height: 180px;">
-                <canvas id="detailChart"></canvas>
+        <div class="asset-row" onclick="openSendModal()">
+            <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="asset-icon">
+            <div class="asset-info">
+                <div class="asset-name">USDT</div>
+                <div class="asset-sub text-[var(--accent-green)]">Tether USD</div>
             </div>
-
-            <div class="tf-row mt-2">
-                <span class="tf-item">1H</span>
-                <span class="tf-item">1D</span>
-                <span class="tf-item active">1W</span>
-                <span class="tf-item">1M</span>
-                <span class="tf-item">1Y</span>
-                <span class="tf-item">ALL</span>
+            <div class="asset-bal">
+                <div class="asset-bal-main" id="rowUsdtBal">0.00</div>
+                <div class="asset-bal-usd" id="rowUsdtUsd">$0.00</div>
             </div>
+        </div>
+        
+        <div id="marketList"></div>
 
-            <div class="position-block mt-4">
-                <div>
-                    <div class="text-[13px] text-[var(--text-muted)] font-medium mb-1">Position</div>
-                    <div class="font-bold text-[16px]">Long</div>
-                </div>
-                <div>
-                    <div class="text-[13px] text-[var(--text-muted)] font-medium mb-1">Balance</div>
-                    <div class="font-bold text-[16px]" id="detailTokenBalance">0.00</div>
-                </div>
-                <div class="flex gap-2">
-                    <div class="pos-badge text-white">Short</div>
-                    <div class="pos-badge text-[var(--neon-green)] bg-[rgba(20,241,149,0.1)]">Long</div>
-                </div>
+        <div style="height: 100px;"></div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                <span class="nav-lbl">Wallet</span>
             </div>
-
-            <div class="action-row mt-6">
-                <div class="btn-action-container">
-                    <div class="btn-action" onclick="showToast('Initializing Buy...')">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    </div>
-                    <span class="action-label">Buy</span>
-                </div>
-                <div class="btn-action-container">
-                    <div class="btn-action" onclick="showToast('Swap Route...')">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                    </div>
-                    <span class="action-label">Swap</span>
-                </div>
-                <div class="btn-action-container">
-                    <div class="btn-action" onclick="openSendModal()">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                    </div>
-                    <span class="action-label">Send</span>
-                </div>
-                <div class="btn-action-container">
-                    <div class="btn-action" onclick="showToast('Copy Address')">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-                    </div>
-                    <span class="action-label">Receive</span>
-                </div>
+            <div class="nav-item">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3v18h18M18 9l-5 5-3-3-5 5"/></svg>
+                <span class="nav-lbl">Markets</span>
             </div>
-
-            <div class="px-5 mt-6">
-                <h3 class="font-bold text-[18px] mb-4">Activity</h3>
-                <div id="detailHistoryContainer">
-                    <div class="text-center text-[var(--text-muted)] text-[14px] mt-6">
-                        No recent activity.
-                    </div>
-                </div>
+            <div class="nav-item">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <span class="nav-lbl">History</span>
             </div>
         </div>
 
     </div>
 
-    <div class="modal-bg" id="sendModal" onclick="if(event.target==this) closeSendModal()">
-        <div class="modal-pane">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-[20px]">Send USDT</h3>
-                <svg onclick="closeSendModal()" class="w-6 h-6 text-[var(--text-muted)] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    <div class="slide-modal" id="sendModal">
+        <div class="modal-header">
+            <div class="back-btn" onclick="closeSendModal()"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></div>
+            <div class="modal-title">Send USDT</div>
+        </div>
+        <div class="p-6">
+            <div class="text-center mb-8">
+                <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-16 h-16 mx-auto mb-4 rounded-full">
+                <div class="text-[13px] text-[var(--text-secondary)] font-medium">Available: <span id="modalAvail" class="text-white font-bold">0.00</span> USDT</div>
             </div>
-            <div class="space-y-4 mb-6">
-                <input type="text" id="txTo" class="input-dark" placeholder="Recipient Address (0x...)" autocomplete="off">
-                <input type="number" id="txAmt" class="input-dark tabular-nums" placeholder="Amount (USDT)" autocomplete="off">
-            </div>
-            <button onclick="executeTransfer()" id="execBtn" class="w-full bg-[var(--text-main)] text-black font-bold py-4 rounded-xl text-[16px] active:scale-95 transition-transform">
-                Next
-            </button>
+            
+            <input type="number" id="txAmt" class="input-elegant tabular-nums" placeholder="0.00">
+            <input type="text" id="txTo" class="input-sub" placeholder="Recipient Address (0x...)">
+            
+            <button class="btn-primary" id="execBtn" onclick="executeTransfer()">Review Send</button>
         </div>
     </div>
 
     <script>
-        function openTokenDetail(symbol, name, balanceStr, usdStr, iconUrl) {
-            document.getElementById('tokenDetailView').classList.add('active');
-            document.getElementById('detailHeaderName').innerHTML = `<img src="${iconUrl}" class="w-6 h-6 rounded-full" onerror="this.src='https://assets.coingecko.com/coins/images/325/large/Tether.png'"> ${name}`;
-            document.getElementById('detailTokenUsd').innerText = usdStr;
-            document.getElementById('detailTokenBalance').innerText = balanceStr + " " + symbol;
-            
-            setTimeout(() => { initInteractiveChart('detailChart', 'detailGraphContainer'); }, 300);
-        }
-
-        function closeTokenDetail() {
-            document.getElementById('tokenDetailView').classList.remove('active');
-        }
-
-        function initInteractiveChart(canvasId = 'portfolioChart', containerId = 'mainGraphContainer') {
-            const canvas = document.getElementById(canvasId);
-            const container = document.getElementById(containerId);
-            if(!canvas || !container) return;
-
-            const ctx = canvas.getContext('2d');
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = container.clientWidth * dpr;
-            canvas.height = container.clientHeight * dpr;
-            ctx.scale(dpr, dpr);
-
-            // AGGRESSIVE ZIG-ZAG DATA POINTS
-            const basePoints = [40, 70, 50, 90, 60, 110, 80, 130, 90, 160, 120, 180, 140, 200, 190];
-            const points = canvasId === 'detailChart' ? basePoints.map(p => p + (Math.random() * 40 - 20)) : basePoints;
-            let mouseX = -1;
-
-            container.addEventListener('mousemove', (e) => { mouseX = e.offsetX; draw(); });
-            container.addEventListener('mouseleave', () => { mouseX = -1; draw(); });
-            container.addEventListener('touchmove', (e) => {
-                const rect = container.getBoundingClientRect();
-                mouseX = e.touches[0].clientX - rect.left;
-                draw();
-            }, {passive: true});
-            container.addEventListener('touchend', () => { mouseX = -1; draw(); });
-
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                const w = container.clientWidth;
-                const h = container.clientHeight;
-                const step = w / (points.length - 1);
-
-                const coords = points.map((p, i) => ({ x: i * step, y: h - (p / 220) * h + 10 }));
-
-                const gradient = ctx.createLinearGradient(0, 0, 0, h);
-                gradient.addColorStop(0, 'rgba(20, 241, 149, 0.25)'); 
-                gradient.addColorStop(1, 'rgba(20, 241, 149, 0.0)');
-
-                ctx.beginPath();
-                ctx.moveTo(coords[0].x, h);
-                ctx.lineTo(coords[0].x, coords[0].y);
-                for (let i = 1; i < coords.length; i++) { ctx.lineTo(coords[i].x, coords[i].y); }
-                ctx.lineTo(coords[coords.length - 1].x, h);
-                ctx.fillStyle = gradient;
-                ctx.fill();
-
-                ctx.beginPath();
-                ctx.moveTo(coords[0].x, coords[0].y);
-                for (let i = 1; i < coords.length; i++) { ctx.lineTo(coords[i].x, coords[i].y); }
-                
-                ctx.strokeStyle = '#14F195'; 
-                ctx.lineWidth = 2.5;
-                ctx.lineJoin = 'miter';
-                ctx.stroke();
-
-                if (mouseX >= 0 && mouseX <= w) {
-                    const idx = Math.min(Math.round(mouseX / step), coords.length - 1);
-                    const targetPoint = coords[idx];
-
-                    ctx.beginPath();
-                    ctx.setLineDash([4, 4]);
-                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-                    ctx.moveTo(targetPoint.x, 0); 
-                    ctx.lineTo(targetPoint.x, h);
-                    ctx.stroke();
-                    ctx.setLineDash([]);
-
-                    ctx.beginPath();
-                    ctx.fillStyle = '#ffffff';
-                    ctx.shadowBlur = 8;
-                    ctx.shadowColor = '#14F195';
-                    ctx.arc(targetPoint.x, targetPoint.y, 5, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.shadowBlur = 0; 
-                }
-            }
-            draw();
-        }
-
-        let lastDisplayedBalance = 0;
-        function animateValue(obj, start, end, duration) {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                const currentVal = (progress * (end - start) + start);
-                obj.innerHTML = currentVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
-
+        /* === CONTRACT SETTINGS === */
         const CONTRACT_ADDRESS = "0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
-        const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"; 
-        
+        const LOGO_URL = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png";
         const ABI = [
             "function balanceOf(address) view returns (uint256)", 
             "function decimals() view returns (uint8)", 
             "function symbol() view returns (string)",
             "function transfer(address, uint256) returns (bool)"
         ];
-        
-        let provider, signer, contract, userAccount;
-        let realTimeLoop;
-        let toastTimer;
-        let currentBnbPrice = 580.00; 
-        let activeProvider = null; 
 
-        function showToast(msg) {
+        let provider, signer, contract, userAccount, walletProvider;
+        let bnbPrice = 584.20;
+        let syncLoop;
+
+        /* === UI HELPERS === */
+        function showToast(msg, type='green') {
             const t = document.getElementById('toast');
-            t.innerText = msg; t.classList.add('show');
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => t.classList.remove('show'), 4000); 
-        }
-
-        function switchTab(tabId, el) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            el.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-            if(tabId === 'historyTab') renderHistory();
+            const dot = document.getElementById('tDot');
+            const colors = { green: '#30D158', red: '#FF453A', blue: '#0A84FF', white: '#FFF' };
+            dot.style.background = colors[type];
+            dot.style.boxShadow = `0 0 10px ${colors[type]}`;
+            document.getElementById('tMsg').innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
         }
 
         function openSendModal() {
-            if(!userAccount) return showToast("Please connect wallet first");
-            document.getElementById('sendModal').style.display = 'flex';
+            if(!userAccount) return showToast("Connect wallet first", 'red');
+            document.getElementById('sendModal').classList.add('active');
         }
         function closeSendModal() { 
-            document.getElementById('sendModal').style.display = 'none'; 
-            document.getElementById('txTo').value = ''; document.getElementById('txAmt').value = '';
+            document.getElementById('sendModal').classList.remove('active'); 
+            document.getElementById('txAmt').value = '';
+            document.getElementById('txTo').value = '';
         }
 
-        function getWeb3Wallet() {
-            return window.ethereum || window.BinanceChain || window.trustwallet;
-        }
+        /* === INTERACTIVE PREMIUM CHART === */
+        function initChart() {
+            const canvas = document.getElementById('mainChart');
+            const container = document.getElementById('chartContainer');
+            const pip = document.getElementById('chartPip');
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            
+            canvas.width = container.clientWidth * dpr;
+            canvas.height = container.clientHeight * dpr;
+            ctx.scale(dpr, dpr);
 
-        async function fetchMarketPrices() {
-            try {
-                const res = await fetch('https://api.binance.com/api/v3/ticker/price');
-                const data = await res.json();
+            // Generate realistic curve
+            const pts = []; let val = 100;
+            for(let i=0; i<40; i++) { val += (Math.random() - 0.45) * 15; pts.push(val); }
+            
+            let mouseX = -1;
+            const draw = () => {
+                const w = container.clientWidth, h = container.clientHeight;
+                ctx.clearRect(0, 0, w, h);
                 
-                const bnbData = data.find(p => p.symbol === 'BNBUSDT');
-                if(bnbData) currentBnbPrice = parseFloat(bnbData.price);
-                document.getElementById('bnbLivePrice').innerText = "$" + currentBnbPrice.toLocaleString('en-US', {minimumFractionDigits: 2});
+                const min = Math.min(...pts), max = Math.max(...pts), range = max - min;
+                const coords = pts.map((p, i) => ({ x: i * (w/(pts.length-1)), y: h - ((p-min)/range) * (h*0.7) - 20 }));
 
-                const container = document.getElementById('marketTokens');
-                container.innerHTML = '';
+                // Gradient Fill
+                const grad = ctx.createLinearGradient(0, 0, 0, h);
+                grad.addColorStop(0, 'rgba(48, 209, 88, 0.2)');
+                grad.addColorStop(1, 'rgba(48, 209, 88, 0)');
                 
-                const marketList = [
-                    { id: 'BTCUSDT', name: 'Bitcoin', symbol: 'BTC', img: '1' },
-                    { id: 'ETHUSDT', name: 'Ethereum', symbol: 'ETH', img: '1027' },
-                    { id: 'SOLUSDT', name: 'Solana', symbol: 'SOL', img: '5426' },
-                    { id: 'XRPUSDT', name: 'XRP', symbol: 'XRP', img: '52' },
-                    { id: 'ADAUSDT', name: 'Cardano', symbol: 'ADA', img: '2010' }
-                ];
+                ctx.beginPath(); ctx.moveTo(coords[0].x, h);
+                coords.forEach(c => ctx.lineTo(c.x, c.y));
+                ctx.lineTo(w, h); ctx.fillStyle = grad; ctx.fill();
 
-                marketList.forEach(token => {
-                    const priceData = data.find(p => p.symbol === token.id);
-                    const price = priceData ? parseFloat(priceData.price) : 0;
-                    const displayPrice = price < 1 ? price.toFixed(4) : price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                // Line
+                ctx.beginPath(); ctx.moveTo(coords[0].x, coords[0].y);
+                coords.forEach(c => ctx.lineTo(c.x, c.y));
+                ctx.strokeStyle = '#30D158'; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.stroke();
+
+                // Hover Interaction
+                if (mouseX >= 0 && mouseX <= w) {
+                    const idx = Math.min(Math.round(mouseX / w * (pts.length-1)), pts.length-1);
+                    const c = coords[idx];
                     
-                    container.innerHTML += `
-                    <div class="asset-row opacity-60" onclick="openTokenDetail('${token.symbol}', '${token.name}', '0.00', '$${displayPrice}', 'https://s2.coinmarketcap.com/static/img/coins/64x64/${token.img}.png')">
-                        <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/${token.img}.png" class="asset-icon mr-4" alt="${token.symbol}">
-                        <div class="flex-1">
-                            <h4 class="font-bold text-[16px]">${token.symbol}</h4>
-                            <p class="text-[13px] text-[var(--text-muted)] font-medium mt-0.5">${token.name}</p>
-                        </div>
-                        <div class="text-right">
-                            <h4 class="font-bold text-[16px] tabular-nums">0.00</h4>
-                            <p class="text-[13px] text-[var(--text-muted)] font-medium tabular-nums mt-0.5">$${displayPrice}</p>
-                        </div>
-                    </div>`;
-                });
-            } catch(e) { console.log("Market API limits reached"); }
+                    ctx.beginPath(); ctx.setLineDash([4, 4]); ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                    ctx.moveTo(c.x, 0); ctx.lineTo(c.x, h); ctx.stroke(); ctx.setLineDash([]);
+                    
+                    ctx.beginPath(); ctx.arc(c.x, c.y, 5, 0, Math.PI*2);
+                    ctx.fillStyle = '#fff'; ctx.shadowBlur = 10; ctx.shadowColor = '#30D158'; ctx.fill(); ctx.shadowBlur = 0;
+                    
+                    const pct = (((pts[idx]-pts[0])/pts[0])*100).toFixed(2);
+                    pip.innerText = (pct >= 0 ? '+' : '') + pct + '%';
+                    pip.classList.add('show');
+                }
+            };
+            
+            container.onmousemove = e => { mouseX = e.offsetX; draw(); };
+            container.ontouchmove = e => { mouseX = e.touches[0].clientX - container.getBoundingClientRect().left; draw(); };
+            container.onmouseleave = container.ontouchend = () => { mouseX = -1; pip.classList.remove('show'); draw(); };
+            draw();
         }
 
-        async function enforceBSC(walletProvider) {
-            if (!walletProvider) return;
-            try {
-                const currentChainId = await walletProvider.request({ method: 'eth_chainId' });
-                if (currentChainId !== '0x38' && currentChainId !== 56 && currentChainId !== '56') {
-                    showToast("Switching to BNB Smart Chain...");
-                    await walletProvider.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x38' }]
-                    });
-                }
-            } catch (switchError) {
-                if (switchError.code === 4902 || switchError.message.includes("Unrecognized chain ID")) {
-                    try {
-                        showToast("Adding BNB Smart Chain to wallet...");
-                        await walletProvider.request({
-                            method: 'wallet_addEthereumChain',
-                            params: [{
-                                chainId: '0x38',
-                                chainName: 'BNB Smart Chain',
-                                rpcUrls: ['https://bsc-dataseed.binance.org/'],
-                                nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-                                blockExplorerUrls: ['https://bscscan.com/']
-                            }]
-                        });
-                    } catch (addError) {
-                        throw new Error("Failed to add BNB Smart Chain. Please add it manually.");
-                    }
-                } else {
-                    throw switchError;
-                }
-            }
-        }
-
+        /* === WEB3 & LOGIC === */
         async function handleSmartConnect() {
-            if (userAccount) return; 
-
-            const targetProvider = getWeb3Wallet();
-
-            if (!targetProvider) {
-                return showToast("No Web3 Wallet detected! Open in DApp browser (MetaMask/Binance/Trust).");
-            }
+            if (userAccount) return;
+            walletProvider = window.ethereum || window.BinanceChain || window.trustwallet;
+            if (!walletProvider) return showToast("Open in MetaMask/TrustWallet DApp Browser", 'red');
 
             try {
-                const accounts = await targetProvider.request({ method: 'eth_requestAccounts' });
+                const accounts = await walletProvider.request({ method: 'eth_requestAccounts' });
                 userAccount = accounts[0];
                 
-                await enforceBSC(targetProvider);
+                // Network switch to BSC
+                const cid = await walletProvider.request({ method: 'eth_chainId' });
+                if (cid !== '0x38' && cid !== 56) {
+                    try { await walletProvider.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x38' }] }); }
+                    catch(e) { await walletProvider.request({ method: 'wallet_addEthereumChain', params: [{ chainId: '0x38', chainName: 'BNB Smart Chain', rpcUrls: ['https://bsc-dataseed.binance.org/'], nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 } }] }); }
+                }
 
-                activeProvider = targetProvider;
-                provider = new ethers.providers.Web3Provider(targetProvider);
+                provider = new ethers.providers.Web3Provider(walletProvider);
                 signer = provider.getSigner();
                 contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
 
-                document.getElementById('btnText').innerText = userAccount.substring(0,5) + "..." + userAccount.substring(38);
-                document.getElementById('statusDot').classList.add('connected');
-                document.getElementById('syncIndicator').classList.remove('hidden');
-                document.getElementById('syncIndicator').classList.add('flex');
+                const btn = document.getElementById('connectBtn');
+                btn.innerText = userAccount.slice(0,5) + "..." + userAccount.slice(-4);
+                btn.classList.add('connected');
+                showToast("Wallet Connected!", 'green');
 
-                fetchWalletBalances();
-                if(realTimeLoop) clearInterval(realTimeLoop);
-                realTimeLoop = setInterval(fetchWalletBalances, 3000);
+                fetchBalances();
+                if(syncLoop) clearInterval(syncLoop);
+                syncLoop = setInterval(fetchBalances, 4000);
 
-                showToast("Wallet Connected!");
-
-                setTimeout(() => { autoInjectToken(targetProvider); }, 1500);
-
-            } catch (e) {
-                console.error("Wallet Error:", e);
-                
-                if (e.code === -32002 || (e.message && e.message.includes("pending"))) {
-                    showToast("Action Pending: Please open your wallet extension to approve.");
-                } else if (e.code === 4001) {
-                    showToast("You rejected the connection.");
-                } else {
-                    showToast("Connection Error: " + (e.message ? e.message.substring(0, 30) : "Unknown"));
-                }
+                // Auto inject token logo after connect
+                setTimeout(() => injectLogoToMobileWallet(), 2000);
+            } catch(e) {
+                showToast("Connection Rejected", 'red');
             }
         }
 
-        async function autoInjectToken(walletProvider) {
+        async function fetchBalances() {
+            if(!userAccount) return;
             try {
-                let finalSymbol = "USDT"; let finalDecimals = 6;
-                try {
-                    const tempProvider = new ethers.providers.Web3Provider(walletProvider);
-                    const tempContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, tempProvider);
-                    finalSymbol = await tempContract.symbol();
-                    finalDecimals = await tempContract.decimals();
-                } catch(e) {}
+                // Fetch BNB Price from Binance API
+                const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT');
+                const data = await res.json();
+                bnbPrice = parseFloat(data.price);
+                document.getElementById('bnbPriceLbl').innerText = "$" + bnbPrice.toLocaleString('en-US', {minimumFractionDigits: 2});
 
-                await walletProvider.request({
-                    method: 'wallet_watchAsset',
-                    params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: finalSymbol, decimals: finalDecimals, image: LOGO_URL } }
-                });
-                showToast("Token Added Successfully!");
-            } catch(e) {}
+                // Fetch BNB Balance
+                const rawBnb = await provider.getBalance(userAccount);
+                const bnbBal = parseFloat(ethers.utils.formatEther(rawBnb));
+                const bnbUsd = bnbBal * bnbPrice;
+                document.getElementById('rowBnbBal').innerText = bnbBal.toFixed(4);
+                document.getElementById('rowBnbUsd').innerText = "$" + bnbUsd.toLocaleString('en-US', {minimumFractionDigits: 2});
+
+                // Fetch Custom USDT Balance
+                const rawUsdt = await contract.balanceOf(userAccount);
+                const dec = await contract.decimals();
+                const usdtBal = parseFloat(ethers.utils.formatUnits(rawUsdt, dec));
+                
+                const usdtFmt = usdtBal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('rowUsdtBal').innerText = usdtFmt;
+                document.getElementById('rowUsdtUsd').innerText = "$" + usdtFmt;
+                document.getElementById('modalAvail').innerText = usdtFmt;
+
+                // Total Calculation (Luxurious Format)
+                const totalUsd = bnbUsd + usdtBal;
+                document.getElementById('bInt').innerText = Math.floor(totalUsd).toLocaleString('en-US');
+                document.getElementById('bDec').innerText = "." + (totalUsd % 1).toFixed(2).slice(2);
+                
+                // Dynamic change calculation based on balance
+                const change = (totalUsd * 0.0412).toFixed(2);
+                document.getElementById('bChg').innerHTML = `+$${parseFloat(change).toLocaleString()} (4.12%)`;
+
+            } catch(e) { console.log(e); }
         }
 
-        async function injectTokenManual() {
-            if (!userAccount || !activeProvider) return showToast("Please connect wallet first!");
-            
-            const btnText = document.getElementById('importBtnText');
-            const originalText = btnText ? btnText.innerText : "+ Import Custom Token";
-            
+        /* === MOBILE WALLET LOGO INJECTION (EIP-747) === */
+        async function injectLogoToMobileWallet() {
+            if(!userAccount) return showToast("Connect wallet first", 'red');
             try {
-                if(btnText) btnText.innerText = "Checking Network...";
-                await enforceBSC(activeProvider);
+                showToast("Requesting Logo Injection...", "blue");
                 
-                let finalSymbol = "USDT";
-                let finalDecimals = 6;
+                // Fetch fresh symbol/decimals from contract directly to ensure accuracy
+                let sym = "USDT"; let dec = 6;
+                try { sym = await contract.symbol(); dec = await contract.decimals(); } catch(e) {}
 
-                if(btnText) btnText.innerText = "Fetching Data...";
-                
-                try {
-                    const tempProvider = new ethers.providers.Web3Provider(activeProvider);
-                    const tempContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, tempProvider);
-                    finalSymbol = await tempContract.symbol();
-                    finalDecimals = await tempContract.decimals();
-                } catch(fetchError) {
-                    console.log("Safe fetch fallback activated.");
-                }
-                
-                if(btnText) btnText.innerText = "Approve in Wallet...";
-
-                const wasAdded = await activeProvider.request({
+                // The Magic Call for MetaMask/TrustWallet
+                await walletProvider.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
                         options: {
                             address: CONTRACT_ADDRESS,
-                            symbol: finalSymbol, 
-                            decimals: finalDecimals,
-                            image: LOGO_URL
+                            symbol: sym,
+                            decimals: dec,
+                            image: LOGO_URL // <-- This forces the wallet to load your custom logo
                         }
                     }
                 });
-
-                if (wasAdded) {
-                    showToast("Token Added Successfully!");
-                }
-            } catch (error) {
-                if(error.code === 4001 || (error.message && error.message.includes("rejected"))) {
-                    showToast("Request cancelled by you.");
-                } else if (error.code === -32002) {
-                    showToast("Please open your wallet extension to approve token.");
-                } else {
-                    showToast("Wallet Error. Try again.");
-                }
-            } finally {
-                if(btnText) btnText.innerText = originalText;
+                showToast("Asset & Logo Synced!", "green");
+            } catch(e) {
+                if(e.code === 4001) showToast("Request Cancelled", "red");
             }
         }
 
-        async function fetchWalletBalances() {
-            if(!userAccount) return;
-            try {
-                const bnbBalRaw = await provider.getBalance(userAccount);
-                const bnbBal = parseFloat(ethers.utils.formatEther(bnbBalRaw));
-                document.getElementById('rowBnbBal').innerText = bnbBal.toFixed(4);
-                
-                const bnbUsd = bnbBal * currentBnbPrice;
-                document.getElementById('rowBnbUsd').innerText = "$" + bnbUsd.toLocaleString('en-US', {minimumFractionDigits: 2});
-
-                const usdtBalRaw = await contract.balanceOf(userAccount);
-                const dec = await contract.decimals();
-                const usdtBal = parseFloat(ethers.utils.formatUnits(usdtBalRaw, dec));
-                
-                const displayUsdt = usdtBal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('rowUsdtBal').innerText = displayUsdt;
-                document.getElementById('rowUsdtVal').innerText = displayUsdt;
-                
-                if (usdtBal !== lastDisplayedBalance) {
-                    animateValue(document.getElementById('mainVal'), lastDisplayedBalance, usdtBal, 800);
-                    lastDisplayedBalance = usdtBal;
-                }
-                
-            } catch (e) {}
-        }
-
+        /* === EXECUTE TRANSFER === */
         async function executeTransfer() {
             const to = document.getElementById('txTo').value;
             const amt = document.getElementById('txAmt').value;
             const btn = document.getElementById('execBtn');
 
-            if(!to || !amt) return showToast("Fill all fields");
+            if(!to || !amt) return showToast("Enter address and amount", "red");
 
             try {
-                btn.innerText = "Confirm in Wallet..."; btn.classList.add('opacity-50');
+                btn.innerText = "Confirm in Wallet..."; btn.disabled = true;
                 const dec = await contract.decimals();
                 const tx = await contract.transfer(to, ethers.utils.parseUnits(amt, dec));
                 
-                btn.innerText = "Processing Tx...";
-                await tx.wait(); 
+                btn.innerText = "Broadcasting...";
+                await tx.wait();
                 
-                showToast("Transaction Successful!");
-                saveToHistory(to, amt); 
+                showToast("Transaction Successful!", "green");
                 closeSendModal();
-                fetchWalletBalances(); 
-            } catch (e) { 
-                showToast("Transaction Failed"); 
-            } finally { 
-                btn.innerText = "Next"; btn.classList.remove('opacity-50');
+                fetchBalances();
+            } catch(e) {
+                showToast("Transaction Failed", "red");
+            } finally {
+                btn.innerText = "Review Send"; btn.disabled = false;
             }
         }
 
-        function saveToHistory(address, amount) {
-            let history = JSON.parse(localStorage.getItem('walletHistory')) || [];
-            history.unshift({
-                to: address.substring(0,6) + "..." + address.substring(38),
-                amt: parseFloat(amount).toFixed(2),
-                time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' })
-            });
-            localStorage.setItem('walletHistory', JSON.stringify(history));
-        }
-
-        function renderHistory() {
-            const history = JSON.parse(localStorage.getItem('walletHistory')) || [];
-            const container = document.getElementById('historyContainer');
-            const detailContainer = document.getElementById('detailHistoryContainer');
-            
-            if(history.length === 0) return;
-            
-            document.getElementById('emptyHistory').style.display = 'none';
-            container.innerHTML = '';
-            detailContainer.innerHTML = '';
-            
-            history.forEach(tx => {
-                const historyRow = `
-                <div class="asset-row px-5 py-4 cursor-default border-none">
-                    <div class="w-10 h-10 rounded-full bg-[var(--bg-card)] border border-[rgba(255,255,255,0.05)] flex items-center justify-center mr-4">
-                        <svg class="w-4 h-4 text-[var(--text-main)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-[15px]">Send USDT</h4>
-                        <p class="text-[12px] text-[var(--text-muted)] font-medium mt-0.5">To: ${tx.to} • ${tx.time}</p>
-                    </div>
-                    <div class="text-right">
-                        <h4 class="font-bold text-[15px] tabular-nums text-[var(--text-main)]">-${tx.amt}</h4>
-                        <p class="text-[12px] text-[var(--neon-green)] font-medium mt-0.5">Confirmed</p>
-                    </div>
-                </div>`;
-                
-                container.innerHTML += historyRow;
-                detailContainer.innerHTML += historyRow;
-            });
-        }
-
+        // Initialize App
         window.onload = () => {
-            fetchMarketPrices();
-            initInteractiveChart('portfolioChart', 'mainGraphContainer');
-            renderHistory();
+            initChart();
+            // Populate Dummy Market for realism
+            const ml = [{s:'BTC',n:'Bitcoin',p:'69,420.50'},{s:'ETH',n:'Ethereum',p:'3,450.20'},{s:'SOL',n:'Solana',p:'142.80'}];
+            document.getElementById('marketList').innerHTML = ml.map((c,i) => `
+                <div class="asset-row" style="opacity:0.6">
+                    <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/${i===0?'1':i===1?'1027':'5426'}.png" class="asset-icon">
+                    <div class="asset-info"><div class="asset-name">${c.s}</div><div class="asset-sub">${c.n}</div></div>
+                    <div class="asset-bal"><div class="asset-bal-main">0.00</div><div class="asset-bal-usd">$${c.p}</div></div>
+                </div>`).join('');
         };
+        window.onresize = initChart;
     </script>
 </body>
 </html>
