@@ -1,159 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Tether Premium Wallet</title>
-<link rel="icon" type="image/png" href="https://assets.coingecko.com/coins/images/325/large/Tether.png">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-<style>
-/* Reset & Native Scrollbar Removal */
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overscroll-behavior:none;background:#000; -ms-overflow-style:none; scrollbar-width:none;}
-::-webkit-scrollbar { display:none !important; width:0 !important; height:0 !important; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tether Premium Wallet</title>
+    <link rel="icon" type="image/png" href="https://assets.coingecko.com/coins/images/325/large/Tether.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <style>
+        /* SCROLLBAR HIDING & NATIVE RESET */
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        html,body{height:100%;overscroll-behavior:none;background:#000; -ms-overflow-style:none; scrollbar-width:none;}
+        ::-webkit-scrollbar { display:none !important; width:0 !important; height:0 !important; }
 
-:root{
-  --black:#000000;
-  --surface:#111111;
-  --card:#1c1c1e;
-  --line:rgba(255,255,255,0.08);
-  --line2:rgba(255,255,255,0.04);
-  --t1:#ffffff;
-  --t2:#8E8E93;
-  --t3:#636366;
-  --green:#30D158;
-  --red:#FF453A;
-  --blue:#0A84FF;
-  /* Ultimate Native iOS Font Stack for Clean Professional Look */
-  --sys-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
-.shell{width:100%;max-width:414px;height:100dvh;margin:0 auto;display:flex;flex-direction:column;background:var(--black);position:relative;overflow:hidden}
-.scroll-body{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding-bottom:110px}
-.scroll-body::-webkit-scrollbar{display:none}
+        :root{
+            --black:#000000;
+            --surface:#111111;
+            --card:#1c1c1e;
+            --line:rgba(255,255,255,0.08);
+            --line2:rgba(255,255,255,0.04);
+            --t1:#ffffff;
+            --t2:#8E8E93;
+            --t3:#636366;
+            --green:#30D158;
+            --red:#FF453A;
+            --blue:#0A84FF;
+            /* Native iOS Font Stack for Clean Professional Look */
+            --sys-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+        body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
+        .shell{width:100%;max-width:414px;height:100dvh;margin:0 auto;display:flex;flex-direction:column;background:var(--black);position:relative;overflow:hidden}
+        .scroll-body{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding-bottom:110px}
+        .scroll-body::-webkit-scrollbar{display:none}
 
-/* TOPBAR */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50;}
-.wallet-pill{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:100px;padding:6px 14px 6px 6px;}
-.avatar{width:24px;height:24px;border-radius:50%;background:var(--black);display:flex;align-items:center;justify-content:center;}
-.avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
-.wallet-name{font-size:14px;font-weight:600;letter-spacing:-0.2px;padding-right:4px;}
-.connect-btn{background:var(--t1);border:none;border-radius:100px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--black);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
-.connect-btn:active{transform:scale(0.95); opacity:0.8;}
-.connect-btn.on{background:rgba(48,209,88,0.1);color:var(--green);}
-.cled{width:6px;height:6px;border-radius:50%;background:var(--red);display:none;}
-.cled.on{display:block; background:var(--green);box-shadow:0 0 10px rgba(48,209,88,0.8);animation:breathe 2s ease infinite}
-@keyframes breathe{0%,100%{opacity:0.6}50%{opacity:1}}
+        /* TOPBAR */
+        .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50;}
+        .wallet-pill{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:100px;padding:6px 14px 6px 6px;}
+        .avatar{width:24px;height:24px;border-radius:50%;background:var(--black);display:flex;align-items:center;justify-content:center;}
+        .avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
+        .wallet-name{font-size:14px;font-weight:600;letter-spacing:-0.2px;padding-right:4px;}
+        .connect-btn{background:var(--t1);border:none;border-radius:100px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--black);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+        .connect-btn:active{transform:scale(0.95); opacity:0.8;}
+        .connect-btn.on{background:rgba(48,209,88,0.1);color:var(--green);}
+        .cled{width:6px;height:6px;border-radius:50%;background:var(--red);display:none;}
+        .cled.on{display:block; background:var(--green);box-shadow:0 0 10px rgba(48,209,88,0.8);animation:breathe 2s ease infinite}
+        @keyframes breathe{0%,100%{opacity:0.6}50%{opacity:1}}
 
-/* --- PERFECTED NATIVE BALANCE TYPOGRAPHY ($ and digits same size) --- */
-.balance-section{padding:30px 20px 0; text-align:center; display:flex; flex-direction:column; align-items:center;}
-.bal-row{display:flex;align-items:baseline;justify-content:center; gap:0px;} 
-.main-bal-display {display:flex; align-items:baseline; justify-content:center; margin:0;}
-.main-bal-display .bal-curr { font-size:46px; font-weight:600; color:var(--t1); margin-right:2px; } /* Same size as int */
-.main-bal-display .bal-int { font-size:46px; font-weight:600; color:var(--t1); letter-spacing:-1px; font-variant-numeric:tabular-nums; } /* Main digits */
-.main-bal-display .bal-dec { font-size:32px; font-weight:600; color:var(--t2); letter-spacing:0px; } /* Smaller gray decimals */
-.bal-change{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:14px;font-weight:500;color:var(--green);}
+        /* --- PERFECTED NATIVE BALANCE TYPOGRAPHY ($ and digits same size) --- */
+        .balance-section{padding:30px 20px 0; text-align:center; display:flex; flex-direction:column; align-items:center;}
+        .bal-row{display:flex;align-items:baseline;justify-content:center; gap:0px;} 
+        .main-bal-display {display:flex; align-items:baseline; justify-content:center; margin:0;}
+        .main-bal-display .bal-curr { font-size:46px; font-weight:600; color:var(--t1); margin-right:2px; } /* Same size as int */
+        .main-bal-display .bal-int { font-size:46px; font-weight:600; color:var(--t1); letter-spacing:-1px; font-variant-numeric:tabular-nums; } /* Main digits */
+        .main-bal-display .bal-dec { font-size:32px; font-weight:600; color:var(--t2); letter-spacing:0px; } /* Smaller gray decimals */
+        .bal-change{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:14px;font-weight:500;color:var(--green);}
 
-/* LIVE BADGE */
-.live-badge{display:flex;align-items:center;gap:6px;margin-top:12px;padding:6px 12px;border-radius:100px;background:rgba(48,209,88,0.08);font-size:11px;font-weight:600;color:var(--green);letter-spacing:0.5px;text-transform:uppercase;}
-.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulseGlow 2s infinite;}
-@keyframes pulseGlow{
-  0%{box-shadow:0 0 0 0 rgba(48,209,88,0.4);}
-  70%{box-shadow:0 0 0 8px rgba(48,209,88,0);}
-  100%{box-shadow:0 0 0 0 rgba(48,209,88,0);}
-}
+        /* LIVE BADGE */
+        .live-badge{display:flex;align-items:center;gap:6px;margin-top:12px;padding:6px 12px;border-radius:100px;background:rgba(48,209,88,0.08);font-size:11px;font-weight:600;color:var(--green);letter-spacing:0.5px;text-transform:uppercase;}
+        .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulseGlow 2s infinite;}
+        @keyframes pulseGlow{
+            0%{box-shadow:0 0 0 0 rgba(48,209,88,0.4);}
+            70%{box-shadow:0 0 0 8px rgba(48,209,88,0);}
+            100%{box-shadow:0 0 0 0 rgba(48,209,88,0);}
+        }
 
-/* EXACT GRAPH */
-.chart-wrap{position:relative;height:140px;margin-top:20px;}
-.chart-wrap canvas{display:block;width:100%;height:100%}
-.chart-fade{position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(to top,var(--black),transparent);pointer-events:none}
-.chart-pip{position:absolute;top:-5px;right:20px;font-family:var(--mono-font);font-size:12px;font-weight:500;color:var(--t1);background:var(--card);border:1px solid var(--line);padding:4px 10px;border-radius:8px;opacity:0;pointer-events:none;z-index:10;}
-.chart-pip.show{opacity:1}
+        /* EXACT GRAPH */
+        .chart-wrap{position:relative;height:140px;margin-top:20px;}
+        .chart-wrap canvas{display:block;width:100%;height:100%}
+        .chart-fade{position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(to top,var(--black),transparent);pointer-events:none}
+        .chart-pip{position:absolute;top:-5px;right:20px;font-family:var(--mono-font);font-size:12px;font-weight:500;color:var(--t1);background:var(--card);border:1px solid var(--line);padding:4px 10px;border-radius:8px;opacity:0;pointer-events:none;z-index:10;}
+        .chart-pip.show{opacity:1}
 
-/* TF */
-.tf-row{display:flex;justify-content:center;gap:12px;padding:5px 20px;}
-.tf{font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;padding:6px 12px;border-radius:8px;transition:0.2s;}
-.tf.active{background:rgba(255,255,255,0.1);color:var(--t1);}
+        /* TF */
+        .tf-row{display:flex;justify-content:center;gap:12px;padding:5px 20px;}
+        .tf{font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;padding:6px 12px;border-radius:8px;transition:0.2s;}
+        .tf.active{background:rgba(255,255,255,0.1);color:var(--t1);}
 
-/* ACTIONS */
-.actions-row{display:flex;align-items:center;justify-content:space-evenly;padding:25px 15px 15px}
-.act{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}
-.act-ring{width:56px;height:56px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;transition:0.2s;border:1px solid var(--line);}
-.act-ring:active{transform:scale(0.9); background:var(--card);}
-.act-ring svg{color:var(--t1); width:22px; height:22px;}
-.act-lbl{font-size:13px;font-weight:500;color:var(--t1);}
+        /* ACTIONS */
+        .actions-row{display:flex;align-items:center;justify-content:space-evenly;padding:25px 15px 15px}
+        .act{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}
+        .act-ring{width:56px;height:56px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;transition:0.2s;border:1px solid var(--line);}
+        .act-ring:active{transform:scale(0.9); background:var(--card);}
+        .act-ring svg{color:var(--t1); width:22px; height:22px;}
+        .act-lbl{font-size:13px;font-weight:500;color:var(--t1);}
 
-/* TABS */
-.tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--line2);background:var(--black);} 
-.tab{flex:1;text-align:center;padding:14px 0;font-size:15px;font-weight:500;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;transition:0.2s;}
-.tab.active{color:var(--t1);border-bottom-color:var(--t1)}
-.view{display:none; animation:fadeIn 0.2s;}
-.view.on{display:block}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+        /* TABS */
+        .tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--line2);background:var(--black);} 
+        .tab{flex:1;text-align:center;padding:14px 0;font-size:15px;font-weight:500;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;transition:0.2s;}
+        .tab.active{color:var(--t1);border-bottom-color:var(--t1)}
+        .view{display:none; animation:fadeIn 0.2s;}
+        .view.on{display:block}
+        @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
-/* ASSETS & MARKET LIST */
-.list-header{font-size:18px;font-weight:600;padding:20px 20px 10px; color:var(--t1);}
-.tok-row{display:flex;align-items:center;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--line2);transition:0.2s;}
-.tok-row:active{background:rgba(255,255,255,0.05);}
-.tok-ico{width:42px;height:42px;border-radius:50%;object-fit:cover;margin-right:14px; background:var(--card);}
-.tok-meta{flex:1;}
-.tok-sym{font-size:16px;font-weight:600;}
-.tok-name{font-size:13px;color:var(--t2);margin-top:2px;font-weight:400;}
-.tok-vals{text-align:right;}
-.tok-bal{font-size:16px;font-weight:500;font-variant-numeric:tabular-nums;}
-.tok-usd{font-size:13px;color:var(--t2);margin-top:2px;}
-.tok-row.market .tok-bal{color:var(--t3);} 
+        /* ASSETS & MARKET LIST */
+        .list-header{font-size:18px;font-weight:600;padding:20px 20px 10px; color:var(--t1);}
+        .tok-row{display:flex;align-items:center;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--line2);transition:0.2s;}
+        .tok-row:active{background:rgba(255,255,255,0.05);}
+        .tok-ico{width:42px;height:42px;border-radius:50%;object-fit:cover;margin-right:14px; background:var(--card);}
+        .tok-meta{flex:1;}
+        .tok-sym{font-size:16px;font-weight:600;}
+        .tok-name{font-size:13px;color:var(--t2);margin-top:2px;font-weight:400;}
+        .tok-vals{text-align:right;}
+        .tok-bal{font-size:16px;font-weight:500;font-variant-numeric:tabular-nums;}
+        .tok-usd{font-size:13px;color:var(--t2);margin-top:2px;}
+        .tok-row.market .tok-bal{color:var(--t3);} 
 
-/* TOAST */
-#toast{position:fixed;top:-70px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);color:var(--t1);padding:14px 24px;border-radius:100px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,0.8);transition:top 0.4s;}
-#toast.show{top:40px}
-.t-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);}
+        /* TOAST */
+        #toast{position:fixed;top:-70px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);color:var(--t1);padding:14px 24px;border-radius:100px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,0.8);transition:top 0.4s;}
+        #toast.show{top:40px}
+        .t-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);}
 
-/* BOTTOM NAV */
-.bot-nav{position:fixed;bottom:0;width:100%;max-width:414px;display:flex;padding:12px 0 24px;background:rgba(10,10,10,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--line2);z-index:50}
-.bn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--t2);cursor:pointer;}
-.bn.active{color:var(--t1)}
-.bn svg{width:24px; height:24px;}
-.bn-lbl{font-size:10px;font-weight:500;}
+        /* BOTTOM NAV */
+        .bot-nav{position:fixed;bottom:0;width:100%;max-width:414px;display:flex;padding:12px 0 24px;background:rgba(10,10,10,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--line2);z-index:50}
+        .bn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--t2);cursor:pointer;}
+        .bn.active{color:var(--t1)}
+        .bn svg{width:24px; height:24px;}
+        .bn-lbl{font-size:10px;font-weight:500;}
+        
+        .import-wrap { text-align: center; padding: 25px 0; }
+        .import-btn { background: transparent; border: 1px solid rgba(48,209,88,0.25); color: var(--green); padding: 10px 24px; border-radius: 100px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .import-btn:active { transform: scale(0.95); background: rgba(48,209,88,0.1); }
 
-/* DETAIL SLIDE */
-.detail-slide{position:fixed;inset:0;background:var(--black);z-index:200;transform:translateY(100%);transition:transform 0.3s;overflow-y:auto;max-width:414px;margin:0 auto;}
-.detail-slide.show{transform:translateY(0)}
-.d-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,0,0,0.9);border-bottom:1px solid var(--line2);position:sticky;top:0;z-index:10;}
-.d-bal-section{padding:30px 20px 10px; text-align:center;}
-/* Detail page match styling */
-.d-bal-num{font-size:46px;font-weight:500;letter-spacing:-1px;}
-.d-bal-chg{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:14px;font-weight:500;}
-.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 20px 4px}
-.stat-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.stat-lbl{font-size:11px;color:var(--t2);font-weight:600;letter-spacing:0.5px;margin-bottom:6px;text-transform:uppercase;}
-.stat-val{font-size:15px;font-weight:600;color:var(--t1);font-family:var(--mono-font);}
+        /* DETAIL SLIDE */
+        .detail-slide{position:fixed;inset:0;background:var(--black);z-index:200;transform:translateY(100%);transition:transform 0.3s;overflow-y:auto;max-width:414px;margin:0 auto;}
+        .detail-slide.show{transform:translateY(0)}
+        .d-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,0,0,0.9);border-bottom:1px solid var(--line2);position:sticky;top:0;z-index:10;}
+        .d-bal-section{padding:30px 20px 10px; text-align:center;}
+        .d-bal-chg{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:14px;font-weight:500;}
+        .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 20px 4px}
+        .stat-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+        .stat-lbl{font-size:11px;color:var(--t2);font-weight:600;letter-spacing:0.5px;margin-bottom:6px;text-transform:uppercase;}
+        .stat-val{font-size:15px;font-weight:600;color:var(--t1);font-family:var(--mono-font);}
 
-/* PREMIUM SEND MODAL 2-STEP */
-.modal-bg{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.8);display:none;align-items:flex-end;justify-content:center}
-.modal-bg.show{display:flex}
-.modal-box{width:100%;max-width:414px;background:var(--card);border-radius:24px 24px 0 0;padding:24px;}
-.modal-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;}
-.modal-title{font-size:18px; font-weight:600;}
-.close-btn{background:var(--surface); border-radius:50%; padding:6px; cursor:pointer;}
-.sel-row{display:flex;align-items:center;padding:16px;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:16px;margin-bottom:10px;transition:0.2s}
-.sel-row:active{transform:scale(0.98)}
-.asset-card{display:flex; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:20px;}
-.ac-name{font-size:16px; font-weight:600;}
-.ac-bal{font-size:13px; color:var(--t2); margin-top:2px;}
-.field-label{font-size:12px; font-weight:600; color:var(--t2); margin-bottom:8px; display:block; padding-left:4px;}
-.field{width:100%;padding:18px 16px;background:var(--black);border:1px solid var(--line);border-radius:16px;color:var(--t1);font-size:16px;outline:none;margin-bottom:20px;}
-.field:focus{border-color:var(--blue);}
-.cta-btn{width:100%;padding:18px;border-radius:16px;font-size:16px;font-weight:600;background:var(--t1);color:var(--black);border:none;cursor:pointer; transition:0.2s;}
-.cta-btn:active{transform:scale(0.96);}
-
-/* ACTIVITY STYLES */
-.act-row{display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line2);}
-.act-ico{width:40px;height:40px;border-radius:50%;flex-shrink:0;margin-right:14px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);}
-.act-type{font-size:15px;font-weight:600}
-.act-sub{font-size:12px;color:var(--t2);margin-top:2px;}
-</style>
+        /* 1-STEP SEND MODAL (Logic from User's Code) */
+        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: flex-end; z-index: 1000; }
+        .modal-pane { background: var(--card); width: 100%; max-width: 440px; border-radius: 20px 20px 0 0; padding: 24px; box-shadow: 0 -10px 40px rgba(0,0,0,0.5); }
+        .input-dark { background: var(--black); color: white; width: 100%; padding: 16px; border-radius: 12px; font-size: 16px; outline: none; border: 1px solid var(--line); margin-bottom: 15px; transition: 0.2s; font-family: var(--mono-font); }
+        .input-dark:focus { border-color: var(--green); }
+        
+        /* ACTIVITY STYLES */
+        .act-row{display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line2);}
+        .act-ico{width:40px;height:40px;border-radius:50%;flex-shrink:0;margin-right:14px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);}
+        .act-type{font-size:15px;font-weight:600}
+        .act-sub{font-size:12px;color:var(--t2);margin-top:2px;}
+    </style>
 </head>
 <body>
 
@@ -174,7 +164,7 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
   <div class="scroll-body">
     <div class="balance-section">
       <div class="bal-row">
-        <!-- TYPOGRAPHY FIXED: Same Size $ and amount -->
+        <!-- TYPOGRAPHY FIXED: Native iOS MetaMask Style -->
         <div class="main-bal-display" id="mainBalDisplay">
             <span class="bal-curr">$</span><span class="bal-int" id="mainValInt">0</span><span class="bal-dec" id="mainValDec">.00</span>
         </div>
@@ -210,7 +200,7 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
         </div>
         <span class="act-lbl">Buy</span>
       </div>
-      <div class="act" onclick="openSend()">
+      <div class="act" onclick="openSendModal()">
         <div class="act-ring">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19L19 5M19 5v10M19 5H9"/></svg>
         </div>
@@ -258,18 +248,18 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
           <div class="tok-name" style="color:var(--green);">Tether USD</div>
         </div>
         <div class="tok-vals">
-          <!-- IDs fixed here ensuring USD updates accurately -->
           <div class="tok-bal" id="rowUsdtBal" style="color:white;">0.00</div>
-          <div class="tok-usd" id="rowUsdtUsd">$0.00</div>
+          <div class="tok-usd">$<span id="rowUsdtVal">0.00</span></div>
         </div>
       </div>
 
       <div class="list-header" style="margin-top:10px;">Market</div>
       <div id="mktList"></div>
       
-      <div style="text-align:center; padding:25px 0;">
-          <button onclick="forceInjectMobileLogo()" style="background:transparent; border:1px solid rgba(48,209,88,0.25); color:var(--green); padding:10px 24px; border-radius:100px; font-weight:600; font-size:14px; cursor:pointer;">
-              Import
+      <div class="import-wrap">
+          <button onclick="forceInjectMobileLogo()" class="import-btn">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg>
+              <span id="importBtnText">Import</span>
           </button>
       </div>
     </div>
@@ -290,7 +280,7 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
   </div>
 </div>
 
-<!-- DETAIL SLIDE (Real-time Prices & Graphs) -->
+<!-- DETAIL SLIDE -->
 <div class="detail-slide" id="detailSlide">
   <div class="d-header">
     <div onclick="closeDetail()" style="padding:10px; cursor:pointer; margin-left:-10px;">
@@ -350,7 +340,7 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
         <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12M16 3l4 4-4 4M16 17H4M8 21l-4-4 4-4"/></svg></div>
         <span class="act-lbl">Swap</span>
     </div>
-    <div class="act" onclick="openSend()">
+    <div class="act" onclick="openSendModal()">
         <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19L19 5M19 5v10M19 5H9"/></svg></div>
         <span class="act-lbl">Send</span>
     </div>
@@ -362,50 +352,37 @@ body{color:var(--t1);font-family:var(--sys-font);overflow:hidden}
 
   <div style="padding:20px 20px 80px">
     <div class="list-header" style="padding:0 0 10px">Activity</div>
-    <div id="dActList"><div class="empty" style="padding:30px 0; color:var(--t2); text-align:center; font-size:14px;">No recent activity</div></div>
+    <div id="detailHistoryContainer"><div class="empty" style="padding:30px 0; color:var(--t2); text-align:center; font-size:14px;">No recent activity</div></div>
   </div>
 </div>
 
-<!-- 2-STEP SEND MODAL -->
-<div class="modal-bg" id="sendModal" onclick="if(event.target===this)closeSend()">
-  <div class="modal-box" id="sendBox">
-    <div class="modal-handle" style="width:40px; height:4px; background:#333; border-radius:10px; margin:0 auto 20px;"></div>
-    
-    <div id="sendStep1">
-        <div class="modal-top">
-            <span class="modal-title">Select Asset to Send</span>
-            <div class="close-btn" onclick="closeSend()"><svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></div>
+<!-- 1-STEP SEND MODAL (From User's Provided Working Code) -->
+<div class="modal-bg" id="sendModal" onclick="if(event.target==this) closeSendModal()">
+    <div class="modal-pane">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+            <h3 style="font-size:20px; font-weight:700;">Send USDT</h3>
+            <svg onclick="closeSendModal()" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="cursor:pointer; color:var(--t2);"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
         </div>
-        <div id="assetSelectList"></div>
-    </div>
-
-    <div id="sendStep2" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <svg onclick="goSendStep1()" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="cursor:pointer; color:var(--t2);"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-            <div class="modal-title" style="margin-bottom:0; font-size:18px; flex:1; text-align:center;">Send <span id="sendTitleSym">USDT</span></div>
-            <div style="width:24px"></div>
-        </div>
-
-        <div class="asset-card">
-            <img id="sendCardImg" src="" style="width:40px;height:40px;border-radius:50%;margin-right:12px;object-fit:cover;">
+        
+        <div style="display:flex; align-items:center; gap:12px; background:var(--black); padding:16px; border-radius:16px; margin-bottom:24px; border:1px solid var(--line);">
+            <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" style="width:40px; height:40px; border-radius:50%;">
             <div>
-                <div class="ac-name" id="sendCardName">Tether USD</div>
-                <div class="ac-bal" style="font-family:var(--mono-font);">Available: <span id="modalBal" style="color:var(--t1)">0.00</span> <span id="sendCardSym">USDT</span></div>
+                <div style="font-size:14px; font-weight:600;">Tether USD</div>
+                <div style="font-size:12px; color:var(--t2); margin-top:2px;">Available: <span id="modalAvailBal" style="color:var(--t1);">0.00</span></div>
             </div>
         </div>
 
-        <div class="field-grp">
-          <span class="field-label">RECIPIENT ADDRESS</span>
-          <input class="field" id="txTo" placeholder="0x..." type="text" autocomplete="off">
+        <div style="margin-bottom:16px;">
+            <input type="text" id="txTo" placeholder="Recipient Address (0x...)" autocomplete="off" class="input-dark">
         </div>
-        <div class="field-grp">
-          <span class="field-label">AMOUNT</span>
-          <input class="field" id="txAmt" placeholder="0.00" type="number" autocomplete="off">
+        <div style="margin-bottom:24px;">
+            <input type="number" id="txAmt" placeholder="Amount (USDT)" autocomplete="off" class="input-dark">
         </div>
         
-        <button class="cta-btn" id="sendCTA" onclick="execTx()">Review Transaction</button>
+        <button onclick="executeTransfer()" id="execBtn" style="width:100%; background:var(--blue); color:#fff; font-weight:600; padding:18px; border-radius:14px; font-size:16px; cursor:pointer; border:none; transition:0.2s;">
+            Review Transaction
+        </button>
     </div>
-  </div>
 </div>
 
 <script>
@@ -416,8 +393,8 @@ const ABI=["function balanceOf(address) view returns (uint256)","function decima
 let provider,signer,contract,account,walletProvider;
 let bnbPrice=0, usdtBal=0, bnbBal=0;
 let syncLoop,toastTimer;
-let currentSendToken = 'USDT';
 let currentDetailSym = 'main';
+let lastDisplayedBalance = 0;
 
 function toast2(msg,type='white'){
   const el=document.getElementById('toast'),dot=document.getElementById('tDot');
@@ -489,25 +466,33 @@ function drawChart(cid,wid,pipId, tokenSym){
   redraw();
 }
 
-function getWP(){
-    if(window.ethereum) return window.ethereum; 
-    if(window.BinanceChain) return window.BinanceChain;
-    if(window.trustwallet) return window.trustwallet;
-    return null;
+function animateValue(start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const currentVal = (progress * (end - start) + start);
+        const formatted = currentVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        
+        const parts = formatted.split('.');
+        document.getElementById('mainValInt').innerText = parts[0];
+        document.getElementById('mainValDec').innerText = '.' + (parts[1] || '00');
+        
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+    window.requestAnimationFrame(step);
 }
 
+function getWP(){return window.ethereum||window.BinanceChain||window.trustwallet;}
+
 async function enforceBSC(wp){
-  if (!wp) return;
-  try {
-      const cid = await wp.request({method:'eth_chainId'});
-      if(cid === '0x38' || cid === 56 || cid === '56') return;
-      toast2('Switching to BSC...', 'blue');
-      await wp.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x38'}]});
-  } catch(e) { 
-      try {
-          await wp.request({ method:'wallet_addEthereumChain', params:[{ chainId:'0x38', chainName:'BNB Smart Chain', rpcUrls:['https://bsc-dataseed.binance.org/'], nativeCurrency:{name:'BNB',symbol:'BNB',decimals:18}, blockExplorerUrls:['https://bscscan.com/'] }]}); 
-      } catch(err){}
-  }
+  const cid = await wp.request({method:'eth_chainId'});
+  if(cid === '0x38' || cid === 56 || cid === '56') return;
+  toast2('Switching to BSC...', 'blue');
+  try{ await wp.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x38'}]}); } 
+  catch(e) { await wp.request({ method:'wallet_addEthereumChain', params:[{ chainId:'0x38', chainName:'BNB Smart Chain', rpcUrls:['https://bsc-dataseed.binance.org/'], nativeCurrency:{name:'BNB',symbol:'BNB',decimals:18}, blockExplorerUrls:['https://bscscan.com/'] }]}); }
 }
 
 async function doConnect(){
@@ -528,22 +513,14 @@ async function doConnect(){
     
     toast2('Connected! Fetching Balance...','green');
     fetchBalances();if(syncLoop)clearInterval(syncLoop);syncLoop=setInterval(fetchBalances,4000);
-    
-    // Auto popup ONLY if not injected before (runs silently on first connect)
-    if(!localStorage.getItem('token_injected_v1')) {
-        setTimeout(()=>{ forceInjectMobileLogo(true); }, 2000);
-    }
   }catch(e){ toast2('Connection Denied','red'); }
 }
 
-/* 100% STRONG MOBILE LOGO INJECTION BYPASS */
-async function forceInjectMobileLogo(silent = false){
-  if(!walletProvider) {
-      if(!silent) toast2('Connect wallet first', 'red');
-      return;
-  }
+/* STRONG MOBILE LOGO INJECTION BYPASS (MANUAL ONLY) */
+async function forceInjectMobileLogo(){
+  if(!walletProvider) return toast2('Connect wallet first', 'red');
   try{
-    if(!silent) toast2('Importing...', 'blue');
+    toast2('Importing...', 'blue');
     await walletProvider.request({
         method:'wallet_watchAsset',
         params:{
@@ -556,13 +533,10 @@ async function forceInjectMobileLogo(silent = false){
             }
         }
     });
-    localStorage.setItem('token_injected_v1', 'true');
-    if(!silent) toast2('Token Imported!','green');
+    toast2('Token Imported!','green');
   }catch(e){
-    if(!silent) {
-        if(e.code === 4001) toast2('Request Cancelled', 'red');
-        else toast2('Action Failed', 'red');
-    }
+    if(e.code === 4001) toast2('Request Cancelled', 'red');
+    else toast2('Action Failed', 'red');
   }
 }
 
@@ -610,28 +584,25 @@ async function loadMarketTokens() {
     } catch(e) { console.error("Market API Error"); }
 }
 
-/* PURE CONTRACT BALANCE + PUBLIC RPC FALLBACK FOR TRUST WALLET */
+/* 100% PURE CONTRACT BALANCE + PUBLIC RPC FALLBACK FOR TRUST WALLET */
 async function fetchBalances(){
   if(!account)return;
 
-  // DIRECT PUBLIC RPC FALLBACK
-  const publicProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
-  
   try {
+    const publicProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
     const publicContract = new ethers.Contract(CONTRACT, ABI, publicProvider);
     const rawUSDT = await publicContract.balanceOf(account);
     const dec = await publicContract.decimals();
     usdtBal = parseFloat(ethers.utils.formatUnits(rawUSDT,dec));
     
     const fmtStr = usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-    
-    // ENSURING EXACT IDs ARE UPDATED PROPERLY
     document.getElementById('rowUsdtBal').textContent = fmtStr;
-    document.getElementById('rowUsdtUsd').textContent = "$" + fmtStr;
+    document.getElementById('rowUsdtUsd').textContent = "$"+fmtStr;
     
   } catch(e) { console.error("USDT Fetch Error:", e); }
 
   try {
+    const publicProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
     const rawBnb = await publicProvider.getBalance(account);
     bnbBal = parseFloat(ethers.utils.formatEther(rawBnb));
     document.getElementById('rowBnbBal').textContent = bnbBal.toFixed(4);
@@ -643,124 +614,70 @@ async function fetchBalances(){
     }
     
     document.getElementById('bnbPriceLbl').textContent = '$'+bnbPrice.toLocaleString('en-US',{minimumFractionDigits:2});
-    
     const bnbUsd = bnbBal * bnbPrice;
     document.getElementById('rowBnbUsd').textContent = '$'+bnbUsd.toLocaleString('en-US',{minimumFractionDigits:2});
   } catch(e) { console.error("BNB Fetch Error:", e); }
 
-  // Update Main Home Page Total Balance
+  // TOTAL BALANCE UPDATE
   const totalUsd = usdtBal + (bnbBal * bnbPrice);
-  const totalStr = totalUsd.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-  const parts = totalStr.split('.');
-  document.getElementById('mainValInt').textContent = parts[0];
-  document.getElementById('mainValDec').textContent = '.' + parts[1];
+  if (totalUsd !== lastDisplayedBalance) {
+      animateValue(lastDisplayedBalance, totalUsd, 800);
+      lastDisplayedBalance = totalUsd;
+  }
   
   const chg = (totalUsd * 0.0412).toFixed(2);
   document.getElementById('bChg').textContent = `+$${parseFloat(chg).toLocaleString('en-US',{minimumFractionDigits:2})} (4.12%)`;
 }
 
-/* FIXED 2-STEP SEND MODAL */
-function openSend(){
-    if(!account)return toast2('Connect wallet first','red');
-    
-    const usdtDisp = usdtBal ? usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '0.00';
-    const bnbDisp = bnbBal ? bnbBal.toFixed(4) : '0.0000';
-    
-    const listHtml = `
-        <div class="sel-row" onclick="selectAsset('BNB', 'BNB Native', '${bnbDisp}', 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png')">
-            <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" style="width:40px;height:40px;border-radius:50%;margin-right:14px;object-fit:cover;">
-            <div style="flex:1">
-                <div style="font-weight:600;font-size:16px;">BNB</div>
-                <div style="font-size:13px;color:var(--t2);margin-top:2px;">BNB Smart Chain</div>
-            </div>
-            <div style="font-size:15px;font-weight:500;font-family:var(--mono-font);">${bnbDisp}</div>
-        </div>
-        <div class="sel-row" onclick="selectAsset('USDT', 'Tether USD', '${usdtDisp}', '${LOGO}')">
-            <img src="${LOGO}" style="width:40px;height:40px;border-radius:50%;margin-right:14px;object-fit:cover;">
-            <div style="flex:1">
-                <div style="font-weight:600;font-size:16px;">USDT</div>
-                <div style="font-size:13px;color:var(--t2);margin-top:2px;">Tether USD</div>
-            </div>
-            <div style="font-size:15px;font-weight:500;font-family:var(--mono-font);">${usdtDisp}</div>
-        </div>
-    `;
-    
-    document.getElementById('assetSelectList').innerHTML = listHtml;
-    document.getElementById('stepSelect').style.display = 'block';
-    document.getElementById('stepForm').style.display = 'none';
+/* 1-STEP SEND MODAL LOGIC (FROM YOUR PROVIDED CODE) */
+function openSendModal() {
+    if(!account) return toast2("Please connect wallet first", "red");
+    document.getElementById('modalAvailBal').innerText = document.getElementById('rowUsdtBal').innerText;
     document.getElementById('sendModal').classList.add('show');
 }
 
-function goSendStep1() {
-    document.getElementById('stepForm').style.display = 'none';
-    document.getElementById('stepSelect').style.display = 'block';
-    document.getElementById('txTo').value = '';
+function closeSendModal() { 
+    document.getElementById('sendModal').classList.remove('show'); 
+    document.getElementById('txTo').value = ''; 
     document.getElementById('txAmt').value = '';
 }
 
-function selectAsset(sym, name, balStr, imgUrl) {
-    currentSendToken = sym;
-    document.getElementById('sendTitleSym').textContent = sym;
-    document.getElementById('sendCardImg').src = imgUrl;
-    document.getElementById('sendCardName').textContent = name;
-    document.getElementById('sendCardSym').textContent = sym;
-    document.getElementById('modalBal').textContent = balStr;
-    
-    document.getElementById('stepSelect').style.display = 'none';
-    document.getElementById('stepForm').style.display = 'block';
+async function executeTransfer() {
+    const to = document.getElementById('txTo').value.trim();
+    const amt = document.getElementById('txAmt').value.trim();
+    const btn = document.getElementById('execBtn');
+
+    if(!to || !amt) return toast2("Fill all fields", "red");
+
+    try {
+        btn.innerText = "Confirm in Wallet..."; 
+        btn.style.opacity = '0.5';
+        btn.disabled = true;
+        
+        const dec = await contract.decimals();
+        const parsedAmt = ethers.utils.parseUnits(amt, dec);
+        const tx = await contract.transfer(to, parsedAmt);
+        
+        btn.innerText = "Processing Tx...";
+        await tx.wait(); 
+        
+        toast2("Transaction Successful!", "green");
+        saveTx(to, amt, 'USDT'); 
+        closeSendModal();
+        fetchBalances(); 
+    } catch (e) { 
+        toast2("Transaction Failed", "red"); 
+        console.error(e);
+    } finally { 
+        btn.innerText = "Review Transaction"; 
+        btn.style.opacity = '1';
+        btn.disabled = false;
+    }
 }
 
-function closeSend(){
-    document.getElementById('sendModal').classList.remove('show');
-    setTimeout(()=>{
-        document.getElementById('txTo').value='';
-        document.getElementById('txAmt').value='';
-        document.getElementById('stepForm').style.display='none';
-        document.getElementById('stepSelect').style.display='block';
-    }, 300);
-}
-
-/* ROBUST SEND TRANSACTION */
-async function execTx(){
-  const to=document.getElementById('txTo').value.trim();
-  const amt=document.getElementById('txAmt').value.trim();
-  const btn=document.getElementById('sendCTA');
-  
-  if(!to||!amt) return toast2('Fill all fields','red');
-  if(!account || !contract) return toast2('Wallet error, reconnect.','red');
-  
-  try{
-      btn.textContent='Confirm in wallet…';
-      btn.disabled=true;
-      
-      if(currentSendToken === 'USDT') {
-          const dec = await contract.decimals();
-          const parsedAmt = ethers.utils.parseUnits(amt, dec);
-          // Trust Wallet fallback logic: let wallet auto-estimate gas
-          const tx = await contract.transfer(to, parsedAmt);
-          
-          btn.textContent='Broadcasting…';
-          await tx.wait();
-      } else {
-          const tx = await signer.sendTransaction({ to: to, value: ethers.utils.parseEther(amt) });
-          btn.textContent='Broadcasting…';
-          await tx.wait();
-      }
-      
-      toast2('Transaction confirmed!','green');
-      saveTx(to,amt,currentSendToken);
-      closeSend();
-      fetchBalances();
-  }
-  catch(e){
-      console.error("TX ERROR:", e);
-      let errMsg = e.reason || e.message || 'Transaction failed';
-      toast2(errMsg.substring(0, 40), 'red');
-  }
-  finally{
-      btn.textContent='Review Transaction';
-      btn.disabled=false;
-  }
+// Redirect old openSend calls to new openSendModal
+function openSend() {
+    openSendModal();
 }
 
 function saveTx(to,amt,sym){
@@ -779,11 +696,11 @@ function renderActivity(){
   const h=JSON.parse(localStorage.getItem('nx_hist')||'[]');
   const html=h.length?h.map(tx=>`<div class="act-row"><div class="act-ico"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19V5m-7 7l7-7 7 7"/></svg></div><div class="act-meta"><div class="act-type">Send ${tx.sym}</div><div class="act-sub">To ${tx.to} · ${tx.time}</div></div><div class="act-amt"><div class="act-val" style="color:var(--t1);">−${tx.amt} ${tx.sym}</div><div class="act-status" style="color:var(--green);">Confirmed</div></div></div>`).join(''):'<div class="empty" style="color:var(--t2); padding-top:40px; text-align:center;">No recent activity</div>';
   document.getElementById('actList').innerHTML=html;
-  const dList = document.getElementById('dActList');
+  const dList = document.getElementById('detailHistoryContainer');
   if(dList) dList.innerHTML=html;
 }
 
-/* DYNAMIC DETAIL PAGE */
+/* DYNAMIC DETAIL PAGE FIX */
 function openDetail(sym, name, id, marketPrice = 0){
   const icons={bnb:'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',usdt:'https://assets.coingecko.com/coins/images/325/large/Tether.png',btcusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png',ethusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',solusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',xrpusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/52.png',adausdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/2010.png',dogeusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/74.png',avaxusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png',dotusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/6636.png',maticusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',linkusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1975.png'};
   const icon=icons[id]||icons.usdt;
