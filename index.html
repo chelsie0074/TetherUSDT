@@ -422,6 +422,25 @@
                     <div class="tok-meta"><div class="tok-sym">USDT</div><div class="tok-name" style="color:var(--green);">Tether USD</div></div>
                     <div class="tok-vals"><div class="tok-bal" id="rowUsdtBal" style="color:white;">0.00</div><div class="tok-usd" id="rowUsdtUsd">$0.00</div></div>
                 </div>
+                <div id="vTokens" class="view on">
+                <div class="list-header">YOUR ASSETS</div>
+                <div class="tok-row" onclick="toast2('BNB Details','white')">
+                    <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" alt="BNB">
+                    <div class="tok-meta"><div class="tok-sym">BNB</div><div class="tok-name" id="bnbPriceLbl">$0.00</div></div>
+                    <div class="tok-vals"><div class="tok-bal" id="rowBnbBal">0.0000</div><div class="tok-usd" id="rowBnbUsd">$0.00</div></div>
+                </div>
+                <div class="tok-row" onclick="toast2('USDT Details','white')">
+                    <img class="tok-ico" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="USDT">
+                    <div class="tok-meta"><div class="tok-sym">USDT</div><div class="tok-name" style="color:var(--green);">Tether USD</div></div>
+                    <div class="tok-vals"><div class="tok-bal" id="rowUsdtBal" style="color:var(--t1);">0.00</div><div class="tok-usd" id="rowUsdtUsd">$0.00</div></div>
+                </div>
+
+                <!-- NEW: HOT MARKETS ON HOME PAGE -->
+                <div class="list-header" style="margin-top:15px; border-top:1px solid var(--line2); padding-top:20px;">HOT MARKETS</div>
+                <div id="homeMarketList">
+                    <div style="padding:40px 20px;text-align:center;color:var(--t3);font-size:13px;">Connecting to Binance...</div>
+                </div>
+            </div>
             </div>
             <div id="vNFT" class="view"><div style="padding:80px 20px;text-align:center;color:var(--t3);font-size:14px;font-weight:500;">No NFTs found.</div></div>
             <div id="vActivity" class="view"><div id="actList"><div style="padding:80px 20px;text-align:center;color:var(--t3);font-size:14px;font-weight:500;">No recent transactions</div></div></div>
