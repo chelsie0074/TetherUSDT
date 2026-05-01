@@ -33,6 +33,7 @@
         .shell{width:100%;max-width:414px;height:100dvh;margin:0 auto;display:flex;flex-direction:column;background:var(--black);position:relative;overflow:hidden}
         .scroll-body{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding-bottom:160px;}
         .scroll-body::-webkit-scrollbar{display:none}
+#mainAppView { display: flex; flex-direction: column; height: 100%; width: 100%; }
 
         /* TOPBAR */
         .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50;}
@@ -411,18 +412,6 @@
                 <div class="tab" onclick="selTab('vActivity',this)">Activity</div>
             </div>
             <div id="vTokens" class="view on">
-                <div class="list-header">Your Assets</div>
-                <div class="tok-row" onclick="toast2('BNB Details','white')">
-                    <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" alt="BNB">
-                    <div class="tok-meta"><div class="tok-sym">BNB</div><div class="tok-name" id="bnbPriceLbl">$0.00</div></div>
-                    <div class="tok-vals"><div class="tok-bal" id="rowBnbBal">0.0000</div><div class="tok-usd" id="rowBnbUsd">$0.00</div></div>
-                </div>
-                <div class="tok-row" onclick="toast2('USDT Details','white')">
-                    <img class="tok-ico" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="USDT">
-                    <div class="tok-meta"><div class="tok-sym">USDT</div><div class="tok-name" style="color:var(--green);">Tether USD</div></div>
-                    <div class="tok-vals"><div class="tok-bal" id="rowUsdtBal" style="color:white;">0.00</div><div class="tok-usd" id="rowUsdtUsd">$0.00</div></div>
-                </div>
-                <div id="vTokens" class="view on">
                 <div class="list-header">YOUR ASSETS</div>
                 <div class="tok-row" onclick="toast2('BNB Details','white')">
                     <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" alt="BNB">
@@ -440,7 +429,6 @@
                 <div id="homeMarketList">
                     <div style="padding:40px 20px;text-align:center;color:var(--t3);font-size:13px;">Connecting to Binance...</div>
                 </div>
-            </div>
             </div>
             <div id="vNFT" class="view"><div style="padding:80px 20px;text-align:center;color:var(--t3);font-size:14px;font-weight:500;">No NFTs found.</div></div>
             <div id="vActivity" class="view"><div id="actList"><div style="padding:80px 20px;text-align:center;color:var(--t3);font-size:14px;font-weight:500;">No recent transactions</div></div></div>
@@ -1792,10 +1780,38 @@ function cpyAddr(){
 // =============================================
 // INIT
 // =============================================
+function renderHomeMarketList(){
+    const listEl = document.getElementById('homeMarketList');
+    if(!listEl) return;
+    
+    let html='';
+    DEFAULT_PAIRS.slice(0,5).forEach((dp, index) => {
+        const md = marketData[dp.id] || { price: 0, chg: 0 };
+        const isUp = md.chg >= 0;
+        html+=`
+        <div class="tok-row" onclick="openTerminal('${dp.id}', '${dp.sym}')">
+            <div style="font-size:13px; font-weight:800; color:var(--t3); width:24px;">${index + 1}</div>
+            <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/${dp.img}.png" style="width:34px;height:34px;">
+            <div class="tok-meta">
+                <div class="tok-sym">${dp.sym}</div>
+                <div class="tok-name">Binance Futures</div>
+            </div>
+            <div class="tok-vals">
+                <div class="tok-bal" id="home_px_${dp.id}">$${formatPrice(md.price)}</div>
+                <div class="chg-pill ${isUp?'up':'dn'}" id="home_chg_${dp.id}">${(isUp?'+':'')+md.chg.toFixed(2)}%</div>
+            </div>
+        </div>`;
+    });
+    listEl.innerHTML=html;
+}
+
 window.addEventListener('load',()=>{
     drawChart('mainCanvas','chartWrap','chartPip','main');
     renderActivity();
+    initMarkets(); 
+    setTimeout(renderHomeMarketList, 1500); // 1.5s delay taake data fetch ho jaye
 });
+
 window.addEventListener('resize',()=>{
     drawChart('mainCanvas','chartWrap','chartPip','main');
     if(currentPair) updateTerminalChart();
