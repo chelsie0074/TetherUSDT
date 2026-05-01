@@ -1780,16 +1780,18 @@ function cpyAddr(){
 // =============================================
 // INIT
 // =============================================
+// Home Page par Live Market List banane ka function
 function renderHomeMarketList(){
     const listEl = document.getElementById('homeMarketList');
     if(!listEl) return;
     
     let html='';
-    DEFAULT_PAIRS.slice(0,5).forEach((dp, index) => {
+    // Yahan maine DEFAULT_PAIRS ki jagah FUTURES_PAIRS kar diya hai!
+    FUTURES_PAIRS.slice(0,5).forEach((dp, index) => {
         const md = marketData[dp.id] || { price: 0, chg: 0 };
         const isUp = md.chg >= 0;
         html+=`
-        <div class="tok-row" onclick="openTerminal('${dp.id}', '${dp.sym}')">
+        <div class="tok-row" onclick="openTerminal('${dp.id}')">
             <div style="font-size:13px; font-weight:800; color:var(--t3); width:24px;">${index + 1}</div>
             <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/${dp.img}.png" style="width:34px;height:34px;">
             <div class="tok-meta">
