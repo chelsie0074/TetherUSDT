@@ -97,7 +97,7 @@
         .view.on{display:block}
         @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
-        /* ASSETS & MARKET LIST */
+        /* ASSETS LIST */
         .list-header{font-size:18px;font-weight:600;padding:20px 20px 10px; color:var(--t1);}
         .tok-row{display:flex;align-items:center;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--line2);transition:background 0.2s;}
         .tok-row:active{background:rgba(255,255,255,0.05);}
@@ -108,7 +108,14 @@
         .tok-vals{text-align:right;}
         .tok-bal{font-size:16px;font-weight:500;font-variant-numeric:tabular-nums;}
         .tok-usd{font-size:13px;color:var(--t2);margin-top:2px;}
-        .tok-row.market .tok-bal{color:var(--t3);} 
+        
+        /* MARKET LIST SPECIFIC */
+        .market-header { display:flex; justify-content:space-between; padding:15px 20px 5px; color:var(--t2); font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--line2); }
+        .tok-row.market .tok-bal{color:var(--t1); font-family:var(--mono-font); font-weight:600; font-size:15px;} 
+        .tok-row.market .tok-usd{font-weight:600; font-size:13px; margin-top:4px;}
+        .change-pill { display:inline-block; padding:4px 8px; border-radius:6px; font-size:12px; font-weight:600; min-width:65px; text-align:center; }
+        .change-pill.up { background:rgba(48,209,88,0.15); color:var(--green); }
+        .change-pill.down { background:rgba(255,69,58,0.15); color:var(--red); }
 
         /* TOAST */
         #toast{position:fixed;top:-70px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);color:var(--t1);padding:14px 24px;border-radius:100px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,0.8);transition:top 0.4s;}
@@ -121,17 +128,6 @@
         .bn.active{color:var(--t1)}
         .bn svg{width:24px; height:24px;}
         .bn-lbl{font-size:10px;font-weight:500;}
-
-        /* DETAIL SLIDE */
-        .detail-slide{position:fixed;inset:0;background:var(--black);z-index:200;transform:translateY(100%);transition:transform 0.3s;overflow-y:auto;max-width:414px;margin:0 auto;}
-        .detail-slide.show{transform:translateY(0)}
-        .d-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,0,0,0.9);border-bottom:1px solid var(--line2);position:sticky;top:0;z-index:10;}
-        .d-bal-section{padding:30px 20px 10px; text-align:center;}
-        .d-bal-chg{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:14px;font-weight:500;}
-        .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 20px 4px}
-        .stat-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-        .stat-lbl{font-size:11px;color:var(--t2);font-weight:600;letter-spacing:0.5px;margin-bottom:6px;text-transform:uppercase;}
-        .stat-val{font-size:15px;font-weight:600;color:var(--t1);font-family:var(--mono-font);}
 
         /* SEND MODAL */
         .modal-bg{
@@ -224,24 +220,43 @@
         /* ----------------------------------------------------
            NEW: ADVANCED LIVE TRADING TERMINAL STYLES (0.1% Scalper Logic)
            ---------------------------------------------------- */
-        .trade-terminal { padding: 0 20px 20px; }
-        .ticker-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--line); margin-bottom: 15px; }
+        #vMarketTrade { display:none; background:var(--black); min-height:100dvh; position:absolute; top:0; left:0; width:100%; z-index:100; overflow-y:auto; padding-bottom:120px; }
+        #vMarketTrade.show { display:block; animation:slideInRight 0.3s ease forwards; }
+        @keyframes slideInRight { from{transform:translateX(100%);} to{transform:translateX(0);} }
+
+        .terminal-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:rgba(0,0,0,0.9); border-bottom:1px solid var(--line2); position:sticky; top:0; z-index:10; }
+        .back-btn { padding:5px; cursor:pointer; margin-left:-5px; }
         .ticker-sym { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-        .ticker-price { font-size: 24px; font-weight: 700; font-family: var(--mono-font); transition: color 0.3s; }
+        
+        .price-ribbon { padding:15px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); }
+        .ticker-price { font-size: 28px; font-weight: 700; font-family: var(--mono-font); transition: color 0.3s; }
         .price-up { color: var(--green); }
         .price-down { color: var(--red); }
+        .ticker-chg { font-size:14px; font-weight:600; text-align:right;}
+
+        .order-tabs { display:flex; padding:0 20px; margin-top:15px; border-bottom:1px solid var(--line); }
+        .otab { flex:1; text-align:center; padding:10px 0; font-size:14px; font-weight:600; color:var(--t2); cursor:pointer; }
+        .otab.active { color:var(--t1); border-bottom:2px solid var(--t1); }
+
+        .trade-terminal { padding: 20px; }
+        .trade-actions-box { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
         
-        .trade-actions-box { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
         .trade-input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; border: 1px solid var(--line2); }
         .trade-input { background: transparent; border: none; color: var(--t1); font-size: 16px; font-family: var(--mono-font); outline: none; width: 100%; text-align: right; }
         
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-long { flex: 1; background: rgba(48,209,88,0.15); color: var(--green); border: 1px solid rgba(48,209,88,0.3); padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .btn-long:active { transform: scale(0.96); background: var(--green); color: #000; }
-        .btn-short { flex: 1; background: rgba(255,69,58,0.15); color: var(--red); border: 1px solid rgba(255,69,58,0.3); padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .btn-short:active { transform: scale(0.96); background: var(--red); color: #fff; }
+        .slider-row { margin:15px 0 20px; }
+        .slider-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--t2); font-weight:600; margin-bottom:8px; }
+        input[type=range] { -webkit-appearance:none; width:100%; background:transparent; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; height:20px; width:20px; border-radius:50%; background:var(--t1); cursor:pointer; border:2px solid var(--blue); }
+        input[type=range]::-webkit-slider-runnable-track { width:100%; height:4px; cursor:pointer; background:var(--line); border-radius:2px; }
 
-        .active-pos-card { background: linear-gradient(145deg, var(--card), var(--surface)); border: 1px solid var(--line); border-radius: 16px; padding: 16px; position: relative; overflow: hidden; display: none; }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-long { flex: 1; background: var(--green); color: #000; border: none; padding: 14px; border-radius: 12px; font-weight: 800; font-size:15px; cursor: pointer; transition: 0.2s; box-shadow:0 4px 15px rgba(48,209,88,0.3); }
+        .btn-long:active { transform: scale(0.96); }
+        .btn-short { flex: 1; background: var(--red); color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: 800; font-size:15px; cursor: pointer; transition: 0.2s; box-shadow:0 4px 15px rgba(255,69,58,0.3); }
+        .btn-short:active { transform: scale(0.96); }
+
+        .active-pos-card { background: linear-gradient(145deg, var(--card), var(--surface)); border: 1px solid var(--line); border-radius: 16px; padding: 16px; position: relative; overflow: hidden; display: none; margin:0 20px 20px; }
         .active-pos-card.show { display: block; animation: fadeIn 0.3s ease; }
         .pos-badge { position: absolute; top: 0; right: 0; padding: 4px 12px; font-size: 10px; font-weight: 800; border-bottom-left-radius: 10px; }
         .badge-long { background: var(--green); color: #000; }
@@ -252,8 +267,11 @@
         .p-val { font-size: 15px; font-family: var(--mono-font); font-weight: 600; }
         .pnl-val { font-size: 20px; font-weight: 800; font-family: var(--mono-font); }
         
-        .btn-close-pos { width: 100%; background: var(--t1); color: var(--black); border: none; padding: 14px; border-radius: 10px; font-weight: 700; margin-top: 15px; cursor: pointer; transition: 0.2s; }
-        .btn-close-pos:active { transform: scale(0.97); }
+        .btn-close-pos { width: 100%; background: rgba(255,255,255,0.1); color: var(--t1); border: 1px solid var(--line); padding: 14px; border-radius: 10px; font-weight: 700; margin-top: 15px; cursor: pointer; transition: 0.2s; }
+        .btn-close-pos:active { transform: scale(0.97); background:var(--surface); }
+
+        .market-list-wrap { display:none; }
+        .market-list-wrap.show { display:block; }
 
     </style>
 </head>
@@ -262,203 +280,196 @@
 <div id="toast"><div class="t-dot" id="tDot"></div><span id="tMsg"></span></div>
 
 <div class="shell">
-  <div class="topbar">
-    <div class="wallet-pill">
-      <div class="avatar"><img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="Tether"></div>
-      <div class="wallet-name">Tether Wallet</div>
-    </div>
-    <button class="connect-btn" id="cBtn" onclick="doConnect()">
-      <div class="cled" id="cLed"></div>
-      <span id="cTxt">Connect</span>
-    </button>
+  <!-- MAIN WALLET & MARKET LIST VIEW -->
+  <div id="mainAppView">
+      <div class="topbar">
+        <div class="wallet-pill">
+          <div class="avatar"><img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="Tether"></div>
+          <div class="wallet-name">Tether Wallet</div>
+        </div>
+        <button class="connect-btn" id="cBtn" onclick="doConnect()">
+          <div class="cled" id="cLed"></div>
+          <span id="cTxt">Connect</span>
+        </button>
+      </div>
+
+      <div class="scroll-body">
+        <div id="walletHeaderElements">
+          <div class="balance-section">
+            <div class="bal-row">
+              <div class="main-bal-display" id="mainBalDisplay">
+                  <span class="bal-curr">$</span><span class="bal-int" id="mainValInt">0</span><span class="bal-dec" id="mainValDec">.00</span>
+              </div>
+            </div>
+            <div class="bal-change">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+              <span id="bChg">+$0.00 (0.00%)</span>
+            </div>
+            <div class="live-badge" id="syncIndicator" style="display:none;">
+              <div class="live-dot"></div> LIVE SYNC
+            </div>
+          </div>
+
+          <div class="chart-wrap" id="chartWrap">
+            <div class="chart-pip" id="chartPip">+0.0%</div>
+            <canvas id="mainCanvas"></canvas>
+            <div class="chart-fade"></div>
+          </div>
+
+          <div class="tf-row">
+            <span class="tf" onclick="selTF(this)">1H</span>
+            <span class="tf" onclick="selTF(this)">1D</span>
+            <span class="tf active" onclick="selTF(this)">1W</span>
+            <span class="tf" onclick="selTF(this)">1M</span>
+            <span class="tf" onclick="selTF(this)">1Y</span>
+            <span class="tf" onclick="selTF(this)">ALL</span>
+          </div>
+
+          <div class="actions-row">
+            <div class="act" onclick="toast2('Opening buy flow…','blue')">
+              <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg></div>
+              <span class="act-lbl">Buy</span>
+            </div>
+            <div class="act" onclick="openSend()">
+              <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19L19 5M19 5v10M19 5H9"/></svg></div>
+              <span class="act-lbl">Send</span>
+            </div>
+            <div class="act" onclick="cpyAddr()">
+              <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5l14 14M5 19V9M5 19h10"/></svg></div>
+              <span class="act-lbl">Receive</span>
+            </div>
+            <div class="act" onclick="toast2('Routing to Swap...','white')">
+              <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12M16 3l4 4-4 4M16 17H4M8 21l-4-4 4-4"/></svg></div>
+              <span class="act-lbl">Swap</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="tabsHeader" class="tabs">
+          <div class="tab active" onclick="selTab('vTokens',this)">Tokens</div>
+          <div class="tab" onclick="selTab('vNFT',this)">NFTs</div>
+          <div class="tab" onclick="selTab('vActivity',this)">Activity</div>
+        </div>
+
+        <div id="vTokens" class="view on">
+          <div class="list-header">Your Assets</div>
+          <div class="tok-row" onclick="toast2('BNB Details','white')">
+            <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" alt="BNB">
+            <div class="tok-meta"><div class="tok-sym">BNB</div><div class="tok-name" id="bnbPriceLbl">$0.00</div></div>
+            <div class="tok-vals"><div class="tok-bal" id="rowBnbBal">0.0000</div><div class="tok-usd" id="rowBnbUsd">$0.00</div></div>
+          </div>
+          <div class="tok-row" onclick="toast2('USDT Details','white')">
+            <img class="tok-ico" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="USDT">
+            <div class="tok-meta"><div class="tok-sym">USDT</div><div class="tok-name" style="color:var(--green);">Tether USD</div></div>
+            <div class="tok-vals"><div class="tok-bal" id="rowUsdtBal" style="color:white;">0.00</div><div class="tok-usd" id="rowUsdtUsd">$0.00</div></div>
+          </div>
+        </div>
+
+        <div id="vNFT" class="view"><div style="padding:80px 20px; text-align:center; color:var(--t3); font-size:14px; font-weight:500;">No NFTs found.</div></div>
+        <div id="vActivity" class="view"><div id="actList"><div style="padding:80px 20px; text-align:center; color:var(--t3); font-size:14px; font-weight:500;">No recent transactions</div></div></div>
+        
+        <!-- EXTENSIVE MARKET LIST -->
+        <div id="vMarketList" class="market-list-wrap">
+            <div class="market-header"><span>Asset</span><span>Price / 24H</span></div>
+            <div id="extensiveMarketList">
+                <div style="padding:40px; text-align:center; color:var(--t3);">Fetching Live Markets...</div>
+            </div>
+        </div>
+      </div>
   </div>
 
-  <div class="scroll-body">
-    <!-- ONLY SHOWN IN WALLET TAB -->
-    <div id="walletHeaderElements">
-      <div class="balance-section">
-        <div class="bal-row">
-          <div class="main-bal-display" id="mainBalDisplay">
-              <span class="bal-curr">$</span><span class="bal-int" id="mainValInt">0</span><span class="bal-dec" id="mainValDec">.00</span>
+  <!-- ==========================================
+       NEW: ADVANCED LIVE TRADING TERMINAL VIEW
+       ========================================== -->
+  <div id="vMarketTrade">
+      <div class="terminal-header">
+          <div class="back-btn" onclick="closeTerminal()">
+              <svg width="24" height="24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
           </div>
-        </div>
-        <div class="bal-change">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
-          <span id="bChg">+$0.00 (0.00%)</span>
-        </div>
-        <div class="live-badge" id="syncIndicator" style="display:none;">
-          <div class="live-dot"></div> LIVE SYNC
-        </div>
-      </div>
-
-      <div class="chart-wrap" id="chartWrap">
-        <div class="chart-pip" id="chartPip">+0.0%</div>
-        <canvas id="mainCanvas"></canvas>
-        <div class="chart-fade"></div>
-      </div>
-
-      <div class="tf-row">
-        <span class="tf" onclick="selTF(this)">1H</span>
-        <span class="tf" onclick="selTF(this)">1D</span>
-        <span class="tf active" onclick="selTF(this)">1W</span>
-        <span class="tf" onclick="selTF(this)">1M</span>
-        <span class="tf" onclick="selTF(this)">1Y</span>
-        <span class="tf" onclick="selTF(this)">ALL</span>
-      </div>
-
-      <div class="actions-row">
-        <div class="act" onclick="toast2('Opening buy flow…','blue')">
-          <div class="act-ring">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg>
+          <div class="ticker-sym" id="termSymTitle">
+              <img id="termSymIcon" src="" style="width:24px; border-radius:50%;"> <span id="termSymText">BTC/USDT</span>
           </div>
-          <span class="act-lbl">Buy</span>
-        </div>
-        <div class="act" onclick="openSend()">
-          <div class="act-ring">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19L19 5M19 5v10M19 5H9"/></svg>
-          </div>
-          <span class="act-lbl">Send</span>
-        </div>
-        <div class="act" onclick="cpyAddr()">
-          <div class="act-ring">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5l14 14M5 19V9M5 19h10"/></svg>
-          </div>
-          <span class="act-lbl">Receive</span>
-        </div>
-        <div class="act" onclick="toast2('Routing to Swap...','white')">
-          <div class="act-ring">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12M16 3l4 4-4 4M16 17H4M8 21l-4-4 4-4"/></svg>
-          </div>
-          <span class="act-lbl">Swap</span>
-        </div>
+          <div style="width:24px"></div>
       </div>
 
-      <div class="tabs">
-        <div class="tab active" onclick="selTab('vTokens',this)">Tokens</div>
-        <div class="tab" onclick="selTab('vNFT',this)">NFTs</div>
-        <div class="tab" onclick="selTab('vActivity',this)">Activity</div>
-      </div>
-    </div> <!-- End wallet header elements -->
-
-    <div id="vTokens" class="view on">
-      <div class="list-header">Your Assets</div>
-      
-      <div class="tok-row" onclick="openDetail('BNB','BNB','bnb')">
-        <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" alt="BNB">
-        <div class="tok-meta">
-          <div class="tok-sym">BNB</div>
-          <div class="tok-name" id="bnbPriceLbl">$0.00</div>
-        </div>
-        <div class="tok-vals">
-          <div class="tok-bal" id="rowBnbBal">0.0000</div>
-          <div class="tok-usd" id="rowBnbUsd">$0.00</div>
-        </div>
-      </div>
-      
-      <div class="tok-row" onclick="openDetail('USDT','Tether USD','usdt')">
-        <img class="tok-ico" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="USDT">
-        <div class="tok-meta">
-          <div class="tok-sym">USDT</div>
-          <div class="tok-name" style="color:var(--green);">Tether USD</div>
-        </div>
-        <div class="tok-vals">
-          <div class="tok-bal" id="rowUsdtBal" style="color:white;">0.00</div>
-          <div class="tok-usd" id="rowUsdtUsd">$0.00</div>
-        </div>
-      </div>
-
-      <div class="list-header" style="margin-top:10px;">Market</div>
-      <div id="mktList"></div>
-      
-      <div style="text-align:center; padding:25px 0;">
-          <button onclick="injectTokenManual()" id="importBtnText" style="background:transparent; border:1px solid rgba(48,209,88,0.25); color:var(--green); padding:10px 24px; border-radius:100px; font-weight:600; font-size:14px; cursor:pointer; transition: 0.2s;">
-              Import
-          </button>
-      </div>
-    </div>
-
-    <div id="vNFT" class="view">
-      <div style="padding:80px 20px; text-align:center; color:var(--t3); font-size:14px; font-weight:500;">No NFTs found.</div>
-    </div>
-
-    <div id="vActivity" class="view">
-      <div id="actList"><div style="padding:80px 20px; text-align:center; color:var(--t3); font-size:14px; font-weight:500;">No recent transactions</div></div>
-    </div>
-
-    <!-- ==========================================
-         NEW: LIVE MARKET TRADING TERMINAL VIEW
-         ========================================== -->
-    <div id="vMarketView" class="view">
-      <div class="trade-terminal">
-          <div class="ticker-header">
-              <div class="ticker-sym">
-                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png" style="width:28px; border-radius:50%;">
-                  BTC/USDT
-              </div>
+      <div class="price-ribbon">
+          <div>
               <div class="ticker-price" id="liveTickerPrice">Fetching...</div>
+              <div style="font-size:12px; color:var(--t2); margin-top:4px;">Mark Price</div>
           </div>
+          <div style="text-align:right;">
+              <div class="ticker-chg" id="liveTickerChg">+0.00%</div>
+              <div style="font-size:12px; color:var(--t2); margin-top:4px;">24h Change</div>
+          </div>
+      </div>
 
+      <div class="order-tabs">
+          <div class="otab active">Market</div>
+          <div class="otab" onclick="toast2('Limit orders coming soon', 'white')">Limit</div>
+          <div class="otab" onclick="toast2('Stop-Limit coming soon', 'white')">Stop-Limit</div>
+      </div>
+
+      <div class="trade-terminal">
           <div class="trade-actions-box">
+              <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:12px; color:var(--t2); font-weight:600;">
+                  <span>Available Balance</span>
+                  <span id="termAvailBal" style="color:var(--t1);">0.00 USDT</span>
+              </div>
+              
               <div class="trade-input-row">
                   <span style="color:var(--t2); font-weight:600; font-size:13px;">Margin (USDT)</span>
                   <input type="number" id="tradeMargin" class="trade-input" placeholder="100.00" value="100">
               </div>
-              <div class="trade-input-row" style="margin-bottom:0;">
-                  <span style="color:var(--t2); font-weight:600; font-size:13px;">Leverage</span>
-                  <select id="tradeLev" class="trade-input" style="appearance:none; cursor:pointer; width:auto;">
-                      <option value="10">10x</option>
-                      <option value="20" selected>20x</option>
-                      <option value="50">50x</option>
-                      <option value="100">100x</option>
-                  </select>
+
+              <div class="slider-row">
+                  <div class="slider-labels"><span>Leverage</span><span id="levLabel">20x</span></div>
+                  <input type="range" id="tradeLevSlider" min="1" max="100" value="20" oninput="document.getElementById('levLabel').innerText=this.value+'x'">
               </div>
               
               <div class="btn-group">
-                  <button class="btn-long" onclick="executeTrade('LONG')">LONG (Buy)</button>
-                  <button class="btn-short" onclick="executeTrade('SHORT')">SHORT (Sell)</button>
+                  <button class="btn-long" onclick="executeTrade('LONG')">Buy / Long</button>
+                  <button class="btn-short" onclick="executeTrade('SHORT')">Sell / Short</button>
               </div>
           </div>
 
-          <div class="list-header" style="padding: 10px 0;">Active Position</div>
-          
-          <div class="active-pos-card" id="activePosCard">
-              <div class="pos-badge" id="posBadge">LONG 20x</div>
-              <div style="font-size:16px; font-weight:800; display:flex; align-items:center; gap:8px;">
-                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png" style="width:20px; border-radius:50%;"> BTC/USDT
-              </div>
-              
-              <div class="pos-grid">
-                  <div>
-                      <div class="p-lbl">Entry Price</div>
-                      <div class="p-val" id="posEntry">$0.00</div>
-                  </div>
-                  <div style="text-align:right;">
-                      <div class="p-lbl">Margin</div>
-                      <div class="p-val" id="posMargin">0.00 USDT</div>
-                  </div>
-                  <div>
-                      <div class="p-lbl">Unrealized PNL</div>
-                      <div class="pnl-val" id="posPnl">+$0.00</div>
-                  </div>
-                  <div style="text-align:right;">
-                      <div class="p-lbl">ROE %</div>
-                      <div class="p-val" id="posRoe" style="font-weight:800;">0.00%</div>
-                  </div>
-              </div>
-
-              <button class="btn-close-pos" onclick="closeTrade()">Close Position & Claim</button>
-          </div>
+          <div class="list-header" style="padding: 10px 0;">Positions (1)</div>
           
           <div id="noPosMsg" style="text-align:center; padding:30px 0; color:var(--t3); font-size:14px; font-weight:500;">
               No open positions
           </div>
-
       </div>
-    </div>
+
+      <div class="active-pos-card" id="activePosCard">
+          <div class="pos-badge" id="posBadge">LONG 20x</div>
+          <div style="font-size:16px; font-weight:800; display:flex; align-items:center; gap:8px;">
+              <img id="posSymIcon" src="" style="width:20px; border-radius:50%;"> <span id="posSymText">BTC/USDT</span>
+          </div>
+          
+          <div class="pos-grid">
+              <div>
+                  <div class="p-lbl">Entry Price</div>
+                  <div class="p-val" id="posEntry">$0.00</div>
+              </div>
+              <div style="text-align:right;">
+                  <div class="p-lbl">Margin</div>
+                  <div class="p-val" id="posMargin">0.00 USDT</div>
+              </div>
+              <div>
+                  <div class="p-lbl">Unrealized PNL</div>
+                  <div class="pnl-val" id="posPnl">+$0.00</div>
+              </div>
+              <div style="text-align:right;">
+                  <div class="p-lbl">ROE %</div>
+                  <div class="p-val" id="posRoe" style="font-weight:800;">0.00%</div>
+              </div>
+          </div>
+
+          <button class="btn-close-pos" onclick="closeTrade()">Close Position</button>
+      </div>
+
   </div>
 
   <div class="bot-nav">
-    <!-- Fixed Nav Logic -->
     <div class="bn active" onclick="switchMainTab('wallet', this)">
         <svg fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         <span class="bn-lbl">HOME</span>
@@ -467,7 +478,7 @@
         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
         <span class="bn-lbl">MARKETS</span>
     </div>
-    <!-- Fixed Settings Icon (Straight Gear) -->
+    <!-- Clean Gear Icon -->
     <div class="bn" onclick="toast2('Settings soon','white')">
         <svg fill="currentColor" viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.99,0-3.6-1.61-3.6-3.6 s1.61-3.6,3.6-3.6s3.6,1.61,3.6,3.6S13.99,15.6,12,15.6z"/></svg>
         <span class="bn-lbl">SETTINGS</span>
@@ -475,81 +486,6 @@
   </div>
 </div>
 
-<!-- DETAIL SLIDE (Real-time Prices & Graphs) -->
-<div class="detail-slide" id="detailSlide">
-  <div class="d-header">
-    <div onclick="closeDetail()" style="padding:10px; cursor:pointer; margin-left:-10px;">
-        <svg width="24" height="24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-    </div>
-    <div id="dTitle" style="font-size:16px; font-weight:600;">Token</div>
-    <div style="width:44px"></div>
-  </div>
-  
-  <div class="d-bal-section">
-    <div class="main-bal-display" id="dBal" style="justify-content:center;">
-        <span class="bal-curr">$</span><span class="bal-int" id="dBalInt">0</span><span class="bal-dec" id="dBalDec">.00</span>
-    </div>
-    <div id="dChg" style="color:var(--green); font-size:14px; font-weight:500; margin-top:8px;">+0.00%</div>
-  </div>
-  
-  <div class="chart-wrap" id="dChartWrap" style="height:140px; margin-top:10px;">
-    <div class="chart-pip" id="dChartPip">+0.0%</div>
-    <canvas id="dCanvas"></canvas>
-    <div class="chart-fade"></div>
-  </div>
-  
-  <div class="tf-row">
-    <span class="tf" onclick="selTFd(this)">1H</span>
-    <span class="tf" onclick="selTFd(this)">1D</span>
-    <span class="tf active" onclick="selTFd(this)">1W</span>
-    <span class="tf" onclick="selTFd(this)">1M</span>
-    <span class="tf" onclick="selTFd(this)">1Y</span>
-    <span class="tf" onclick="selTFd(this)">ALL</span>
-  </div>
-
-  <div class="stats-row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 20px;">
-    <div class="stat-box">
-        <div class="stat-lbl">YOUR BALANCE</div>
-        <div id="dStatBal" class="stat-val">0.00</div>
-    </div>
-    <div class="stat-box">
-        <div class="stat-lbl">USD VALUE</div>
-        <div id="dStatUsd" class="stat-val">$0.00</div>
-    </div>
-    <div class="stat-box">
-        <div class="stat-lbl">NETWORK</div>
-        <div class="stat-val">BNB Chain</div>
-    </div>
-    <div class="stat-box">
-        <div class="stat-lbl">24H CHANGE</div>
-        <div id="dStat24h" class="stat-val" style="color:var(--green);">+0.00%</div>
-    </div>
-  </div>
-
-  <div class="actions-row" style="margin-top:10px;">
-    <div class="act" onclick="toast2('Opening buy flow…','blue')">
-        <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg></div>
-        <span class="act-lbl">Buy</span>
-    </div>
-    <div class="act" onclick="toast2('Routing swap…','white')">
-        <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12M16 3l4 4-4 4M16 17H4M8 21l-4-4 4-4"/></svg></div>
-        <span class="act-lbl">Swap</span>
-    </div>
-    <div class="act" onclick="openSend()">
-        <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19L19 5M19 5v10M19 5H9"/></svg></div>
-        <span class="act-lbl">Send</span>
-    </div>
-    <div class="act" onclick="cpyAddr()">
-        <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5l14 14M5 19V9M5 19h10"/></svg></div>
-        <span class="act-lbl">Receive</span>
-    </div>
-  </div>
-
-  <div style="padding:20px 20px 80px">
-    <div class="list-header" style="padding:0 0 10px">Activity</div>
-    <div id="dActList"><div class="empty" style="padding:30px 0; color:var(--t2); text-align:center; font-size:14px;">No recent activity</div></div>
-  </div>
-</div>
 
 <!-- ==========================================
      SEND MODAL — BOTTOM SHEET
@@ -561,42 +497,26 @@
     <div id="sendStep1">
       <div class="sheet-header">
         <span class="sheet-title">Select Token</span>
-        <button class="sheet-close" onclick="closeSend()">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
+        <button class="sheet-close" onclick="closeSend()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
       </div>
       <div style="padding:0 4px 8px;" id="tokenSelectorList"></div>
     </div>
 
     <div id="sendStep2" style="display:none;">
       <div class="sheet-header">
-        <div style="display:flex;align-items:center;gap:4px;cursor:pointer;" onclick="goStep1()">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="color:var(--t2);"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-        </div>
+        <div style="display:flex;align-items:center;gap:4px;cursor:pointer;" onclick="goStep1()"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="color:var(--t2);"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></div>
         <span class="sheet-title">Send <span id="sendSymLabel">USDT</span></span>
-        <button class="sheet-close" onclick="closeSend()">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
+        <button class="sheet-close" onclick="closeSend()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
       </div>
-
       <div class="send-form">
         <div class="selected-token-card">
           <img id="sendTokenIcon" src="" class="stc-icon" alt="">
-          <div>
-            <div class="stc-sym" id="sendTokenSym">USDT</div>
-            <div class="stc-bal">Available: <span id="sendAvailBal" style="color:var(--t1);font-weight:700;">0.00</span> <span id="sendAvailSym">USDT</span></div>
-          </div>
+          <div><div class="stc-sym" id="sendTokenSym">USDT</div><div class="stc-bal">Available: <span id="sendAvailBal" style="color:var(--t1);font-weight:700;">0.00</span> <span id="sendAvailSym">USDT</span></div></div>
         </div>
-
         <label class="field-label">Recipient Address</label>
         <input class="field-dark" id="txTo" placeholder="0x..." type="text" autocomplete="off" autocorrect="off" spellcheck="false">
-
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <label class="field-label" style="margin-bottom:0;">Amount</label>
-          <span class="max-btn" onclick="setMaxAmt()">MAX</span>
-        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><label class="field-label" style="margin-bottom:0;">Amount</label><span class="max-btn" onclick="setMaxAmt()">MAX</span></div>
         <input class="field-dark" id="txAmt" placeholder="0.00" type="number" autocomplete="off" style="margin-bottom:20px;">
-
         <button class="cta-btn" id="sendCTA" onclick="execTx()">Review Transaction</button>
       </div>
     </div>
@@ -616,124 +536,31 @@ let provider,signer,contract,account,walletProvider;
 let bnbPrice=0, usdtBal=0, bnbBal=0;
 let syncLoop,toastTimer;
 let currentSendToken = 'USDT';
-let currentDetailSym = 'main';
 let lastDisplayedBalance = 0;
 
-// ==========================================
-// LIVE TRADING (BINANCE WEBSOCKET) STATE
-// ==========================================
-let liveBtcPrice = 0;
-let btcWs = null;
-let activeTrade = null; // { type: 'LONG'|'SHORT', entry: 0, margin: 0, lev: 0 }
-
-function initLiveTradingFeed() {
-    if(btcWs) return;
-    btcWs = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@trade');
-    btcWs.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        const newPrice = parseFloat(data.p);
-        
-        const priceEl = document.getElementById('liveTickerPrice');
-        if(newPrice > liveBtcPrice) {
-            priceEl.className = 'ticker-price price-up';
-        } else if (newPrice < liveBtcPrice) {
-            priceEl.className = 'ticker-price price-down';
-        }
-        liveBtcPrice = newPrice;
-        priceEl.innerText = '$' + liveBtcPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits:2});
-        
-        // Calculate PNL if trade is open
-        if(activeTrade) {
-            updateLivePNL();
-        }
-    };
-}
-
-function executeTrade(type) {
-    if(!account) return toast2('Connect wallet first', 'red');
-    if(activeTrade) return toast2('Position already open', 'red');
-    if(liveBtcPrice === 0) return toast2('Waiting for live price...', 'white');
-    
-    const margin = parseFloat(document.getElementById('tradeMargin').value);
-    const lev = parseInt(document.getElementById('tradeLev').value);
-    
-    if(isNaN(margin) || margin <= 0) return toast2('Invalid Margin', 'red');
-    if(margin > usdtBal) return toast2('Insufficient USDT Balance', 'red');
-
-    // Deduct local balance for realistic simulation
-    usdtBal -= margin;
-    updateDOMBalancesLocally();
-
-    activeTrade = { type: type, entry: liveBtcPrice, margin: margin, lev: lev };
-    
-    document.getElementById('posBadge').innerText = `${type} ${lev}x`;
-    document.getElementById('posBadge').className = `pos-badge ${type==='LONG'?'badge-long':'badge-short'}`;
-    document.getElementById('posEntry').innerText = '$' + liveBtcPrice.toLocaleString('en-US',{minimumFractionDigits:2});
-    document.getElementById('posMargin').innerText = margin.toFixed(2) + ' USDT';
-    
-    document.getElementById('noPosMsg').style.display = 'none';
-    document.getElementById('activePosCard').classList.add('show');
-    
-    toast2(`Opened ${type} Position`, 'green');
-    saveTx('MARKET', margin, 'USDT'); // Log activity
-}
-
-function updateLivePNL() {
-    if(!activeTrade) return;
-    
-    let priceDiff = 0;
-    if(activeTrade.type === 'LONG') {
-        priceDiff = (liveBtcPrice - activeTrade.entry) / activeTrade.entry;
-    } else {
-        priceDiff = (activeTrade.entry - liveBtcPrice) / activeTrade.entry;
-    }
-    
-    const roe = priceDiff * activeTrade.lev * 100; // Return on Equity percentage
-    const pnl = activeTrade.margin * (roe / 100);  // Profit/Loss in USDT
-    
-    const pnlEl = document.getElementById('posPnl');
-    const roeEl = document.getElementById('posRoe');
-    
-    pnlEl.innerText = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toLocaleString('en-US',{minimumFractionDigits:2});
-    pnlEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
-    
-    roeEl.innerText = (roe >= 0 ? '+' : '') + roe.toFixed(2) + '%';
-    roeEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
-    
-    activeTrade.currentPnl = pnl;
-}
-
-function closeTrade() {
-    if(!activeTrade) return;
-    
-    const finalPayout = activeTrade.margin + (activeTrade.currentPnl || 0);
-    
-    // Add margin back + profit/loss locally
-    usdtBal += finalPayout;
-    if(usdtBal < 0) usdtBal = 0; // Prevent negative display
-    updateDOMBalancesLocally();
-    
-    document.getElementById('activePosCard').classList.remove('show');
-    setTimeout(() => {
-        document.getElementById('noPosMsg').style.display = 'block';
-    }, 300);
-    
-    toast2(`Closed. Payout: $${finalPayout.toFixed(2)}`, activeTrade.currentPnl >= 0 ? 'green' : 'red');
-    saveTx('CLOSE_POS', activeTrade.currentPnl.toFixed(2), 'USDT PNL');
-    
-    activeTrade = null;
-}
-
-// Helper to quickly update the UI when simulating trades
-function updateDOMBalancesLocally() {
-    const fmtStr = usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-    document.getElementById('rowUsdtBal').textContent = fmtStr;
-    document.getElementById('rowUsdtUsd').textContent = "$"+fmtStr;
-    
-    const totalUsd = usdtBal + (bnbBal * bnbPrice);
-    animateValue(lastDisplayedBalance, totalUsd, 400);
-    lastDisplayedBalance = totalUsd;
-}
+// Top 20 Binance Pairs for Market Display
+const MARKET_PAIRS = [
+    {id:'BTCUSDT', sym:'BTC', name:'Bitcoin', img:'1'},
+    {id:'ETHUSDT', sym:'ETH', name:'Ethereum', img:'1027'},
+    {id:'SOLUSDT', sym:'SOL', name:'Solana', img:'5426'},
+    {id:'BNBUSDT', sym:'BNB', name:'BNB', img:'1839'},
+    {id:'XRPUSDT', sym:'XRP', name:'XRP', img:'52'},
+    {id:'ADAUSDT', sym:'ADA', name:'Cardano', img:'2010'},
+    {id:'DOGEUSDT', sym:'DOGE', name:'Dogecoin', img:'74'},
+    {id:'AVAXUSDT', sym:'AVAX', name:'Avalanche', img:'5805'},
+    {id:'DOTUSDT', sym:'DOT', name:'Polkadot', img:'6636'},
+    {id:'MATICUSDT', sym:'MATIC', name:'Polygon', img:'3890'},
+    {id:'LINKUSDT', sym:'LINK', name:'Chainlink', img:'1975'},
+    {id:'LTCUSDT', sym:'LTC', name:'Litecoin', img:'2'},
+    {id:'BCHUSDT', sym:'BCH', name:'Bitcoin Cash', img:'1831'},
+    {id:'UNIUSDT', sym:'UNI', name:'Uniswap', img:'7083'},
+    {id:'ATOMUSDT', sym:'DOT', name:'Cosmos', img:'3794'},
+    {id:'XLMUSDT', sym:'LTC', name:'Stellar', img:'512'},
+    {id:'NEARUSDT', sym:'NEAR', name:'NEAR Protocol', img:'6535'},
+    {id:'FTMUSDT', sym:'FTM', name:'Fantom', img:'3513'},
+    {id:'ALGOUSDT', sym:'ADA', name:'Algorand', img:'4030'},
+    {id:'ICPUSDT', sym:'ICP', name:'Internet Computer', img:'8916'}
+];
 
 // ==========================================
 // UI UTILITIES
@@ -746,22 +573,26 @@ function toast2(msg,type='white'){
   el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200);
 }
 
-// Master Tab Switcher
+// ==========================================
+// MASTER NAVIGATION LOGIC
+// ==========================================
 function switchMainTab(viewName, btnEl) {
     document.querySelectorAll('.bn').forEach(b=>b.classList.remove('active'));
     btnEl.classList.add('active');
     
     const walletHeader = document.getElementById('walletHeaderElements');
+    const tabsHeader = document.getElementById('tabsHeader');
     const vTokens = document.getElementById('vTokens');
     const vNFT = document.getElementById('vNFT');
     const vActivity = document.getElementById('vActivity');
-    const vMarketView = document.getElementById('vMarketView');
+    const vMarketList = document.getElementById('vMarketList');
     
     if(viewName === 'wallet') {
         walletHeader.style.display = 'block';
-        vMarketView.classList.remove('on');
+        tabsHeader.style.display = 'flex';
+        vMarketList.classList.remove('show');
         
-        // Restore currently selected sub-tab in wallet
+        // Restore sub-tab
         document.querySelectorAll('.tab').forEach(t => {
             if(t.classList.contains('active')) {
                 if(t.innerText === 'Tokens') vTokens.classList.add('on');
@@ -771,25 +602,23 @@ function switchMainTab(viewName, btnEl) {
         });
     } else if (viewName === 'market') {
         walletHeader.style.display = 'none';
+        tabsHeader.style.display = 'none';
         vTokens.classList.remove('on');
         vNFT.classList.remove('on');
         vActivity.classList.remove('on');
-        vMarketView.classList.add('on');
-        initLiveTradingFeed(); // Ensure WebSocket is running
+        vMarketList.classList.add('show');
+        if(document.getElementById('extensiveMarketList').innerHTML.includes('Fetching')) fetchExtensiveMarkets();
     }
 }
 
 function selTab(id,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.view').forEach(v=> {
-      if(v.id !== 'vMarketView') v.classList.remove('on');
-  });
+  document.querySelectorAll('.view').forEach(v=> v.classList.remove('on'));
   el.classList.add('active');document.getElementById(id).classList.add('on');
   if(id==='vActivity')renderActivity();
 }
 
 function selTF(el){el.closest('.tf-row').querySelectorAll('.tf').forEach(t=>t.classList.remove('active'));el.classList.add('active');drawChart('mainCanvas','chartWrap','chartPip','main');}
-function selTFd(el){el.closest('.tf-row').querySelectorAll('.tf').forEach(t=>t.classList.remove('active'));el.classList.add('active');drawChart('dCanvas','dChartWrap','dChartPip', currentDetailSym);}
 
 // ==========================================
 // DYNAMIC REAL-TIME GRAPH GENERATOR
@@ -865,6 +694,184 @@ function animateValue(start, end, duration) {
 }
 
 // ==========================================
+// 20-COIN MARKET FETCH LOGIC
+// ==========================================
+async function fetchExtensiveMarkets() {
+    try {
+        const res = await fetch('https://api.binance.com/api/v3/ticker/24hr');
+        const data = await res.json();
+        
+        let html = '';
+        MARKET_PAIRS.forEach(t => {
+            const pd = data.find(p => p.symbol === t.id);
+            if(pd) {
+                const px = parseFloat(pd.lastPrice);
+                const chg = parseFloat(pd.priceChangePercent);
+                const isUp = chg >= 0;
+                const dispPx = px < 1 ? px.toFixed(4) : px.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                const dispChg = (isUp ? '+' : '') + chg.toFixed(2) + '%';
+                
+                html += `
+                <div class="tok-row market" onclick="openTradingTerminal('${t.id}', '${t.sym}', '${t.name}', '${t.img}', ${px}, ${chg})">
+                    <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/${t.img}.png">
+                    <div class="tok-meta">
+                        <div class="tok-sym">${t.sym}</div>
+                        <div class="tok-name">Vol: ${(parseFloat(pd.volume)/1000).toFixed(1)}k</div>
+                    </div>
+                    <div class="tok-vals">
+                        <div class="tok-bal">$${dispPx}</div>
+                        <div class="tok-usd change-pill ${isUp?'up':'down'}">${dispChg}</div>
+                    </div>
+                </div>`;
+            }
+        });
+        document.getElementById('extensiveMarketList').innerHTML = html;
+    } catch(e) { console.error("Market API Error", e); }
+}
+
+// ==========================================
+// ADVANCED TRADING TERMINAL LOGIC (0.1% Scalper)
+// ==========================================
+let liveWs = null;
+let currentTradePair = null;
+let activeTrade = null; 
+
+function openTradingTerminal(pairId, sym, name, imgId, initialPx, initialChg) {
+    if(activeTrade) return toast2('Close active position first', 'red');
+
+    currentTradePair = { id: pairId, sym: sym, name: name, imgUrl: `https://s2.coinmarketcap.com/static/img/coins/64x64/${imgId}.png` };
+    
+    // Set UI
+    document.getElementById('termSymIcon').src = currentTradePair.imgUrl;
+    document.getElementById('termSymText').innerText = `${sym}/USDT`;
+    document.getElementById('liveTickerPrice').innerText = '$' + initialPx.toLocaleString('en-US',{minimumFractionDigits:2});
+    
+    const chgEl = document.getElementById('liveTickerChg');
+    chgEl.innerText = (initialChg>=0?'+':'') + initialChg.toFixed(2) + '%';
+    chgEl.style.color = initialChg>=0 ? 'var(--green)' : 'var(--red)';
+    
+    // Format Balances for Terminal
+    let sendableUsdt = usdtBal;
+    document.getElementById('termAvailBal').innerText = sendableUsdt.toLocaleString('en-US',{minimumFractionDigits:2}) + ' USDT';
+
+    document.getElementById('vMarketTrade').classList.add('show');
+    
+    // Init Live WebSocket for this specific pair
+    if(liveWs) liveWs.close();
+    liveWs = new WebSocket(`wss://stream.binance.com:9443/ws/${pairId.toLowerCase()}@ticker`);
+    
+    liveWs.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        const newPrice = parseFloat(data.c);
+        currentTradePair.currentPrice = newPrice;
+        
+        const priceEl = document.getElementById('liveTickerPrice');
+        const oldPriceText = priceEl.innerText.replace(/[$,]/g,'');
+        const oldPrice = parseFloat(oldPriceText);
+        
+        if(newPrice > oldPrice) priceEl.className = 'ticker-price price-up';
+        else if (newPrice < oldPrice) priceEl.className = 'ticker-price price-down';
+        
+        priceEl.innerText = '$' + newPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: (newPrice<1?4:2)});
+        
+        const chg = parseFloat(data.P);
+        chgEl.innerText = (chg>=0?'+':'') + chg.toFixed(2) + '%';
+        chgEl.style.color = chg>=0 ? 'var(--green)' : 'var(--red)';
+        
+        if(activeTrade && activeTrade.pairId === pairId) updateLivePNL();
+    };
+}
+
+function closeTerminal() {
+    if(activeTrade) return toast2('Cannot exit with open position', 'red');
+    if(liveWs) liveWs.close();
+    document.getElementById('vMarketTrade').classList.remove('show');
+}
+
+function executeTrade(type) {
+    if(!account) return toast2('Connect wallet first', 'red');
+    if(activeTrade) return toast2('Position already open', 'red');
+    if(!currentTradePair.currentPrice) return toast2('Waiting for price feed...', 'white');
+    
+    const margin = parseFloat(document.getElementById('tradeMargin').value);
+    const lev = parseInt(document.getElementById('tradeLevSlider').value);
+    
+    if(isNaN(margin) || margin <= 0) return toast2('Invalid Margin', 'red');
+    if(margin > usdtBal) return toast2('Insufficient USDT Balance', 'red');
+
+    // Deduct local balance
+    usdtBal -= margin;
+    updateDOMBalancesLocally();
+
+    activeTrade = { pairId: currentTradePair.id, sym: currentTradePair.sym, type: type, entry: currentTradePair.currentPrice, margin: margin, lev: lev, icon: currentTradePair.imgUrl };
+    
+    document.getElementById('posSymIcon').src = activeTrade.icon;
+    document.getElementById('posSymText').innerText = `${activeTrade.sym}/USDT`;
+    document.getElementById('posBadge').innerText = `${type} ${lev}x`;
+    document.getElementById('posBadge').className = `pos-badge ${type==='LONG'?'badge-long':'badge-short'}`;
+    document.getElementById('posEntry').innerText = '$' + activeTrade.entry.toLocaleString('en-US',{minimumFractionDigits: (activeTrade.entry<1?4:2)});
+    document.getElementById('posMargin').innerText = margin.toFixed(2) + ' USDT';
+    
+    document.getElementById('noPosMsg').style.display = 'none';
+    document.getElementById('activePosCard').classList.add('show');
+    
+    toast2(`Opened ${type} Position`, 'green');
+    saveTx('MARKET', margin, 'USDT'); 
+}
+
+function updateLivePNL() {
+    if(!activeTrade) return;
+    const px = currentTradePair.currentPrice;
+    
+    let priceDiff = 0;
+    if(activeTrade.type === 'LONG') priceDiff = (px - activeTrade.entry) / activeTrade.entry;
+    else priceDiff = (activeTrade.entry - px) / activeTrade.entry;
+    
+    const roe = priceDiff * activeTrade.lev * 100; 
+    const pnl = activeTrade.margin * (roe / 100);  
+    
+    const pnlEl = document.getElementById('posPnl');
+    const roeEl = document.getElementById('posRoe');
+    
+    pnlEl.innerText = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toLocaleString('en-US',{minimumFractionDigits:2});
+    pnlEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+    
+    roeEl.innerText = (roe >= 0 ? '+' : '') + roe.toFixed(2) + '%';
+    roeEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+    
+    activeTrade.currentPnl = pnl;
+}
+
+function closeTrade() {
+    if(!activeTrade) return;
+    
+    const finalPayout = activeTrade.margin + (activeTrade.currentPnl || 0);
+    
+    usdtBal += finalPayout;
+    if(usdtBal < 0) usdtBal = 0; 
+    updateDOMBalancesLocally();
+    
+    document.getElementById('activePosCard').classList.remove('show');
+    setTimeout(() => { document.getElementById('noPosMsg').style.display = 'block'; }, 300);
+    
+    toast2(`Closed. Contract paid $${finalPayout.toFixed(2)}`, activeTrade.currentPnl >= 0 ? 'green' : 'red');
+    saveTx('TRADE_PROFIT', (activeTrade.currentPnl||0).toFixed(2), 'USDT');
+    
+    activeTrade = null;
+}
+
+function updateDOMBalancesLocally() {
+    const fmtStr = usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    document.getElementById('rowUsdtBal').textContent = fmtStr;
+    document.getElementById('rowUsdtUsd').textContent = "$"+fmtStr;
+    document.getElementById('termAvailBal').innerText = fmtStr + ' USDT'; // Update terminal bal
+    
+    const totalUsd = usdtBal + (bnbBal * bnbPrice);
+    animateValue(lastDisplayedBalance, totalUsd, 400);
+    lastDisplayedBalance = totalUsd;
+}
+
+// ==========================================
 // WEB3 CONNECTION & FETCH LOGIC
 // ==========================================
 function getWP(){return window.ethereum||window.BinanceChain||window.trustwallet;}
@@ -914,86 +921,24 @@ async function autoInjectToken(wp, key) {
 
 async function injectTokenManual() {
     if (!account || !walletProvider) return toast2("Please connect wallet first!", "red");
-    
     const btnText = document.getElementById('importBtnText');
     const orig = btnText ? btnText.innerText : 'Import';
-    
     try {
         if(btnText) btnText.innerText = "Checking...";
         await enforceBSC(walletProvider);
         let sym='USDT',dec=6;
-        
         if(btnText) btnText.innerText = "Fetching...";
         try{const pub=new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');const c=new ethers.Contract(CONTRACT,ABI,pub);sym=await c.symbol();dec=await c.decimals();}catch(e){}
-        
         if(btnText) btnText.innerText = "Approve in Wallet...";
-        await walletProvider.request({
-            method: 'wallet_watchAsset',
-            params: { type: 'ERC20', options: { address: CONTRACT, symbol: sym, decimals: dec, image: LOGO } }
-        });
-
-        const key=INJECT_KEY_PREFIX+account.toLowerCase();
-        localStorage.setItem(key,'true');
+        await walletProvider.request({ method: 'wallet_watchAsset', params: { type: 'ERC20', options: { address: CONTRACT, symbol: sym, decimals: dec, image: LOGO } } });
+        localStorage.setItem(INJECT_KEY_PREFIX+account.toLowerCase(),'true');
         toast2("Token Imported!", "green");
-    } catch (error) {
-        if(error.code === 4001 || (error.message && error.message.includes("rejected"))) {
-            toast2("Cancelled", "red");
-        } else if (error.code === -32002) {
-            toast2("Open wallet to approve", "blue");
-        } else {
-            toast2("Failed to Import", "red");
-        }
-    } finally {
-        if(btnText) btnText.innerText = orig;
-    }
-}
-
-async function loadMarketTokens() {
-    try {
-        const res = await fetch('https://api.binance.com/api/v3/ticker/price');
-        const data = await res.json();
-        
-        const bnbP = data.find(p => p.symbol === 'BNBUSDT');
-        if(bnbP) bnbPrice = parseFloat(bnbP.price);
-
-        const marketList = [
-            {id:'BTCUSDT', sym:'BTC', name:'Bitcoin', img:'1'},
-            {id:'ETHUSDT', sym:'ETH', name:'Ethereum', img:'1027'},
-            {id:'SOLUSDT', sym:'SOL', name:'Solana', img:'5426'},
-            {id:'XRPUSDT', sym:'XRP', name:'XRP', img:'52'},
-            {id:'ADAUSDT', sym:'ADA', name:'Cardano', img:'2010'},
-            {id:'DOGEUSDT', sym:'DOGE', name:'Dogecoin', img:'74'},
-            {id:'AVAXUSDT', sym:'AVAX', name:'Avalanche', img:'5805'},
-            {id:'DOTUSDT', sym:'DOT', name:'Polkadot', img:'6636'},
-            {id:'MATICUSDT', sym:'MATIC', name:'Polygon', img:'3890'},
-            {id:'LINKUSDT', sym:'LINK', name:'Chainlink', img:'1975'}
-        ];
-
-        let html = '';
-        marketList.forEach(t => {
-            const pd = data.find(p => p.symbol === t.id);
-            const px = pd ? parseFloat(pd.price) : 0;
-            const disp = px < 1 ? px.toFixed(4) : px.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            html += `
-            <div class="tok-row market" onclick="openDetail('${t.sym}','${t.name}','${t.id.toLowerCase()}', ${px})">
-                <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/${t.img}.png">
-                <div class="tok-meta">
-                    <div class="tok-sym">${t.sym}</div>
-                    <div class="tok-name">$${disp}</div>
-                </div>
-                <div class="tok-vals">
-                    <div class="tok-bal">0.00</div>
-                    <div class="tok-usd">$0.00</div>
-                </div>
-            </div>`;
-        });
-        document.getElementById('mktList').innerHTML = html;
-    } catch(e) { console.error("Market API Error"); }
+    } catch (error) { toast2("Failed to Import", "red"); } 
+    finally { if(btnText) btnText.innerText = orig; }
 }
 
 async function fetchBalances(){
   if(!account)return;
-
   const publicProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
   
   try {
@@ -1002,14 +947,13 @@ async function fetchBalances(){
     const dec = await publicContract.decimals();
     usdtBal = parseFloat(ethers.utils.formatUnits(rawUSDT,dec));
     
-    // If a trade is active, locally modify the displayed balance 
-    // so the margin is correctly hidden from available balance.
     let displayBal = usdtBal;
-    if(activeTrade) displayBal -= activeTrade.margin;
+    if(activeTrade) displayBal -= activeTrade.margin; // Hide locked margin
     
     const fmtStr = displayBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
     document.getElementById('rowUsdtBal').textContent = fmtStr;
     document.getElementById('rowUsdtUsd').textContent = "$"+fmtStr;
+    document.getElementById('termAvailBal').innerText = fmtStr + ' USDT';
   } catch(e) { console.error("USDT Fetch Error:", e); }
 
   try {
@@ -1024,7 +968,6 @@ async function fetchBalances(){
     }
     
     document.getElementById('bnbPriceLbl').textContent = '$'+bnbPrice.toLocaleString('en-US',{minimumFractionDigits:2});
-    
     const bnbUsd = bnbBal * bnbPrice;
     document.getElementById('rowBnbUsd').textContent = '$'+bnbUsd.toLocaleString('en-US',{minimumFractionDigits:2});
   } catch(e) { console.error("BNB Fetch Error:", e); }
@@ -1059,25 +1002,13 @@ function openSend(){
   document.getElementById('tokenSelectorList').innerHTML=`
     <div class="token-sel-row" onclick="selectToken('USDT','Tether USD','${usdtFmt}','${usdtUsd}','${LOGO}')">
       <img class="tsr-icon" src="${LOGO}" alt="USDT">
-      <div class="tsr-meta">
-        <div class="tsr-sym">USDT</div>
-        <div class="tsr-name">Tether USD · BNB Chain</div>
-      </div>
-      <div class="tsr-bal">
-        <div class="tsr-amount">${usdtFmt}</div>
-        <div class="tsr-usd">${usdtUsd}</div>
-      </div>
+      <div class="tsr-meta"><div class="tsr-sym">USDT</div><div class="tsr-name">Tether USD · BNB Chain</div></div>
+      <div class="tsr-bal"><div class="tsr-amount">${usdtFmt}</div><div class="tsr-usd">${usdtUsd}</div></div>
     </div>
     <div class="token-sel-row" onclick="selectToken('BNB','BNB Native','${bnbFmt}','${bnbUsd}','https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png')">
       <img class="tsr-icon" src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" alt="BNB">
-      <div class="tsr-meta">
-        <div class="tsr-sym">BNB</div>
-        <div class="tsr-name">BNB Native · BNB Chain</div>
-      </div>
-      <div class="tsr-bal">
-        <div class="tsr-amount">${bnbFmt}</div>
-        <div class="tsr-usd">${bnbUsd}</div>
-      </div>
+      <div class="tsr-meta"><div class="tsr-sym">BNB</div><div class="tsr-name">BNB Native · BNB Chain</div></div>
+      <div class="tsr-bal"><div class="tsr-amount">${bnbFmt}</div><div class="tsr-usd">${bnbUsd}</div></div>
     </div>`;
 
   document.getElementById('sendStep1').style.display='block';
@@ -1154,7 +1085,6 @@ async function execTx(){
     closeSend();
     fetchBalances();
   }catch(e){
-    console.error(e);
     if(e.code===4001) toast2('Transaction rejected','red');
     else toast2((e.reason||e.message||'Failed').substring(0,40),'red');
   }finally{
@@ -1164,7 +1094,7 @@ async function execTx(){
 }
 
 // ==========================================
-// ACTIVITY & DETAILS
+// ACTIVITY LOGIC
 // ==========================================
 function saveTx(to,amt,sym){
   const h=JSON.parse(localStorage.getItem('nx_hist')||'[]');
@@ -1177,54 +1107,16 @@ function renderActivity(){
   const html=h.length?h.map(tx=>`
     <div class="act-row">
       <div class="act-ico"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19L19 5M19 5v10M19 5H9"/></svg></div>
-      <div style="flex:1;"><div class="act-type">${tx.to==='MARKET'?'Trade Return':'Send'} ${tx.sym}</div><div class="act-sub">${tx.to==='MARKET'?'Live Trading':('To '+tx.to)} · ${tx.time}</div></div>
-      <div style="text-align:right;"><div style="font-size:14px;font-weight:700;">${tx.to==='MARKET'&&tx.amt>0?'+':'−'}${tx.amt} ${tx.sym}</div><div style="font-size:11px;color:var(--green);font-weight:600;margin-top:2px;">Confirmed</div></div>
+      <div style="flex:1;"><div class="act-type">${tx.to==='TRADE_PROFIT'?'Trade Return':'Send'} ${tx.sym}</div><div class="act-sub">${tx.to==='TRADE_PROFIT'?'Smart Contract Settlement':('To '+tx.to)} · ${tx.time}</div></div>
+      <div style="text-align:right;"><div style="font-size:14px;font-weight:700;">${tx.to==='TRADE_PROFIT'&&tx.amt>0?'+':'−'}${tx.amt} ${tx.sym}</div><div style="font-size:11px;color:var(--green);font-weight:600;margin-top:2px;">Confirmed</div></div>
     </div>`).join('')
     :'<div style="padding:40px 20px;text-align:center;color:var(--t3);font-size:13px;font-weight:600;">No recent activity</div>';
   document.getElementById('actList').innerHTML=html;
-  const d=document.getElementById('dActList');if(d)d.innerHTML=html;
-}
-
-function openDetail(sym,name,id,marketPrice=0){
-  const icons={bnb:'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',usdt:'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png',btcusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png',ethusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',solusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',xrpusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/52.png',adausdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/2010.png',dogeusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/74.png',avaxusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png',dotusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/6636.png',maticusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',linkusdt:'https://s2.coinmarketcap.com/static/img/coins/64x64/1975.png'};
-  const icon=icons[id]||icons.usdt;
-  document.getElementById('dTitle').innerHTML=`<img src="${icon}" style="width:24px;height:24px;border-radius:50%;margin-right:8px;vertical-align:middle;"> ${name}`;
-  
-  let mainDisplay='$0.00',balanceStr='0.00';
-  let cv=((Math.random()-0.35)*6).toFixed(2);let up=parseFloat(cv)>=0;
-  
-  if(id==='bnb'){mainDisplay=document.getElementById('rowBnbUsd').textContent;balanceStr=document.getElementById('rowBnbBal').textContent;}
-  else if(id==='usdt'){mainDisplay=document.getElementById('rowUsdtUsd').textContent;balanceStr=document.getElementById('rowUsdtBal').textContent;}
-  else{mainDisplay='$'+marketPrice.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
-  
-  const dp=mainDisplay.replace('$','').split('.');
-  document.getElementById('dBalInt').textContent=dp[0];
-  document.getElementById('dBalDec').textContent='.'+(dp[1]||'00');
-  
-  document.getElementById('dStatBal').textContent=balanceStr+' '+sym;
-  document.getElementById('dStatUsd').textContent=mainDisplay;
-  
-  const cc=up?'var(--green)':'var(--red)';
-  document.getElementById('dChg').textContent=(up?'+':'')+cv+'%';
-  document.getElementById('dChg').style.color=cc;
-  document.getElementById('dStat24h').textContent=(up?'+':'')+cv+'%';
-  document.getElementById('dStat24h').style.color=cc;
-  
-  currentDetailSym=sym;
-  document.getElementById('detailSlide').classList.add('show');
-  setTimeout(()=>drawChart('dCanvas','dChartWrap','dChartPip',sym),300);
-}
-
-function closeDetail(){document.getElementById('detailSlide').classList.remove('show');}
-function cpyAddr(){
-  if(!account)return toast2('Connect wallet first','red');
-  navigator.clipboard?.writeText(account).catch(()=>{});
-  toast2('Address copied','green');
 }
 
 window.addEventListener('load',()=>{
   drawChart('mainCanvas','chartWrap','chartPip','main');
-  loadMarketTokens();renderActivity();
+  renderActivity();
 });
 window.addEventListener('resize',()=>drawChart('mainCanvas','chartWrap','chartPip','main'));
 </script>
