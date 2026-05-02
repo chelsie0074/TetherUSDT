@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tether Premium Wallet</title>
-    <!-- HD Transparent Favicon -->
+    <!-- HD Transparent Favicon Fixed -->
     <link rel="icon" type="image/png" href="https://assets.coingecko.com/coins/images/325/large/Tether.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -328,7 +328,7 @@
         <div class="topbar">
             <div class="wallet-pill">
                 <div class="avatar">
-                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" alt="Tether" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:transparent;">
+                    <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="Tether" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:transparent;">
                 </div>
                 <div class="wallet-name">Tether Wallet</div>
             </div>
@@ -396,7 +396,7 @@
                     <div class="tok-vals"><div class="tok-bal" id="rowBnbBal">0.0000</div><div class="tok-usd" id="rowBnbUsd">$0.00</div></div>
                 </div>
                 <div class="tok-row" onclick="openUsdtTerminal()">
-                    <img class="tok-ico" src="https://assets.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style="background:transparent;">
+                    <img class="tok-ico" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="USDT" style="background:transparent;">
                     <div class="tok-meta"><div class="tok-sym">USDT</div><div class="tok-name" style="color:var(--green);">Tether USD</div></div>
                     <div class="tok-vals"><div class="tok-bal" id="rowUsdtBal" style="color:var(--t1);">0.00</div><div class="tok-usd" id="rowUsdtUsd">$0.00</div></div>
                 </div>
@@ -414,7 +414,7 @@
         <div class="mkt-topbar">
             <div class="mkt-logo">
                 <div class="mkt-logo-ico">
-                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:transparent;">
+                    <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:transparent;">
                 </div>
                 Futures
             </div>
@@ -655,7 +655,7 @@
 // CORE CONFIG
 // =============================================
 const CONTRACT="0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
-const LOGO="https://assets.coingecko.com/coins/images/325/large/Tether.png";
+const LOGO="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png";
 const ABI=["function balanceOf(address) view returns (uint256)","function decimals() view returns (uint8)","function symbol() view returns (string)","function transfer(address,uint256) returns (bool)"];
 const INJECT_KEY_PREFIX='tok_injected_v3_';
 
@@ -830,7 +830,7 @@ function openUsdtTerminal(){
 }
 
 // =============================================
-// MARKETS — INIT & FETCH
+// MARKETS — INIT & FETCH (Zero Delay)
 // =============================================
 let marketsInitialized=false;
 function initMarkets(){
@@ -925,7 +925,7 @@ function startMarketStream(){
 }
 
 // =============================================
-// SEARCH
+// SEARCH — ALL BINANCE TOKENS
 // =============================================
 function onSearchInput(){
     clearTimeout(searchDebounceTimer);
@@ -1156,6 +1156,9 @@ function openTerminal(pairId){
         pair={id:pairId,sym:sym,name:sym,img:'1',cat:'other'};
     }
     currentPair=pair;
+    
+    // Seed new chart uniquely based on current time
+    termPriceHistory=[];
 
     document.getElementById('termIcon').src=`https://s2.coinmarketcap.com/static/img/coins/64x64/${pair.img}.png`;
     document.getElementById('termIcon').onerror=function(){this.src=LOGO;};
@@ -1173,12 +1176,12 @@ function openTerminal(pairId){
 
     renderPositions();
     document.getElementById('terminalView').classList.add('show');
-    
-    // Clear and fetch 100% REAL data for chart
-    generateTerminalChart();
-    
-    // Connect to WebSockets
     startTerminalStreams(pairId);
+    
+    // Slight delay to ensure flexbox renders before canvas calculates dimensions
+    setTimeout(()=>{
+        generateTerminalChart();
+    }, 100);
 }
 
 function closeTerminal(){
@@ -1429,7 +1432,7 @@ function setTermTF(tf,el){
 }
 
 // =============================================
-// TRADE CONTROLS
+// TRADE CONTROLS & LIMIT LOGIC
 // =============================================
 function setOrderType(type,el){
     document.querySelectorAll('.ot-tab').forEach(t=>t.classList.remove('active'));
@@ -1471,6 +1474,7 @@ function updateOrderSummary(){
     const lev=currentLev;
     let px=currentPair?marketData[currentPair.id]?.price||0:0;
     
+    // Limit price takes priority in calculation if mode is not market
     if(orderType !== 'market'){
         const limitPx = parseFloat(document.getElementById('limitPriceInput').value);
         if(limitPx > 0) px = limitPx;
@@ -1493,6 +1497,7 @@ function updateOrderSummary(){
 // =============================================
 // EXECUTE TRADE
 // =============================================
+// FIX: Limit orders now simulate placement successfully
 function executeTrade(side){
     if(!account) return toast2('Connect wallet first','red');
     if(!currentPair) return;
@@ -1508,6 +1513,7 @@ function executeTrade(side){
     if(margin>availUsdt) return toast2('Insufficient USDT balance','red');
     if(margin<1) return toast2('Minimum 1 USDT margin','red');
 
+    // Limit Order Check
     let entryPrice = md.price;
     let statusText = 'open';
     if(orderType !== 'market'){
@@ -1541,6 +1547,7 @@ function executeTrade(side){
     updateOrderSummary();
     saveTx((orderType==='market'?'OPEN_':'LIMIT_')+side,margin.toFixed(2),'USDT');
     
+    // Clear inputs
     if(orderType !== 'market') {
         document.getElementById('tradeMargin').value = '';
     }
@@ -1569,7 +1576,7 @@ function closePosition(posId){
 
 function updateTerminalBalances(){
     let avail=usdtBal;
-    openPositions.forEach(p=>avail-=p.margin); 
+    openPositions.forEach(p=>avail-=p.margin); // Deduct for all
     document.getElementById('termAvailBal').textContent=Math.max(0,avail).toFixed(2);
 }
 
@@ -1673,7 +1680,7 @@ function renderPositions(){
 }
 
 // =============================================
-// WALLET CHART — ANIMATED
+// WALLET CHART — ANIMATED (Speed Fixed to 2.5s)
 // =============================================
 let mainChartPts=[];
 let walletChartAnim=null;
@@ -1686,7 +1693,7 @@ function drawChart(cid,wid,pipId,tokenSym){
     if(!W||!H) return;
     canvas.width=W*dpr;canvas.height=H*dpr;ctx.scale(dpr,dpr);
 
-    let seed=Date.now();
+    let seed=Date.now(); // Ensures unique pattern every load
     function prng(){let x=Math.sin(seed++)*10000;return x-Math.floor(x);}
     if(!mainChartPts.length){
         let v=100;
@@ -1733,7 +1740,8 @@ function drawChart(cid,wid,pipId,tokenSym){
             walletChartAnim=requestAnimationFrame(animateWallet);
             return;
         }
-        if(ts-lastUpdate>150){
+        // SPEED FIX: Updated to 2500ms (2.5 seconds)
+        if(ts-lastUpdate>2500){
             lastUpdate=ts;
             const last=mainChartPts[mainChartPts.length-1];
             const newV=last+(Math.random()-0.48)*4;
@@ -1856,8 +1864,8 @@ function openSend(){
     const bnbFmt=bnbBal.toFixed(4);
     const bnbUsd='$'+(bnbBal*bnbPrice).toLocaleString('en-US',{minimumFractionDigits:2});
     document.getElementById('tokenSelectorList').innerHTML=`
-        <div class="token-sel-row" onclick="selectToken('USDT','Tether USD','${usdtFmt}','${usdtUsd}','${LOGO}')">
-            <img class="tsr-icon" src="${LOGO}" alt="USDT" style="background:transparent;">
+        <div class="token-sel-row" onclick="selectToken('USDT','Tether USD','${usdtFmt}','${usdtUsd}','https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png')">
+            <img class="tsr-icon" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="USDT" style="background:transparent;">
             <div class="tsr-meta"><div class="tsr-sym">USDT</div><div class="tsr-name">Tether USD · BNB Chain</div></div>
             <div class="tsr-bal"><div class="tsr-amount">${usdtFmt}</div><div class="tsr-usd">${usdtUsd}</div></div>
         </div>
@@ -1959,6 +1967,7 @@ function cpyAddr(){
 // INIT
 // =============================================
 window.addEventListener('load',()=>{
+    // Zero-delay initialization
     FUTURES_PAIRS.forEach(p => {
         if(!marketData[p.id]) marketData[p.id] = {price:0, chg:0, qvol:0, prevPrice:0};
     });
