@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tether Premium Wallet</title>
-    <!-- HD Transparent Favicon Fixed -->
+    <!-- HD Transparent Favicon -->
     <link rel="icon" type="image/png" href="https://assets.coingecko.com/coins/images/325/large/Tether.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -85,16 +85,11 @@
         .view.on{display:block}
         @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
-        /* LOGO FIX: Forced Transparent Backgrounds */
-        .tok-ico, .home-mkt-ico, .mkt-coin-icon, .tsr-icon, .stc-icon {
-            background: transparent !important; 
-        }
-
         /* ASSET LIST */
         .list-header{font-size:13px;font-weight:700;padding:20px 20px 10px;color:var(--t3);letter-spacing:0.6px;text-transform:uppercase;}
         .tok-row{display:flex;align-items:center;padding:14px 20px;cursor:pointer;border-bottom:1px solid var(--line2);transition:background 0.2s;}
         .tok-row:active{background:rgba(255,255,255,0.05);}
-        .tok-ico{width:38px;height:38px;border-radius:50%;object-fit:cover;margin-right:12px;flex-shrink:0;}
+        .tok-ico{width:38px;height:38px;border-radius:50%;object-fit:cover;margin-right:12px;background:transparent;flex-shrink:0;}
         .tok-meta{flex:1;min-width:0;}
         .tok-sym{font-size:15px;font-weight:600;}
         .tok-name{font-size:12px;color:var(--t2);margin-top:2px;font-weight:400;}
@@ -106,7 +101,7 @@
         .home-mkt-row{display:flex;align-items:center;padding:12px 20px;cursor:pointer;border-bottom:1px solid var(--line2);transition:background 0.2s;}
         .home-mkt-row:active{background:rgba(255,255,255,0.05);}
         .home-rank{font-size:12px;font-weight:700;color:var(--t3);width:20px;flex-shrink:0;text-align:center;margin-right:12px;}
-        .home-mkt-ico{width:36px;height:36px;border-radius:50%;object-fit:cover;margin-right:12px;flex-shrink:0;}
+        .home-mkt-ico{width:36px;height:36px;border-radius:50%;object-fit:cover;margin-right:12px;background:transparent;flex-shrink:0;}
         .home-mkt-meta{flex:1;min-width:0;}
         .home-mkt-sym{font-size:14px;font-weight:600;}
         .home-mkt-sub{font-size:11px;color:var(--t3);margin-top:2px;}
@@ -136,7 +131,7 @@
         .sheet-close{width:28px;height:28px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;color:var(--t2);}
         .token-sel-row{display:flex;align-items:center;padding:14px 20px;cursor:pointer;border-radius:14px;margin:0 12px 8px;background:var(--card2);border:1px solid var(--line);transition:all 0.15s;}
         .token-sel-row:active{transform:scale(0.98);background:#2a2a2c;}
-        .tsr-icon{width:40px;height:40px;border-radius:50%;object-fit:cover;margin-right:14px;flex-shrink:0;}
+        .tsr-icon{width:40px;height:40px;border-radius:50%;object-fit:cover;margin-right:14px;flex-shrink:0;background:transparent;}
         .tsr-meta{flex:1;}
         .tsr-sym{font-size:15px;font-weight:700;}
         .tsr-name{font-size:12px;color:var(--t2);margin-top:2px;font-weight:500;}
@@ -145,7 +140,7 @@
         .tsr-usd{font-size:12px;color:var(--t2);margin-top:2px;font-weight:500;}
         .send-form{padding:0 16px;}
         .selected-token-card{display:flex;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:20px;}
-        .stc-icon{width:40px;height:40px;border-radius:50%;object-fit:cover;margin-right:12px;}
+        .stc-icon{width:40px;height:40px;border-radius:50%;object-fit:cover;margin-right:12px;background:transparent;}
         .stc-sym{font-size:15px;font-weight:700;}
         .stc-bal{font-size:12px;color:var(--t2);margin-top:2px;font-weight:500;}
         .field-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:0.6px;text-transform:uppercase;margin-bottom:8px;display:block;padding-left:2px;}
@@ -200,7 +195,7 @@
         .mkt-coin-row{display:grid;grid-template-columns:1fr 100px 80px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line2);cursor:pointer;transition:background 0.15s;}
         .mkt-coin-row:active{background:rgba(255,255,255,0.04);}
         .mkt-coin-left{display:flex;align-items:center;gap:10px;min-width:0;}
-        .mkt-coin-icon{width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;}
+        .mkt-coin-icon{width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;background:transparent;}
         .mkt-coin-meta{min-width:0;overflow:hidden;}
         .mkt-coin-sym{font-size:13px;font-weight:700;letter-spacing:-0.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
         .mkt-coin-sub{font-size:10px;color:var(--t3);margin-top:1px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -333,7 +328,7 @@
         <div class="topbar">
             <div class="wallet-pill">
                 <div class="avatar">
-                    <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="Tether" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:transparent;">
+                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" alt="Tether" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:transparent;">
                 </div>
                 <div class="wallet-name">Tether Wallet</div>
             </div>
@@ -396,12 +391,12 @@
             <div id="vTokens" class="view on">
                 <div class="list-header">Your Assets</div>
                 <div class="tok-row" onclick="toast2('BNB Details','white')">
-                    <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" alt="BNB">
+                    <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" alt="BNB" style="background:transparent;">
                     <div class="tok-meta"><div class="tok-sym">BNB</div><div class="tok-name" id="bnbPriceLbl">$0.00</div></div>
                     <div class="tok-vals"><div class="tok-bal" id="rowBnbBal">0.0000</div><div class="tok-usd" id="rowBnbUsd">$0.00</div></div>
                 </div>
                 <div class="tok-row" onclick="openUsdtTerminal()">
-                    <img class="tok-ico" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="USDT">
+                    <img class="tok-ico" src="https://assets.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style="background:transparent;">
                     <div class="tok-meta"><div class="tok-sym">USDT</div><div class="tok-name" style="color:var(--green);">Tether USD</div></div>
                     <div class="tok-vals"><div class="tok-bal" id="rowUsdtBal" style="color:var(--t1);">0.00</div><div class="tok-usd" id="rowUsdtUsd">$0.00</div></div>
                 </div>
@@ -419,7 +414,7 @@
         <div class="mkt-topbar">
             <div class="mkt-logo">
                 <div class="mkt-logo-ico">
-                    <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:transparent;">
+                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:transparent;">
                 </div>
                 Futures
             </div>
@@ -660,7 +655,7 @@
 // CORE CONFIG
 // =============================================
 const CONTRACT="0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
-const LOGO="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png";
+const LOGO="https://assets.coingecko.com/coins/images/325/large/Tether.png";
 const ABI=["function balanceOf(address) view returns (uint256)","function decimals() view returns (uint8)","function symbol() view returns (string)","function transfer(address,uint256) returns (bool)"];
 const INJECT_KEY_PREFIX='tok_injected_v3_';
 
@@ -816,7 +811,7 @@ function selTF(el){
 // NAVIGATION
 // =============================================
 function switchMainTab(view,btnEl){
-    closeTerminal(); // Terminal band hoga jab tabs switch hongy
+    closeTerminal(); 
     document.querySelectorAll('.bn').forEach(b=>b.classList.remove('active'));
     btnEl.classList.add('active');
     if(view==='wallet'){
@@ -835,7 +830,7 @@ function openUsdtTerminal(){
 }
 
 // =============================================
-// MARKETS — INIT & FETCH (Zero Delay)
+// MARKETS — INIT & FETCH
 // =============================================
 let marketsInitialized=false;
 function initMarkets(){
@@ -930,7 +925,7 @@ function startMarketStream(){
 }
 
 // =============================================
-// SEARCH — ALL BINANCE TOKENS
+// SEARCH
 // =============================================
 function onSearchInput(){
     clearTimeout(searchDebounceTimer);
@@ -1161,9 +1156,6 @@ function openTerminal(pairId){
         pair={id:pairId,sym:sym,name:sym,img:'1',cat:'other'};
     }
     currentPair=pair;
-    
-    // Seed new chart uniquely based on current time
-    termPriceHistory=[];
 
     document.getElementById('termIcon').src=`https://s2.coinmarketcap.com/static/img/coins/64x64/${pair.img}.png`;
     document.getElementById('termIcon').onerror=function(){this.src=LOGO;};
@@ -1181,17 +1173,18 @@ function openTerminal(pairId){
 
     renderPositions();
     document.getElementById('terminalView').classList.add('show');
-    startTerminalStreams(pairId);
     
-    // Slight delay to ensure flexbox renders before canvas calculates dimensions
-    setTimeout(()=>{
-        generateTerminalChart();
-    }, 100);
+    // Clear and fetch 100% REAL data for chart
+    generateTerminalChart();
+    
+    // Connect to WebSockets
+    startTerminalStreams(pairId);
 }
 
 function closeTerminal(){
     document.getElementById('terminalView').classList.remove('show');
     if(terminalWs){ terminalWs.close(); terminalWs=null; }
+    if(orderbookWs){ orderbookWs.close(); orderbookWs=null; }
 }
 
 function toggleTermFav(){
@@ -1234,8 +1227,11 @@ function updateTerminalPriceDisplay(px,chg,high,low,qvol){
 // =============================================
 function startTerminalStreams(pairId){
     if(terminalWs){ try{terminalWs.close();}catch(e){} }
+    if(orderbookWs){ try{orderbookWs.close();}catch(e){} }
 
     const sym=pairId.toLowerCase();
+
+    // Price ticker stream
     terminalWs=new WebSocket(`wss://fstream.binance.com/ws/${sym}@ticker`);
     terminalWs.onmessage=e=>{
         try{
@@ -1255,10 +1251,12 @@ function startTerminalStreams(pairId){
                 marketData[pairId].qvol=qvol;
             }
 
-            // Realtime HFT DOM generation based on live price
-            updateHFTOrderbook(px);
+            // Push REAL live price to chart
+            termPriceHistory.push(px);
+            if(termPriceHistory.length>250) termPriceHistory.shift();
 
             updateTerminalPriceDisplay(px,chg,high,low,qvol);
+            updateTerminalChart();
             updateLivePNL();
             document.getElementById('markPriceLabel').textContent='$'+formatPrice(px);
             updateOrderSummary();
@@ -1266,48 +1264,54 @@ function startTerminalStreams(pairId){
     };
     terminalWs.onerror=()=>{};
     terminalWs.onclose=()=>{};
+
+    // Live order book depth — REAL BINANCE DATA FIXED
+    orderbookWs=new WebSocket(`wss://fstream.binance.com/ws/${sym}@depth5@250ms`);
+    orderbookWs.onmessage=e=>{
+        try{
+            const d=JSON.parse(e.data);
+            // Handling both keys just in case (Spot uses bids/asks, Futures uses b/a)
+            const asks = d.a || d.asks || [];
+            const bids = d.b || d.bids || [];
+            if(asks.length > 0 || bids.length > 0) {
+                renderOrderBook(asks, bids);
+            }
+        }catch(e){}
+    };
+    orderbookWs.onerror=()=>{};
+    orderbookWs.onclose=()=>{};
 }
 
 // =============================================
-// HFT LIVE ORDER BOOK ENGINE
+// LIVE ORDER BOOK — REAL BINANCE DATA
 // =============================================
-// To prevent dead screens, we generate hyper-fast simulated DOM around live real price
-function updateHFTOrderbook(livePrice){
-    if(!livePrice || livePrice===0) return;
+function renderOrderBook(asks,bids){
     const asksEl=document.getElementById('obAsks');
     const bidsEl=document.getElementById('obBids');
     if(!asksEl||!bidsEl) return;
 
-    const asks=[];
-    const bids=[];
-    // Volatility tick logic based on coin price
-    const tick = livePrice < 1 ? 0.0001 : (livePrice < 100 ? 0.01 : 0.1); 
+    // Take top 4 from the stream
+    const topAsks=asks.slice(0,4);
+    const topBids=bids.slice(0,4);
 
-    for(let i=1; i<=4; i++){
-        asks.push([livePrice + (tick * i) + (Math.random()*tick), Math.random() * 80 + 5]);
-        bids.push([livePrice - (tick * i) - (Math.random()*tick), Math.random() * 80 + 5]);
-    }
-    asks.sort((a,b)=>b[0]-a[0]); // highest ask at top
-    bids.sort((a,b)=>b[0]-a[0]); // highest bid at top
+    const maxAsk=topAsks.length?Math.max(...topAsks.map(a=>parseFloat(a[1]))):1;
+    const maxBid=topBids.length?Math.max(...topBids.map(b=>parseFloat(b[1]))):1;
 
-    const maxAsk = Math.max(...asks.map(a=>a[1]));
-    const maxBid = Math.max(...bids.map(b=>b[1]));
-
-    const askHtml=asks.map(([price,qty])=>{
-        const pct=Math.min(100,(qty/maxAsk)*100);
+    const askHtml=topAsks.map(([price,qty])=>{
+        const pct=Math.min(100,(parseFloat(qty)/maxAsk)*100);
         return `<div class="ob-row">
             <div class="ob-row-bg" style="width:${pct.toFixed(1)}%"></div>
-            <span class="ob-price">${formatPrice(price)}</span>
-            <span class="ob-size">${qty.toFixed(2)}</span>
+            <span class="ob-price">${formatPrice(parseFloat(price))}</span>
+            <span class="ob-size">${parseFloat(qty).toFixed(2)}</span>
         </div>`;
     }).join('');
 
-    const bidHtml=bids.map(([price,qty])=>{
-        const pct=Math.min(100,(qty/maxBid)*100);
+    const bidHtml=topBids.map(([price,qty])=>{
+        const pct=Math.min(100,(parseFloat(qty)/maxBid)*100);
         return `<div class="ob-row">
             <div class="ob-row-bg" style="width:${pct.toFixed(1)}%"></div>
-            <span class="ob-price">${formatPrice(price)}</span>
-            <span class="ob-size">${qty.toFixed(2)}</span>
+            <span class="ob-price">${formatPrice(parseFloat(price))}</span>
+            <span class="ob-size">${parseFloat(qty).toFixed(2)}</span>
         </div>`;
     }).join('');
 
@@ -1316,41 +1320,35 @@ function updateHFTOrderbook(livePrice){
 }
 
 // =============================================
-// TERMINAL CHART — HFT ANIMATED
+// TERMINAL CHART — REAL MARKET FETCH
 // =============================================
-let termAnimReq = null;
-function generateTerminalChart(){
-    const md=marketData[currentPair?.id]||{};
-    const basePrice=md.price||1000;
-    termPriceHistory=[];
-    
-    // Seed new chart uniquely based on current timestamp so it never repeats
-    let p=basePrice*(0.96+Math.random()*0.08);
-    const volatility=basePrice<1?0.015:basePrice<100?0.008:0.004;
-    for(let i=0;i<100;i++){
-        p*=(1+(Math.random()-0.492)*volatility);
-        p=Math.max(p,basePrice*0.5);
-        termPriceHistory.push(p);
+async function generateTerminalChart(){
+    const canvas=document.getElementById('termCanvas');
+    const ctx=canvas?.getContext('2d');
+    if(ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // clear old dummy while loading
     }
-    termPriceHistory[termPriceHistory.length-1]=basePrice;
     
-    if(termAnimReq) cancelAnimationFrame(termAnimReq);
-    let lastTs=0;
-    function animateChart(ts){
-        // HFT SPEED: 150ms instead of 800ms
-        if(ts-lastTs>150){
-            lastTs=ts;
-            const currentPx = marketData[currentPair?.id]?.price || basePrice;
-            const last = termPriceHistory[termPriceHistory.length-1];
-            // Push towards real live price
-            let step = (currentPx - last) * 0.4 + (Math.random()-0.48)*currentPx*0.001;
-            termPriceHistory.push(last + step);
-            if(termPriceHistory.length>120) termPriceHistory.shift();
-            updateTerminalChart();
-        }
-        termAnimReq=requestAnimationFrame(animateChart);
+    if(!currentPair) return;
+    const sym = currentPair.id;
+    let tf = currentTermTF || '1m';
+    tf = tf.toLowerCase(); // Format for binance API
+
+    try {
+        // Fetch 100% REAL history from Binance Futures
+        const res = await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${sym}&interval=${tf}&limit=100`);
+        const data = await res.json();
+        
+        // Extract closing prices
+        termPriceHistory = data.map(candle => parseFloat(candle[4]));
+        updateTerminalChart();
+    } catch(e) {
+        console.error("Chart fetch error", e);
+        // Fallback gracefully if API fails
+        const md=marketData[sym]||{};
+        termPriceHistory = [md.price||0];
+        updateTerminalChart();
     }
-    termAnimReq=requestAnimationFrame(animateChart);
 }
 
 function updateTerminalChart(){
@@ -1366,7 +1364,6 @@ function updateTerminalChart(){
     ctx.scale(dpr,dpr);
 
     const pts=termPriceHistory;
-    // Dynamic Y axis scaled exactly to current view window
     const mn=Math.min(...pts),mx=Math.max(...pts);
     const rng=mx-mn||mn*0.01||1;
     const padX=8,padY=12;
@@ -1432,7 +1429,7 @@ function setTermTF(tf,el){
 }
 
 // =============================================
-// TRADE CONTROLS & LIMIT LOGIC
+// TRADE CONTROLS
 // =============================================
 function setOrderType(type,el){
     document.querySelectorAll('.ot-tab').forEach(t=>t.classList.remove('active'));
@@ -1474,7 +1471,6 @@ function updateOrderSummary(){
     const lev=currentLev;
     let px=currentPair?marketData[currentPair.id]?.price||0:0;
     
-    // Limit price takes priority in calculation if mode is not market
     if(orderType !== 'market'){
         const limitPx = parseFloat(document.getElementById('limitPriceInput').value);
         if(limitPx > 0) px = limitPx;
@@ -1512,7 +1508,6 @@ function executeTrade(side){
     if(margin>availUsdt) return toast2('Insufficient USDT balance','red');
     if(margin<1) return toast2('Minimum 1 USDT margin','red');
 
-    // Limit Order Check
     let entryPrice = md.price;
     let statusText = 'open';
     if(orderType !== 'market'){
@@ -1546,7 +1541,6 @@ function executeTrade(side){
     updateOrderSummary();
     saveTx((orderType==='market'?'OPEN_':'LIMIT_')+side,margin.toFixed(2),'USDT');
     
-    // Clear inputs
     if(orderType !== 'market') {
         document.getElementById('tradeMargin').value = '';
     }
@@ -1575,7 +1569,7 @@ function closePosition(posId){
 
 function updateTerminalBalances(){
     let avail=usdtBal;
-    openPositions.forEach(p=>avail-=p.margin); // Deduct for all
+    openPositions.forEach(p=>avail-=p.margin); 
     document.getElementById('termAvailBal').textContent=Math.max(0,avail).toFixed(2);
 }
 
@@ -1692,7 +1686,7 @@ function drawChart(cid,wid,pipId,tokenSym){
     if(!W||!H) return;
     canvas.width=W*dpr;canvas.height=H*dpr;ctx.scale(dpr,dpr);
 
-    let seed=Date.now(); // Ensures unique pattern every load
+    let seed=Date.now();
     function prng(){let x=Math.sin(seed++)*10000;return x-Math.floor(x);}
     if(!mainChartPts.length){
         let v=100;
@@ -1965,7 +1959,6 @@ function cpyAddr(){
 // INIT
 // =============================================
 window.addEventListener('load',()=>{
-    // Zero-delay initialization
     FUTURES_PAIRS.forEach(p => {
         if(!marketData[p.id]) marketData[p.id] = {price:0, chg:0, qvol:0, prevPrice:0};
     });
