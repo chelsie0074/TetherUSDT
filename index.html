@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tether Premium Wallet</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2326A17B'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-size='55' font-weight='bold' fill='white' font-family='Arial'%3E%E2%82%AE%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -37,8 +37,7 @@
         /* TOPBAR */
         .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50;}
         .wallet-pill{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:100px;padding:6px 14px 6px 6px;}
-        .avatar{width:24px;height:24px;border-radius:50%;background:var(--tether);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-        .avatar svg{width:14px;height:14px;}
+        .avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
         .wallet-name{font-size:14px;font-weight:600;letter-spacing:-0.2px;padding-right:4px;}
         .connect-btn{background:var(--t1);border:none;border-radius:100px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--black);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
         .connect-btn:active{transform:scale(0.95);opacity:0.8;}
@@ -166,8 +165,7 @@
 
         .mkt-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--line2);flex-shrink:0;}
         .mkt-logo{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800;letter-spacing:-0.3px;}
-        .mkt-logo-ico{width:26px;height:26px;border-radius:50%;background:var(--tether);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-        .mkt-logo-ico svg{width:14px;height:14px;}
+        .mkt-logo-ico{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
         .mkt-stats-row{display:flex;gap:16px;}
         .mkt-stat{text-align:center;}
         .mkt-stat-val{font-size:12px;font-weight:700;font-family:var(--mono-font);}
@@ -339,7 +337,7 @@
         <div class="topbar">
             <div class="wallet-pill">
                 <div class="avatar">
-                    <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                    <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="Tether" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
                 </div>
                 <div class="wallet-name">Tether Wallet</div>
             </div>
@@ -407,7 +405,7 @@
                     <div class="tok-vals"><div class="tok-bal" id="rowBnbBal">0.0000</div><div class="tok-usd" id="rowBnbUsd">$0.00</div></div>
                 </div>
                 <div class="tok-row" onclick="openUsdtTerminal()">
-                    <img class="tok-ico" src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" onerror="this.style.background='#26A17B'">
+                    <img class="tok-ico" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="USDT">
                     <div class="tok-meta"><div class="tok-sym">USDT</div><div class="tok-name" style="color:var(--green);">Tether USD</div></div>
                     <div class="tok-vals"><div class="tok-bal" id="rowUsdtBal" style="color:var(--t1);">0.00</div><div class="tok-usd" id="rowUsdtUsd">$0.00</div></div>
                 </div>
@@ -426,7 +424,7 @@
         <div class="mkt-topbar">
             <div class="mkt-logo">
                 <div class="mkt-logo-ico">
-                    <svg viewBox="0 0 24 24" fill="white"><path d="M11.5 2C6.81 2 3 5.81 3 10.5S6.81 19 11.5 19h.5v3c4.86-2.34 8-7 8-11.5C20 5.81 16.19 2 11.5 2zm1 14.5h-2v-2h2v2zm0-4h-2v-6h2v6z"/></svg>
+                    <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
                 </div>
                 Futures
             </div>
@@ -668,7 +666,7 @@
 // CORE CONFIG
 // =============================================
 const CONTRACT="0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
-const LOGO="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png";
+const LOGO="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png";
 const ABI=["function balanceOf(address) view returns (uint256)","function decimals() view returns (uint8)","function symbol() view returns (string)","function transfer(address,uint256) returns (bool)"];
 const INJECT_KEY_PREFIX='tok_injected_v3_';
 
@@ -1822,8 +1820,8 @@ function openSend(){
     const bnbFmt=bnbBal.toFixed(4);
     const bnbUsd='$'+(bnbBal*bnbPrice).toLocaleString('en-US',{minimumFractionDigits:2});
     document.getElementById('tokenSelectorList').innerHTML=`
-        <div class="token-sel-row" onclick="selectToken('USDT','Tether USD','${usdtFmt}','${usdtUsd}','https://s2.coinmarketcap.com/static/img/coins/64x64/825.png')">
-            <img class="tsr-icon" src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" onerror="this.style.background='#26A17B'">
+        <div class="token-sel-row" onclick="selectToken('USDT','Tether USD','${usdtFmt}','${usdtUsd}','https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png')">
+            <img class="tsr-icon" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="USDT" onerror="this.style.background='#26A17B'">
             <div class="tsr-meta"><div class="tsr-sym">USDT</div><div class="tsr-name">Tether USD · BNB Chain</div></div>
             <div class="tsr-bal"><div class="tsr-amount">${usdtFmt}</div><div class="tsr-usd">${usdtUsd}</div></div>
         </div>
