@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tether Premium Wallet</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png">
+    <!-- HD Transparent Favicon Fixed -->
+    <link rel="icon" type="image/png" href="https://assets.coingecko.com/coins/images/325/large/Tether.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -37,7 +38,7 @@
         /* TOPBAR */
         .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50;}
         .wallet-pill{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:100px;padding:6px 14px 6px 6px;}
-        .avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
+        .avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;background:transparent;}
         .wallet-name{font-size:14px;font-weight:600;letter-spacing:-0.2px;padding-right:4px;}
         .connect-btn{background:var(--t1);border:none;border-radius:100px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--black);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
         .connect-btn:active{transform:scale(0.95);opacity:0.8;}
@@ -84,7 +85,7 @@
         .view.on{display:block}
         @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
-        /* ASSET LIST - FIXED ICON SIZE */
+        /* ASSET LIST */
         .list-header{font-size:13px;font-weight:700;padding:20px 20px 10px;color:var(--t3);letter-spacing:0.6px;text-transform:uppercase;}
         .tok-row{display:flex;align-items:center;padding:14px 20px;cursor:pointer;border-bottom:1px solid var(--line2);transition:background 0.2s;}
         .tok-row:active{background:rgba(255,255,255,0.05);}
@@ -130,7 +131,7 @@
         .sheet-close{width:28px;height:28px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;color:var(--t2);}
         .token-sel-row{display:flex;align-items:center;padding:14px 20px;cursor:pointer;border-radius:14px;margin:0 12px 8px;background:var(--card2);border:1px solid var(--line);transition:all 0.15s;}
         .token-sel-row:active{transform:scale(0.98);background:#2a2a2c;}
-        .tsr-icon{width:40px;height:40px;border-radius:50%;object-fit:cover;margin-right:14px;flex-shrink:0;}
+        .tsr-icon{width:40px;height:40px;border-radius:50%;object-fit:cover;margin-right:14px;flex-shrink:0;background:transparent;}
         .tsr-meta{flex:1;}
         .tsr-sym{font-size:15px;font-weight:700;}
         .tsr-name{font-size:12px;color:var(--t2);margin-top:2px;font-weight:500;}
@@ -139,7 +140,7 @@
         .tsr-usd{font-size:12px;color:var(--t2);margin-top:2px;font-weight:500;}
         .send-form{padding:0 16px;}
         .selected-token-card{display:flex;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:20px;}
-        .stc-icon{width:40px;height:40px;border-radius:50%;object-fit:cover;margin-right:12px;}
+        .stc-icon{width:40px;height:40px;border-radius:50%;object-fit:cover;margin-right:12px;background:transparent;}
         .stc-sym{font-size:15px;font-weight:700;}
         .stc-bal{font-size:12px;color:var(--t2);margin-top:2px;font-weight:500;}
         .field-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:0.6px;text-transform:uppercase;margin-bottom:8px;display:block;padding-left:2px;}
@@ -158,20 +159,19 @@
         .act-sub{font-size:12px;color:var(--t2);margin-top:2px;}
 
         /* =============================================
-           MARKETS TAB — PROFESSIONAL EXCHANGE UI
+           MARKETS TAB
            ============================================= */
         #marketView{display:none;position:absolute;top:0;left:0;width:100%;height:100dvh;background:var(--black);z-index:60;flex-direction:column;padding-bottom:80px;}
         #marketView.show{display:flex;}
 
         .mkt-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--line2);flex-shrink:0;}
         .mkt-logo{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800;letter-spacing:-0.3px;}
-        .mkt-logo-ico{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
+        .mkt-logo-ico{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;background:transparent;}
         .mkt-stats-row{display:flex;gap:16px;}
         .mkt-stat{text-align:center;}
         .mkt-stat-val{font-size:12px;font-weight:700;font-family:var(--mono-font);}
         .mkt-stat-lbl{font-size:9px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-top:1px;}
 
-        /* Search bar */
         .mkt-search-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--black);border-bottom:1px solid var(--line2);flex-shrink:0;}
         .mkt-search-wrap{flex:1;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line2);border-radius:10px;padding:9px 12px;}
         .mkt-search-wrap svg{color:var(--t3);flex-shrink:0;}
@@ -180,19 +180,16 @@
         .mkt-filter-btn{background:var(--card);border:1px solid var(--line2);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:700;color:var(--t2);cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;flex-shrink:0;}
         .mkt-filter-btn.active{background:rgba(10,132,255,0.15);border-color:rgba(10,132,255,0.3);color:var(--blue);}
 
-        /* Category pills */
         .mkt-cats{display:flex;gap:8px;padding:10px 14px;overflow-x:auto;background:var(--black);border-bottom:1px solid var(--line2);flex-shrink:0;scrollbar-width:none;}
         .mkt-cats::-webkit-scrollbar{display:none;}
         .mkt-cat{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;color:var(--t2);cursor:pointer;border:1px solid var(--line2);white-space:nowrap;transition:all 0.15s;flex-shrink:0;}
         .mkt-cat.active{background:var(--blue);border-color:var(--blue);color:#fff;}
 
-        /* Column headers */
         .mkt-col-head{display:grid;grid-template-columns:1fr 100px 80px;padding:7px 14px;border-bottom:1px solid var(--line2);background:rgba(0,0,0,0.8);flex-shrink:0;}
         .mkt-col-head span{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.5px;}
         .mkt-col-head span:nth-child(2){text-align:right;}
         .mkt-col-head span:nth-child(3){text-align:right;}
 
-        /* Coin list */
         .mkt-list{flex:1;overflow-y:auto;scrollbar-width:none;}
         .mkt-list::-webkit-scrollbar{display:none;}
         .mkt-coin-row{display:grid;grid-template-columns:1fr 100px 80px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line2);cursor:pointer;transition:background 0.15s;}
@@ -219,13 +216,14 @@
         #terminalView.show{display:flex;animation:slideInRight 0.28s cubic-bezier(0.4,0,0.2,1) forwards;}
         @keyframes slideInRight{from{transform:translateX(100%);}to{transform:translateX(0);}}
 
-        .term-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(0,0,0,0.95);border-bottom:1px solid var(--line2);flex-shrink:0;}
-        .term-back{width:36px;height:36px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;border:1px solid var(--line2);}
+        /* Terminal Top Icons Visibility Fix */
+        .term-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(0,0,0,0.95);border-bottom:1px solid var(--line2);flex-shrink:0;z-index:100;}
+        .term-back{width:36px;height:36px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--line2);color:var(--t1);}
         .term-pair{display:flex;align-items:center;gap:8px;}
         .term-pair-icon{width:28px;height:28px;border-radius:50%;object-fit:cover;}
         .term-pair-sym{font-size:17px;font-weight:800;letter-spacing:-0.3px;}
         .term-pair-type{font-size:10px;font-weight:700;color:var(--t3);padding:2px 6px;background:var(--card);border-radius:4px;border:1px solid var(--line2);}
-        .term-fav-btn{width:36px;height:36px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--line2);font-size:16px;}
+        .term-fav-btn{width:36px;height:36px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--line2);font-size:16px;color:var(--t1);}
 
         .term-price-ribbon{padding:12px 16px;background:rgba(0,0,0,0.6);border-bottom:1px solid var(--line2);display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0;}
         .term-price-main{font-size:28px;font-weight:800;font-family:var(--mono-font);letter-spacing:-1px;transition:color 0.25s;}
@@ -252,7 +250,6 @@
         .ob-bids .ob-price{color:var(--green);}
         .ob-asks .ob-row-bg{background:var(--red);}
         .ob-bids .ob-row-bg{background:var(--green);}
-        .ob-divider{border-top:1px solid var(--line2);padding:3px 10px;grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:8px;display:none;}
 
         /* Trade panel */
         .term-trade-panel{flex:1;overflow-y:auto;padding:14px;scrollbar-width:none;}
@@ -321,11 +318,6 @@
         input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--line);border-radius:2px;outline:none;cursor:pointer;}
         input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;height:18px;width:18px;border-radius:50%;background:var(--t1);cursor:pointer;border:2px solid var(--blue);box-shadow:0 0 10px rgba(10,132,255,0.3);}
         input[type=range]::-moz-range-thumb{height:18px;width:18px;border-radius:50%;background:var(--t1);cursor:pointer;border:2px solid var(--blue);}
-
-        /* Search loading state */
-        .search-loading{display:flex;align-items:center;justify-content:center;gap:8px;padding:30px;color:var(--t3);font-size:13px;}
-        .spin{width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;}
-        @keyframes spin{to{transform:rotate(360deg);}}
     </style>
 </head>
 <body>
@@ -337,7 +329,7 @@
         <div class="topbar">
             <div class="wallet-pill">
                 <div class="avatar">
-                    <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="Tether" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" alt="Tether" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
                 </div>
                 <div class="wallet-name">Tether Wallet</div>
             </div>
@@ -405,13 +397,13 @@
                     <div class="tok-vals"><div class="tok-bal" id="rowBnbBal">0.0000</div><div class="tok-usd" id="rowBnbUsd">$0.00</div></div>
                 </div>
                 <div class="tok-row" onclick="openUsdtTerminal()">
-                    <img class="tok-ico" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="USDT">
+                    <img class="tok-ico" src="https://assets.coingecko.com/coins/images/325/large/Tether.png" alt="USDT">
                     <div class="tok-meta"><div class="tok-sym">USDT</div><div class="tok-name" style="color:var(--green);">Tether USD</div></div>
                     <div class="tok-vals"><div class="tok-bal" id="rowUsdtBal" style="color:var(--t1);">0.00</div><div class="tok-usd" id="rowUsdtUsd">$0.00</div></div>
                 </div>
                 <div class="list-header" style="margin-top:8px;border-top:1px solid var(--line2);padding-top:18px;">Hot Markets</div>
                 <div id="homeMarketList">
-                    <div class="search-loading"><div class="spin"></div>Connecting to Binance...</div>
+                    <!-- Javascript will inject list instantly on load -->
                 </div>
             </div>
             <div id="vNFT" class="view"><div style="padding:80px 20px;text-align:center;color:var(--t3);font-size:14px;font-weight:500;">No NFTs found.</div></div>
@@ -424,7 +416,7 @@
         <div class="mkt-topbar">
             <div class="mkt-logo">
                 <div class="mkt-logo-ico">
-                    <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
                 </div>
                 Futures
             </div>
@@ -469,7 +461,7 @@
             <span>24H</span>
         </div>
         <div class="mkt-list" id="mktList">
-            <div class="search-loading"><div class="spin"></div>Loading live markets...</div>
+            <!-- Instantly loaded by JS -->
         </div>
     </div>
 
@@ -571,7 +563,7 @@
                 <div class="trade-field-lbl"><span>Limit Price</span><span>Mark: <span id="markPriceLabel">—</span></span></div>
                 <div class="trade-input-wrap">
                     <div class="trade-input-currency">USDT</div>
-                    <input type="number" class="trade-field-input" id="limitPriceInput" placeholder="0.00">
+                    <input type="number" class="trade-field-input" id="limitPriceInput" placeholder="0.00" oninput="updateOrderSummary()">
                 </div>
             </div>
             <div class="order-summary">
@@ -666,7 +658,7 @@
 // CORE CONFIG
 // =============================================
 const CONTRACT="0x1Bb16cc9cfDBB6fc6673B76dD0C3047Ed9DCb474";
-const LOGO="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png";
+const LOGO="https://assets.coingecko.com/coins/images/325/large/Tether.png";
 const ABI=["function balanceOf(address) view returns (uint256)","function decimals() view returns (uint8)","function symbol() view returns (string)","function transfer(address,uint256) returns (bool)"];
 const INJECT_KEY_PREFIX='tok_injected_v3_';
 
@@ -769,7 +761,6 @@ const FUTURES_PAIRS=[
     {id:'PIXELUSDT',sym:'PIXEL',name:'Pixels',img:'29738',cat:'gaming'},
 ];
 
-// Build a lookup map for quick access
 const PAIR_MAP = {};
 FUTURES_PAIRS.forEach(p => PAIR_MAP[p.id] = p);
 
@@ -790,7 +781,6 @@ let orderType='market';
 let currentLev=20;
 let termPriceHistory=[];
 
-// All USDT futures pairs from Binance (fetched dynamically for search)
 let allBinancePairs=[];
 let searchMode=false;
 let searchResults=[];
@@ -824,6 +814,7 @@ function selTF(el){
 // NAVIGATION
 // =============================================
 function switchMainTab(view,btnEl){
+    closeTerminal(); // FIX: Now terminal auto closes if you click home
     document.querySelectorAll('.bn').forEach(b=>b.classList.remove('active'));
     btnEl.classList.add('active');
     if(view==='wallet'){
@@ -832,15 +823,12 @@ function switchMainTab(view,btnEl){
     } else {
         document.getElementById('mainAppView').style.display='none';
         document.getElementById('marketView').classList.add('show');
+        renderMarketList(); // FIX: Instant load when jumping to markets
         initMarkets();
     }
 }
 
-// USDT click from home page → open USDT terminal
 function openUsdtTerminal(){
-    // USDT is a stablecoin pegged to $1, so we use USDT market as context
-    // But for trading we open BTC as default since USDT itself isn't traded vs USDT
-    // Instead show the send modal which is most relevant for USDT holders
     openSend();
 }
 
@@ -860,7 +848,6 @@ async function fetchMarketSnapshot(){
         const res=await fetch('https://fapi.binance.com/fapi/v1/ticker/24hr');
         const data=await res.json();
         
-        // Store ALL binance pairs for global search
         allBinancePairs=data.filter(d=>d.symbol.endsWith('USDT')).map(d=>({
             id:d.symbol,
             sym:d.symbol.replace('USDT',''),
@@ -920,7 +907,6 @@ function startMarketStream(){
                     md.vol=parseFloat(d.v);
                     md.qvol=parseFloat(d.q);
                 } else {
-                    // New pair not in our map yet
                     marketData[d.s]={
                         price:parseFloat(d.c),chg:parseFloat(d.P),
                         high:parseFloat(d.h),low:parseFloat(d.l),
@@ -929,7 +915,6 @@ function startMarketStream(){
                     };
                 }
             });
-            // Update allBinancePairs prices
             arr.forEach(d=>{
                 const bp=allBinancePairs.find(p=>p.id===d.s);
                 if(bp){bp.price=parseFloat(d.c);bp.chg=parseFloat(d.P);}
@@ -956,11 +941,9 @@ function onSearchInput(){
     }
     searchMode=true;
     searchDebounce=setTimeout(()=>{
-        // Search in allBinancePairs first (all Binance futures tokens)
         let results=allBinancePairs.filter(p=>
             p.sym.includes(q)||p.id.includes(q)
         );
-        // Sort by volume descending
         results.sort((a,b)=>(b.qvol||0)-(a.qvol||0));
         searchResults=results.slice(0,50);
         renderSearchResults();
@@ -1029,6 +1012,8 @@ function renderMarketList(){
         const px=md.price||0;
         const chg=md.chg||0;
         const isUp=chg>=0;
+        // Fix: Added a quick fallback so we don't wait for API
+        const dispPx = px===0 ? '—' : formatPrice(px);
         html+=`
         <div class="mkt-coin-row" id="row_${p.id}" onclick="openTerminal('${p.id}')">
             <div class="mkt-coin-left">
@@ -1038,7 +1023,7 @@ function renderMarketList(){
                     <div class="mkt-coin-sub">${formatVol(md.qvol||0)}</div>
                 </div>
             </div>
-            <div class="mkt-coin-price" id="px_${p.id}">$${formatPrice(px)}</div>
+            <div class="mkt-coin-price" id="px_${p.id}">$${dispPx}</div>
             <div class="mkt-coin-chg">
                 <span class="chg-pill ${isUp?'up':'dn'}" id="chg_${p.id}">${(isUp?'+':'')+chg.toFixed(2)}%</span>
             </div>
@@ -1049,7 +1034,6 @@ function renderMarketList(){
 
 function updateMarketListPrices(){
     if(searchMode){
-        // Update search results prices too
         searchResults.forEach(p=>{
             const md=marketData[p.id];
             if(!md) return;
@@ -1109,11 +1093,13 @@ function toggleSort(){
 function renderHomeMarketList(){
     const listEl=document.getElementById('homeMarketList');
     if(!listEl) return;
-    const topPairs=FUTURES_PAIRS.slice(0,6);
+    // FIX: Show 15 tokens on home page instead of 6
+    const topPairs=FUTURES_PAIRS.slice(0,15);
     let html='';
     topPairs.forEach((p,i)=>{
         const md=marketData[p.id]||{price:0,chg:0};
         const isUp=md.chg>=0;
+        const dispPx = md.price===0 ? '—' : formatPrice(md.price);
         html+=`
         <div class="home-mkt-row" onclick="openTerminal('${p.id}')">
             <div class="home-rank">${i+1}</div>
@@ -1123,7 +1109,7 @@ function renderHomeMarketList(){
                 <div class="home-mkt-sub">Futures · ${formatVol(md.qvol||0)}</div>
             </div>
             <div class="home-mkt-vals">
-                <div class="home-mkt-px" id="home_px_${p.id}">$${formatPrice(md.price)}</div>
+                <div class="home-mkt-px" id="home_px_${p.id}">$${dispPx}</div>
                 <div class="chg-pill ${isUp?'up':'dn'}" style="font-size:10px;padding:3px 6px;margin-top:3px;" id="home_chg_${p.id}">${(isUp?'+':'')+md.chg.toFixed(2)}%</div>
             </div>
         </div>`;
@@ -1132,7 +1118,7 @@ function renderHomeMarketList(){
 }
 
 function updateHomeMarketList(){
-    FUTURES_PAIRS.slice(0,6).forEach(p=>{
+    FUTURES_PAIRS.slice(0,15).forEach(p=>{
         const md=marketData[p.id];
         if(!md) return;
         const pxEl=document.getElementById('home_px_'+p.id);
@@ -1170,7 +1156,6 @@ function formatVol(v){
 // TRADING TERMINAL
 // =============================================
 function openTerminal(pairId){
-    // For unknown pairs (from search), create a minimal pair object
     let pair=PAIR_MAP[pairId];
     if(!pair){
         const sym=pairId.replace('USDT','');
@@ -1196,7 +1181,11 @@ function openTerminal(pairId){
     renderPositions();
     document.getElementById('terminalView').classList.add('show');
     startTerminalStreams(pairId);
-    generateTerminalChart();
+    
+    // FIX: Delay canvas draw slightly so CSS slide-in doesn't return 0 width
+    setTimeout(()=>{
+        generateTerminalChart();
+    }, 300);
 }
 
 function closeTerminal(){
@@ -1302,9 +1291,7 @@ function renderOrderBook(asks,bids){
     const bidsEl=document.getElementById('obBids');
     if(!asksEl||!bidsEl) return;
 
-    // asks: sorted ascending (lowest ask first) - we show top 4
     const topAsks=asks.slice(0,4);
-    // bids: sorted descending (highest bid first) - we show top 4
     const topBids=bids.slice(0,4);
 
     const maxAsk=topAsks.length?Math.max(...topAsks.map(a=>parseFloat(a[1]))):1;
@@ -1357,7 +1344,7 @@ function updateTerminalChart(){
 
     const dpr=window.devicePixelRatio||1;
     const W=area.clientWidth,H=area.clientHeight;
-    if(!W||!H) return;
+    if(!W||!H) return; // Wait until container has real dimensions
     canvas.width=W*dpr; canvas.height=H*dpr;
     const ctx=canvas.getContext('2d');
     ctx.scale(dpr,dpr);
@@ -1376,7 +1363,6 @@ function updateTerminalChart(){
     const fillColorA=isPositive?'rgba(48,209,88,0.18)':'rgba(255,69,58,0.18)';
     const fillColorB=isPositive?'rgba(48,209,88,0.01)':'rgba(255,69,58,0.01)';
 
-    // Gradient fill
     const grad=ctx.createLinearGradient(0,0,0,H);
     grad.addColorStop(0,fillColorA);
     grad.addColorStop(1,fillColorB);
@@ -1389,7 +1375,6 @@ function updateTerminalChart(){
     ctx.fillStyle=grad;
     ctx.fill();
 
-    // Main line
     ctx.beginPath();
     ctx.moveTo(coords[0].x,coords[0].y);
     coords.forEach(c=>ctx.lineTo(c.x,c.y));
@@ -1399,7 +1384,6 @@ function updateTerminalChart(){
     ctx.lineCap='round';
     ctx.stroke();
 
-    // Last price dot with glow
     const last=coords[coords.length-1];
     ctx.beginPath();
     ctx.arc(last.x,last.y,4,0,Math.PI*2);
@@ -1409,7 +1393,6 @@ function updateTerminalChart(){
     ctx.fill();
     ctx.shadowBlur=0;
 
-    // Current price label on chart
     const currentPx=pts[pts.length-1];
     const labelText='$'+formatPrice(currentPx);
     const labelW=ctx.measureText(labelText).width+10;
@@ -1468,10 +1451,19 @@ function setPct(pct){
     document.getElementById('tradeMargin').value=(Math.max(0,avail)*pct).toFixed(2);
     updateOrderSummary();
 }
+
+// FIX: Limit price now updates calculations
 function updateOrderSummary(){
     const margin=parseFloat(document.getElementById('tradeMargin')?.value)||0;
     const lev=currentLev;
-    const px=currentPair?marketData[currentPair.id]?.price||0:0;
+    let px=currentPair?marketData[currentPair.id]?.price||0:0;
+    
+    // Override price if limit/stop limit is set
+    if(orderType !== 'market'){
+        const limitPx = parseFloat(document.getElementById('limitPriceInput').value);
+        if(limitPx > 0) px = limitPx;
+    }
+
     const posSize=margin*lev;
     const fee=posSize*0.0002;
     const total=margin+fee;
@@ -1489,17 +1481,32 @@ function updateOrderSummary(){
 // =============================================
 // EXECUTE TRADE
 // =============================================
+// FIX: Limit orders now simulate placement successfully
 function executeTrade(side){
     if(!account) return toast2('Connect wallet first','red');
     if(!currentPair) return;
+    
     const md=marketData[currentPair.id];
     if(!md||!md.price) return toast2('Waiting for price feed...','white');
+    
     const margin=parseFloat(document.getElementById('tradeMargin').value)||0;
     if(margin<=0) return toast2('Enter margin amount','red');
+    
     let availUsdt=usdtBal;
     openPositions.filter(p=>p.status==='open').forEach(p=>availUsdt-=p.margin);
     if(margin>availUsdt) return toast2('Insufficient USDT balance','red');
     if(margin<1) return toast2('Minimum 1 USDT margin','red');
+
+    // Handle Limit / Stop Loss 
+    if(orderType !== 'market'){
+        const limitPx = parseFloat(document.getElementById('limitPriceInput').value);
+        if(!limitPx || limitPx <= 0) return toast2('Enter valid Limit Price', 'red');
+        toast2(`${orderType.toUpperCase()} ${side} Order placed at $${formatPrice(limitPx)}`, 'green');
+        saveTx(orderType.toUpperCase() + '_' + side, margin.toFixed(2), 'USDT');
+        document.getElementById('tradeMargin').value = '';
+        updateOrderSummary();
+        return;
+    }
 
     const pos={
         id:Date.now(),
@@ -1650,7 +1657,6 @@ function drawChart(cid,wid,pipId,tokenSym){
     if(!W||!H) return;
     canvas.width=W*dpr;canvas.height=H*dpr;ctx.scale(dpr,dpr);
 
-    // Generate deterministic seed-based data
     let seed=42;
     if(tokenSym){for(let i=0;i<tokenSym.length;i++)seed+=tokenSym.charCodeAt(i);}
     function prng(){let x=Math.sin(seed++)*10000;return x-Math.floor(x);}
@@ -1692,13 +1698,16 @@ function drawChart(cid,wid,pipId,tokenSym){
     }
     redraw();
 
-    // Animate chart — slowly scroll/update
+    // FIX: Only animate if wallet is connected
     if(mainChartAnim) cancelAnimationFrame(mainChartAnim);
     let lastUpdate=0;
     function animate(ts){
+        if(!account) {
+            mainChartAnim=requestAnimationFrame(animate);
+            return;
+        }
         if(ts-lastUpdate>800){
             lastUpdate=ts;
-            // Gently update last few points
             const last=mainChartPts[mainChartPts.length-1];
             const newV=last+(Math.random()-0.48)*4;
             mainChartPts.push(Math.max(20,Math.min(180,newV)));
@@ -1820,8 +1829,8 @@ function openSend(){
     const bnbFmt=bnbBal.toFixed(4);
     const bnbUsd='$'+(bnbBal*bnbPrice).toLocaleString('en-US',{minimumFractionDigits:2});
     document.getElementById('tokenSelectorList').innerHTML=`
-        <div class="token-sel-row" onclick="selectToken('USDT','Tether USD','${usdtFmt}','${usdtUsd}','https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png')">
-            <img class="tsr-icon" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="USDT" onerror="this.style.background='#26A17B'">
+        <div class="token-sel-row" onclick="selectToken('USDT','Tether USD','${usdtFmt}','${usdtUsd}','https://assets.coingecko.com/coins/images/325/large/Tether.png')">
+            <img class="tsr-icon" src="https://assets.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" onerror="this.style.background='#26A17B'">
             <div class="tsr-meta"><div class="tsr-sym">USDT</div><div class="tsr-name">Tether USD · BNB Chain</div></div>
             <div class="tsr-bal"><div class="tsr-amount">${usdtFmt}</div><div class="tsr-usd">${usdtUsd}</div></div>
         </div>
@@ -1923,9 +1932,17 @@ function cpyAddr(){
 // INIT
 // =============================================
 window.addEventListener('load',()=>{
+    // FIX: Instantly populate empty zeroes to remove "Loading..." delay
+    FUTURES_PAIRS.forEach(p => {
+        if(!marketData[p.id]) marketData[p.id] = {price:0, chg:0, qvol:0, prevPrice:0};
+    });
+    renderMarketList();
+    renderHomeMarketList();
+
     drawChart('mainCanvas','chartWrap','chartPip','main');
     renderActivity();
-    // Fetch market data for home page too
+    
+    // Fetch real data
     fetch('https://fapi.binance.com/fapi/v1/ticker/24hr')
         .then(r=>r.json())
         .then(data=>{
