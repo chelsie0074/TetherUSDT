@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tether Premium Wallet</title>
-    <!-- HD Transparent Favicon Fixed -->
     <link rel="icon" type="image/png" href="https://assets.coingecko.com/coins/images/325/large/Tether.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -35,7 +34,6 @@
         .scroll-body::-webkit-scrollbar{display:none}
         #mainAppView{display:flex;flex-direction:column;height:100%;width:100%;}
 
-        /* TOPBAR */
         .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50;}
         .wallet-pill{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:100px;padding:6px 14px 6px 6px;}
         .avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;background:transparent;}
@@ -47,7 +45,6 @@
         .cled.on{display:block;background:var(--green);box-shadow:0 0 10px rgba(48,209,88,0.8);animation:breathe 2s ease infinite}
         @keyframes breathe{0%,100%{opacity:0.6}50%{opacity:1}}
 
-        /* BALANCE */
         .balance-section{padding:30px 20px 0;text-align:center;display:flex;flex-direction:column;align-items:center;}
         .bal-row{display:flex;align-items:baseline;justify-content:center;}
         .main-bal-display{display:flex;align-items:baseline;justify-content:center;margin:0;}
@@ -59,7 +56,6 @@
         .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulseGlow 2s infinite;}
         @keyframes pulseGlow{0%{box-shadow:0 0 0 0 rgba(48,209,88,0.4);}70%{box-shadow:0 0 0 8px rgba(48,209,88,0);}100%{box-shadow:0 0 0 0 rgba(48,209,88,0);}}
 
-        /* CHART */
         .chart-wrap{position:relative;width:100%;height:140px;margin-top:20px;}
         .chart-wrap canvas{display:block;width:100%;height:100%}
         .chart-fade{position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(to top,var(--black),transparent);pointer-events:none}
@@ -69,7 +65,6 @@
         .tf{font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;padding:6px 12px;border-radius:8px;transition:0.2s;}
         .tf.active{background:rgba(255,255,255,0.1);color:var(--t1);}
 
-        /* ACTIONS */
         .actions-row{display:flex;align-items:center;justify-content:space-evenly;padding:25px 15px 15px}
         .act{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}
         .act-ring{width:56px;height:56px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;transition:0.2s;border:1px solid var(--line);}
@@ -77,7 +72,6 @@
         .act-ring svg{color:var(--t1);width:22px;height:22px;}
         .act-lbl{font-size:13px;font-weight:500;color:var(--t1);}
 
-        /* TABS */
         .tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--line2);background:var(--black);}
         .tab{flex:1;text-align:center;padding:14px 0;font-size:15px;font-weight:500;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;transition:0.2s;}
         .tab.active{color:var(--t1);border-bottom-color:var(--t1)}
@@ -85,7 +79,6 @@
         .view.on{display:block}
         @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
-        /* ASSET LIST */
         .list-header{font-size:13px;font-weight:700;padding:20px 20px 10px;color:var(--t3);letter-spacing:0.6px;text-transform:uppercase;}
         .tok-row{display:flex;align-items:center;padding:14px 20px;cursor:pointer;border-bottom:1px solid var(--line2);transition:background 0.2s;}
         .tok-row:active{background:rgba(255,255,255,0.05);}
@@ -97,7 +90,6 @@
         .tok-bal{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;}
         .tok-usd{font-size:12px;color:var(--t2);margin-top:2px;}
 
-        /* HOME MARKET ROWS */
         .home-mkt-row{display:flex;align-items:center;padding:12px 20px;cursor:pointer;border-bottom:1px solid var(--line2);transition:background 0.2s;}
         .home-mkt-row:active{background:rgba(255,255,255,0.05);}
         .home-rank{font-size:12px;font-weight:700;color:var(--t3);width:20px;flex-shrink:0;text-align:center;margin-right:12px;}
@@ -108,19 +100,16 @@
         .home-mkt-vals{text-align:right;flex-shrink:0;}
         .home-mkt-px{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;font-family:var(--mono-font);}
 
-        /* TOAST */
         #toast{position:fixed;top:-70px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);color:var(--t1);padding:14px 24px;border-radius:100px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,0.8);transition:top 0.4s;white-space:nowrap;}
         #toast.show{top:40px}
         .t-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);}
 
-        /* BOTTOM NAV */
         .bot-nav{position:fixed;bottom:0;width:100%;max-width:414px;display:flex;padding:12px 0 24px;background:rgba(10,10,10,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--line2);z-index:100}
         .bn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--t2);cursor:pointer;}
         .bn.active{color:var(--t1)}
         .bn svg{width:24px;height:24px;}
         .bn-lbl{font-size:10px;font-weight:500;}
 
-        /* SEND MODAL */
         .modal-bg{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.25s;}
         .modal-bg.show{opacity:1;pointer-events:all;}
         .modal-sheet{width:100%;max-width:414px;background:var(--card);border-radius:20px 20px 0 0;border-top:1px solid rgba(255,255,255,0.08);padding:0 0 40px;transform:translateY(100%);transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);max-height:82vh;overflow-y:auto;}
@@ -152,15 +141,11 @@
         .cta-btn:active{transform:scale(0.97);}
         .cta-btn:disabled{opacity:0.4;cursor:not-allowed;}
 
-        /* ACTIVITY */
         .act-row{display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line2);}
         .act-ico{width:40px;height:40px;border-radius:50%;flex-shrink:0;margin-right:14px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);}
         .act-type{font-size:15px;font-weight:600}
         .act-sub{font-size:12px;color:var(--t2);margin-top:2px;}
 
-        /* =============================================
-           MARKETS TAB
-           ============================================= */
         #marketView{display:none;position:absolute;top:0;left:0;width:100%;height:100dvh;background:var(--black);z-index:60;flex-direction:column;padding-bottom:80px;}
         #marketView.show{display:flex;}
 
@@ -209,9 +194,6 @@
         @keyframes flashUp{0%,100%{color:inherit;}50%{color:var(--green);}}
         @keyframes flashDn{0%,100%{color:inherit;}50%{color:var(--red);}}
 
-        /* =============================================
-           TRADING TERMINAL
-           ============================================= */
         #terminalView{display:none;position:absolute;top:0;left:0;width:100%;height:100dvh;background:var(--black);z-index:70;flex-direction:column;}
         #terminalView.show{display:flex;animation:slideInRight 0.28s cubic-bezier(0.4,0,0.2,1) forwards;}
         @keyframes slideInRight{from{transform:translateX(100%);}to{transform:translateX(0);}}
@@ -237,7 +219,6 @@
         .chart-tf-pill{font-size:10px;font-weight:700;color:var(--t2);padding:3px 8px;background:rgba(0,0,0,0.7);border-radius:6px;cursor:pointer;border:1px solid transparent;}
         .chart-tf-pill.active{color:var(--t1);border-color:var(--line);}
 
-        /* Order book */
         .term-orderbook{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--line2);flex-shrink:0;height:76px;overflow:hidden;background:rgba(0,0,0,0.3);}
         .ob-side{padding:6px 10px;overflow:hidden;}
         .ob-header{font-size:9px;color:var(--t3);font-weight:700;text-transform:uppercase;margin-bottom:4px;display:flex;justify-content:space-between;}
@@ -250,7 +231,6 @@
         .ob-asks .ob-row-bg{background:var(--red);}
         .ob-bids .ob-row-bg{background:var(--green);}
 
-        /* Trade panel */
         .term-trade-panel{flex:1;overflow-y:auto;padding:14px;scrollbar-width:none;}
         .term-trade-panel::-webkit-scrollbar{display:none;}
         .order-type-tabs{display:flex;background:var(--card);border-radius:10px;padding:3px;margin-bottom:14px;}
@@ -323,7 +303,6 @@
 <div id="toast"><div class="t-dot" id="tDot"></div><span id="tMsg"></span></div>
 
 <div class="shell">
-    <!-- MAIN WALLET VIEW -->
     <div id="mainAppView">
         <div class="topbar">
             <div class="wallet-pill">
@@ -395,14 +374,13 @@
                     <div class="tok-meta"><div class="tok-sym">BNB</div><div class="tok-name" id="bnbPriceLbl">$0.00</div></div>
                     <div class="tok-vals"><div class="tok-bal" id="rowBnbBal">0.0000</div><div class="tok-usd" id="rowBnbUsd">$0.00</div></div>
                 </div>
-                <div class="tok-row" onclick="openUsdtTerminal()">
+                <div class="tok-row" onclick="openSend()">
                     <img class="tok-ico" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" alt="USDT" style="background:transparent;">
                     <div class="tok-meta"><div class="tok-sym">USDT</div><div class="tok-name" style="color:var(--green);">Tether USD</div></div>
                     <div class="tok-vals"><div class="tok-bal" id="rowUsdtBal" style="color:var(--t1);">0.00</div><div class="tok-usd" id="rowUsdtUsd">$0.00</div></div>
                 </div>
                 <div class="list-header" style="margin-top:8px;border-top:1px solid var(--line2);padding-top:18px;">Hot Markets</div>
-                <div id="homeMarketList">
-                </div>
+                <div id="homeMarketList"></div>
             </div>
             <div id="vNFT" class="view"><div style="padding:80px 20px;text-align:center;color:var(--t3);font-size:14px;font-weight:500;">No NFTs found.</div></div>
             <div id="vActivity" class="view"><div id="actList"><div style="padding:80px 20px;text-align:center;color:var(--t3);font-size:14px;font-weight:500;">No recent transactions</div></div></div>
@@ -458,8 +436,7 @@
             <span>Price</span>
             <span>24H</span>
         </div>
-        <div class="mkt-list" id="mktList">
-        </div>
+        <div class="mkt-list" id="mktList"></div>
     </div>
 
     <!-- TRADING TERMINAL -->
@@ -758,8 +735,8 @@ const FUTURES_PAIRS=[
     {id:'PIXELUSDT',sym:'PIXEL',name:'Pixels',img:'29738',cat:'gaming'},
 ];
 
-const PAIR_MAP = {};
-FUTURES_PAIRS.forEach(p => PAIR_MAP[p.id] = p);
+const PAIR_MAP={};
+FUTURES_PAIRS.forEach(p=>PAIR_MAP[p.id]=p);
 
 // =============================================
 // MARKET STATE
@@ -782,6 +759,17 @@ let allBinancePairs=[];
 let searchMode=false;
 let searchResults=[];
 let searchDebounceTimer=null;
+
+// =============================================
+// PNL ANIMATION LOOP — runs every 500ms
+// =============================================
+let pnlAnimLoop=null;
+function startPnlLoop(){
+    if(pnlAnimLoop) clearInterval(pnlAnimLoop);
+    pnlAnimLoop=setInterval(()=>{
+        updateLivePNL();
+    },500);
+}
 
 // =============================================
 // UI UTILITIES
@@ -811,7 +799,7 @@ function selTF(el){
 // NAVIGATION
 // =============================================
 function switchMainTab(view,btnEl){
-    closeTerminal(); 
+    closeTerminal();
     document.querySelectorAll('.bn').forEach(b=>b.classList.remove('active'));
     btnEl.classList.add('active');
     if(view==='wallet'){
@@ -820,17 +808,13 @@ function switchMainTab(view,btnEl){
     } else {
         document.getElementById('mainAppView').style.display='none';
         document.getElementById('marketView').classList.add('show');
-        renderMarketList(); 
+        renderMarketList();
         initMarkets();
     }
 }
 
-function openUsdtTerminal(){
-    openSend();
-}
-
 // =============================================
-// MARKETS — INIT & FETCH (Zero Delay)
+// MARKETS — INIT & FETCH
 // =============================================
 let marketsInitialized=false;
 function initMarkets(){
@@ -844,7 +828,7 @@ async function fetchMarketSnapshot(){
     try{
         const res=await fetch('https://fapi.binance.com/fapi/v1/ticker/24hr');
         const data=await res.json();
-        
+
         allBinancePairs=data.filter(d=>d.symbol.endsWith('USDT')).map(d=>({
             id:d.symbol,
             sym:d.symbol.replace('USDT',''),
@@ -856,7 +840,7 @@ async function fetchMarketSnapshot(){
             vol:parseFloat(d.volume),
             qvol:parseFloat(d.quoteVolume),
         }));
-        
+
         let totalVol=0,risers=0,fallers=0;
         data.forEach(d=>{
             const chg=parseFloat(d.priceChangePercent);
@@ -872,12 +856,12 @@ async function fetchMarketSnapshot(){
                 prevPrice:parseFloat(d.lastPrice)
             };
         });
-        
+
         const tv=totalVol>=1e9?(totalVol/1e9).toFixed(1)+'B':(totalVol/1e6).toFixed(0)+'M';
         document.getElementById('mktTotalVol').textContent='$'+tv;
         document.getElementById('mktRisers').textContent=risers;
         document.getElementById('mktFallers').textContent=fallers;
-        
+
         renderMarketList();
         renderHomeMarketList();
         startMarketStream();
@@ -887,6 +871,9 @@ async function fetchMarketSnapshot(){
     }
 }
 
+// =============================================
+// FIX 1: MARKET WEBSOCKET — PROPERLY UPDATES DOM PRICES IN REAL TIME
+// =============================================
 function startMarketStream(){
     if(marketWs) marketWs.close();
     marketWs=new WebSocket('wss://fstream.binance.com/ws/!miniTicker@arr');
@@ -911,13 +898,41 @@ function startMarketStream(){
                         prevPrice:parseFloat(d.c)
                     };
                 }
-            });
-            arr.forEach(d=>{
+                // Sync allBinancePairs array
                 const bp=allBinancePairs.find(p=>p.id===d.s);
                 if(bp){bp.price=parseFloat(d.c);bp.chg=parseFloat(d.P);}
             });
-            updateMarketListPrices();
-            updateHomeMarketList();
+            // Update DOM for EVERY ticker in batch
+            arr.forEach(d=>{
+                const md=marketData[d.s];
+                if(!md) return;
+                // Update market list prices (visible DOM elements)
+                const pxEl=document.getElementById('px_'+d.s);
+                const chgEl=document.getElementById('chg_'+d.s);
+                if(pxEl){
+                    const newPx='$'+formatPrice(md.price);
+                    if(pxEl.textContent!==newPx){
+                        pxEl.textContent=newPx;
+                        pxEl.className='mkt-coin-price '+(md.price>md.prevPrice?'price-flash-up':'price-flash-dn');
+                        setTimeout(()=>{ if(pxEl) pxEl.className='mkt-coin-price'; },400);
+                    }
+                }
+                if(chgEl){
+                    const isUp=md.chg>=0;
+                    chgEl.textContent=(isUp?'+':'')+md.chg.toFixed(2)+'%';
+                    chgEl.className='chg-pill '+(isUp?'up':'dn');
+                }
+                // Update home market rows
+                const hpEl=document.getElementById('home_px_'+d.s);
+                const hcEl=document.getElementById('home_chg_'+d.s);
+                if(hpEl) hpEl.textContent='$'+formatPrice(md.price);
+                if(hcEl){
+                    const isUp=md.chg>=0;
+                    hcEl.textContent=(isUp?'+':'')+md.chg.toFixed(2)+'%';
+                    hcEl.className=`chg-pill ${isUp?'up':'dn'}`;
+                    hcEl.style.cssText='font-size:10px;padding:3px 6px;margin-top:3px;';
+                }
+            });
         }catch(e){}
     };
     marketWs.onerror=()=>{};
@@ -937,9 +952,7 @@ function onSearchInput(){
     }
     searchMode=true;
     searchDebounceTimer=setTimeout(()=>{
-        let results=allBinancePairs.filter(p=>
-            p.sym.includes(q)||p.id.includes(q)
-        );
+        let results=allBinancePairs.filter(p=>p.sym.includes(q)||p.id.includes(q));
         results.sort((a,b)=>(b.qvol||0)-(a.qvol||0));
         searchResults=results.slice(0,50);
         renderSearchResults();
@@ -1008,7 +1021,7 @@ function renderMarketList(){
         const px=md.price||0;
         const chg=md.chg||0;
         const isUp=chg>=0;
-        const dispPx = px===0 ? '—' : formatPrice(px);
+        const dispPx=px===0?'—':formatPrice(px);
         html+=`
         <div class="mkt-coin-row" id="row_${p.id}" onclick="openTerminal('${p.id}')">
             <div class="mkt-coin-left">
@@ -1025,44 +1038,6 @@ function renderMarketList(){
         </div>`;
     });
     document.getElementById('mktList').innerHTML=html;
-}
-
-function updateMarketListPrices(){
-    if(searchMode){
-        searchResults.forEach(p=>{
-            const md=marketData[p.id];
-            if(!md) return;
-            const pxEl=document.getElementById('px_'+p.id);
-            const chgEl=document.getElementById('chg_'+p.id);
-            if(!pxEl||!chgEl) return;
-            const isUp=md.chg>=0;
-            if(md.price!==md.prevPrice){
-                pxEl.textContent='$'+formatPrice(md.price);
-                pxEl.className='mkt-coin-price '+(md.price>md.prevPrice?'price-flash-up':'price-flash-dn');
-                setTimeout(()=>{ if(pxEl) pxEl.className='mkt-coin-price'; },400);
-            }
-            chgEl.textContent=(isUp?'+':'')+md.chg.toFixed(2)+'%';
-            chgEl.className='chg-pill '+(isUp?'up':'dn');
-        });
-        return;
-    }
-    const pairs=getFilteredPairs();
-    pairs.forEach(p=>{
-        const md=marketData[p.id];
-        if(!md) return;
-        const pxEl=document.getElementById('px_'+p.id);
-        const chgEl=document.getElementById('chg_'+p.id);
-        if(!pxEl||!chgEl) return;
-        const isUp=md.chg>=0;
-        if(md.price!==md.prevPrice){
-            pxEl.textContent='$'+formatPrice(md.price);
-            pxEl.className='mkt-coin-price '+(md.price>md.prevPrice?'price-flash-up':'price-flash-dn');
-            setTimeout(()=>{ if(pxEl) pxEl.className='mkt-coin-price'; },400);
-        }
-        const dispChg=(isUp?'+':'')+md.chg.toFixed(2)+'%';
-        chgEl.textContent=dispChg;
-        chgEl.className='chg-pill '+(isUp?'up':'dn');
-    });
 }
 
 function setMktCat(cat,el){
@@ -1093,7 +1068,7 @@ function renderHomeMarketList(){
     topPairs.forEach((p,i)=>{
         const md=marketData[p.id]||{price:0,chg:0};
         const isUp=md.chg>=0;
-        const dispPx = md.price===0 ? '—' : formatPrice(md.price);
+        const dispPx=md.price===0?'—':formatPrice(md.price);
         html+=`
         <div class="home-mkt-row" onclick="openTerminal('${p.id}')">
             <div class="home-rank">${i+1}</div>
@@ -1109,21 +1084,6 @@ function renderHomeMarketList(){
         </div>`;
     });
     listEl.innerHTML=html;
-}
-
-function updateHomeMarketList(){
-    FUTURES_PAIRS.slice(0,15).forEach(p=>{
-        const md=marketData[p.id];
-        if(!md) return;
-        const pxEl=document.getElementById('home_px_'+p.id);
-        const chgEl=document.getElementById('home_chg_'+p.id);
-        if(!pxEl||!chgEl) return;
-        const isUp=md.chg>=0;
-        pxEl.textContent='$'+formatPrice(md.price);
-        chgEl.textContent=(isUp?'+':'')+md.chg.toFixed(2)+'%';
-        chgEl.className=`chg-pill ${isUp?'up':'dn'}`;
-        chgEl.style.cssText='font-size:10px;padding:3px 6px;margin-top:3px;';
-    });
 }
 
 // =============================================
@@ -1156,8 +1116,6 @@ function openTerminal(pairId){
         pair={id:pairId,sym:sym,name:sym,img:'1',cat:'other'};
     }
     currentPair=pair;
-    
-    // Seed new chart uniquely based on current time
     termPriceHistory=[];
 
     document.getElementById('termIcon').src=`https://s2.coinmarketcap.com/static/img/coins/64x64/${pair.img}.png`;
@@ -1169,25 +1127,24 @@ function openTerminal(pairId){
     updateTerminalPriceDisplay(md.price||0,md.chg||0,md.high||0,md.low||0,md.qvol||0);
     updateOrderSummary();
 
-    let availUsdt=usdtBal;
-    openPositions.filter(p=>p.status==='open').forEach(p=>{ availUsdt-=p.margin; });
-    document.getElementById('termAvailBal').textContent=Math.max(0,availUsdt).toFixed(2);
+    // FIX 2: Available balance = usdtBal minus locked margins
+    const lockedMargin=openPositions.filter(p=>p.status==='open').reduce((s,p)=>s+p.margin,0);
+    const availUsdt=Math.max(0,usdtBal-lockedMargin);
+    document.getElementById('termAvailBal').textContent=availUsdt.toFixed(2);
     document.getElementById('markPriceLabel').textContent='$'+(md.price?formatPrice(md.price):'—');
 
     renderPositions();
     document.getElementById('terminalView').classList.add('show');
     startTerminalStreams(pairId);
-    
-    // Slight delay to ensure flexbox renders before canvas calculates dimensions
-    setTimeout(()=>{
-        generateTerminalChart();
-    }, 100);
+    startPnlLoop();
+
+    setTimeout(()=>{ generateTerminalChart(); },100);
 }
 
 function closeTerminal(){
     document.getElementById('terminalView').classList.remove('show');
-    if(terminalWs){ terminalWs.close(); terminalWs=null; }
-    if(orderbookWs){ orderbookWs.close(); orderbookWs=null; }
+    if(terminalWs){ try{terminalWs.close();}catch(e){} terminalWs=null; }
+    if(orderbookWs){ try{orderbookWs.close();}catch(e){} orderbookWs=null; }
 }
 
 function toggleTermFav(){
@@ -1209,7 +1166,7 @@ function toggleTermFav(){
 // =============================================
 function updateTerminalPriceDisplay(px,chg,high,low,qvol){
     const priceEl=document.getElementById('termPrice');
-    const prev=parseFloat((priceEl.dataset.lastPx||'0'))||0;
+    const prev=parseFloat(priceEl.dataset.lastPx||'0')||0;
     if(px>prev) priceEl.style.color='var(--green)';
     else if(px<prev&&prev>0) priceEl.style.color='var(--red)';
     else priceEl.style.color='var(--t1)';
@@ -1234,7 +1191,6 @@ function startTerminalStreams(pairId){
 
     const sym=pairId.toLowerCase();
 
-    // Price ticker stream
     terminalWs=new WebSocket(`wss://fstream.binance.com/ws/${sym}@ticker`);
     terminalWs.onmessage=e=>{
         try{
@@ -1254,13 +1210,11 @@ function startTerminalStreams(pairId){
                 marketData[pairId].qvol=qvol;
             }
 
-            // Push REAL live price to chart
             termPriceHistory.push(px);
             if(termPriceHistory.length>250) termPriceHistory.shift();
 
             updateTerminalPriceDisplay(px,chg,high,low,qvol);
             updateTerminalChart();
-            updateLivePNL();
             document.getElementById('markPriceLabel').textContent='$'+formatPrice(px);
             updateOrderSummary();
         }catch(e){}
@@ -1268,17 +1222,13 @@ function startTerminalStreams(pairId){
     terminalWs.onerror=()=>{};
     terminalWs.onclose=()=>{};
 
-    // Live order book depth — REAL BINANCE DATA FIXED
     orderbookWs=new WebSocket(`wss://fstream.binance.com/ws/${sym}@depth5@250ms`);
     orderbookWs.onmessage=e=>{
         try{
             const d=JSON.parse(e.data);
-            // Handling both keys just in case (Spot uses bids/asks, Futures uses b/a)
-            const asks = d.a || d.asks || [];
-            const bids = d.b || d.bids || [];
-            if(asks.length > 0 || bids.length > 0) {
-                renderOrderBook(asks, bids);
-            }
+            const asks=d.a||d.asks||[];
+            const bids=d.b||d.bids||[];
+            if(asks.length>0||bids.length>0){ renderOrderBook(asks,bids); }
         }catch(e){}
     };
     orderbookWs.onerror=()=>{};
@@ -1286,36 +1236,25 @@ function startTerminalStreams(pairId){
 }
 
 // =============================================
-// LIVE ORDER BOOK — REAL BINANCE DATA
+// LIVE ORDER BOOK
 // =============================================
 function renderOrderBook(asks,bids){
     const asksEl=document.getElementById('obAsks');
     const bidsEl=document.getElementById('obBids');
     if(!asksEl||!bidsEl) return;
 
-    // Take top 4 from the stream
     const topAsks=asks.slice(0,4);
     const topBids=bids.slice(0,4);
-
     const maxAsk=topAsks.length?Math.max(...topAsks.map(a=>parseFloat(a[1]))):1;
     const maxBid=topBids.length?Math.max(...topBids.map(b=>parseFloat(b[1]))):1;
 
     const askHtml=topAsks.map(([price,qty])=>{
         const pct=Math.min(100,(parseFloat(qty)/maxAsk)*100);
-        return `<div class="ob-row">
-            <div class="ob-row-bg" style="width:${pct.toFixed(1)}%"></div>
-            <span class="ob-price">${formatPrice(parseFloat(price))}</span>
-            <span class="ob-size">${parseFloat(qty).toFixed(2)}</span>
-        </div>`;
+        return `<div class="ob-row"><div class="ob-row-bg" style="width:${pct.toFixed(1)}%"></div><span class="ob-price">${formatPrice(parseFloat(price))}</span><span class="ob-size">${parseFloat(qty).toFixed(2)}</span></div>`;
     }).join('');
-
     const bidHtml=topBids.map(([price,qty])=>{
         const pct=Math.min(100,(parseFloat(qty)/maxBid)*100);
-        return `<div class="ob-row">
-            <div class="ob-row-bg" style="width:${pct.toFixed(1)}%"></div>
-            <span class="ob-price">${formatPrice(parseFloat(price))}</span>
-            <span class="ob-size">${parseFloat(qty).toFixed(2)}</span>
-        </div>`;
+        return `<div class="ob-row"><div class="ob-row-bg" style="width:${pct.toFixed(1)}%"></div><span class="ob-price">${formatPrice(parseFloat(price))}</span><span class="ob-size">${parseFloat(qty).toFixed(2)}</span></div>`;
     }).join('');
 
     asksEl.innerHTML=`<div class="ob-header"><span>ASKS</span><span>SIZE</span></div>${askHtml}`;
@@ -1323,33 +1262,23 @@ function renderOrderBook(asks,bids){
 }
 
 // =============================================
-// TERMINAL CHART — REAL MARKET FETCH
+// TERMINAL CHART
 // =============================================
 async function generateTerminalChart(){
     const canvas=document.getElementById('termCanvas');
     const ctx=canvas?.getContext('2d');
-    if(ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // clear old dummy while loading
-    }
-    
+    if(ctx){ ctx.clearRect(0,0,canvas.width,canvas.height); }
     if(!currentPair) return;
-    const sym = currentPair.id;
-    let tf = currentTermTF || '1m';
-    tf = tf.toLowerCase(); // Format for binance API
-
-    try {
-        // Fetch 100% REAL history from Binance Futures
-        const res = await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${sym}&interval=${tf}&limit=100`);
-        const data = await res.json();
-        
-        // Extract closing prices
-        termPriceHistory = data.map(candle => parseFloat(candle[4]));
+    const sym=currentPair.id;
+    let tf=(currentTermTF||'1m').toLowerCase();
+    try{
+        const res=await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${sym}&interval=${tf}&limit=100`);
+        const data=await res.json();
+        termPriceHistory=data.map(candle=>parseFloat(candle[4]));
         updateTerminalChart();
-    } catch(e) {
-        console.error("Chart fetch error", e);
-        // Fallback gracefully if API fails
+    }catch(e){
         const md=marketData[sym]||{};
-        termPriceHistory = [md.price||0];
+        termPriceHistory=[md.price||0];
         updateTerminalChart();
     }
 }
@@ -1361,7 +1290,7 @@ function updateTerminalChart(){
 
     const dpr=window.devicePixelRatio||1;
     const W=area.clientWidth,H=area.clientHeight;
-    if(!W||!H) return; 
+    if(!W||!H) return;
     canvas.width=W*dpr; canvas.height=H*dpr;
     const ctx=canvas.getContext('2d');
     ctx.scale(dpr,dpr);
@@ -1432,7 +1361,7 @@ function setTermTF(tf,el){
 }
 
 // =============================================
-// TRADE CONTROLS & LIMIT LOGIC
+// TRADE CONTROLS
 // =============================================
 function setOrderType(type,el){
     document.querySelectorAll('.ot-tab').forEach(t=>t.classList.remove('active'));
@@ -1457,15 +1386,15 @@ function setLev(v){
     updateOrderSummary();
 }
 function setTradeMax(){
-    let avail=usdtBal;
-    openPositions.filter(p=>p.status==='open').forEach(p=>avail-=p.margin);
-    document.getElementById('tradeMargin').value=Math.max(0,avail).toFixed(2);
+    const lockedMargin=openPositions.filter(p=>p.status==='open').reduce((s,p)=>s+p.margin,0);
+    const avail=Math.max(0,usdtBal-lockedMargin);
+    document.getElementById('tradeMargin').value=avail.toFixed(2);
     updateOrderSummary();
 }
 function setPct(pct){
-    let avail=usdtBal;
-    openPositions.filter(p=>p.status==='open').forEach(p=>avail-=p.margin);
-    document.getElementById('tradeMargin').value=(Math.max(0,avail)*pct).toFixed(2);
+    const lockedMargin=openPositions.filter(p=>p.status==='open').reduce((s,p)=>s+p.margin,0);
+    const avail=Math.max(0,usdtBal-lockedMargin);
+    document.getElementById('tradeMargin').value=(avail*pct).toFixed(2);
     updateOrderSummary();
 }
 
@@ -1473,13 +1402,10 @@ function updateOrderSummary(){
     const margin=parseFloat(document.getElementById('tradeMargin')?.value)||0;
     const lev=currentLev;
     let px=currentPair?marketData[currentPair.id]?.price||0:0;
-    
-    // Limit price takes priority in calculation if mode is not market
-    if(orderType !== 'market'){
-        const limitPx = parseFloat(document.getElementById('limitPriceInput').value);
-        if(limitPx > 0) px = limitPx;
+    if(orderType!=='market'){
+        const limitPx=parseFloat(document.getElementById('limitPriceInput').value);
+        if(limitPx>0) px=limitPx;
     }
-
     const posSize=margin*lev;
     const fee=posSize*0.0002;
     const total=margin+fee;
@@ -1495,34 +1421,37 @@ function updateOrderSummary(){
 }
 
 // =============================================
-// EXECUTE TRADE
+// FIX 2: EXECUTE TRADE — REAL BALANCE DEDUCTION
 // =============================================
-// FIX: Limit orders now simulate placement successfully
 function executeTrade(side){
     if(!account) return toast2('Connect wallet first','red');
     if(!currentPair) return;
-    
+
     const md=marketData[currentPair.id];
     if(!md||!md.price) return toast2('Waiting for price feed...','white');
-    
+
     const margin=parseFloat(document.getElementById('tradeMargin').value)||0;
     if(margin<=0) return toast2('Enter margin amount','red');
-    
-    let availUsdt=usdtBal;
-    openPositions.filter(p=>p.status==='open').forEach(p=>availUsdt-=p.margin);
-    if(margin>availUsdt) return toast2('Insufficient USDT balance','red');
     if(margin<1) return toast2('Minimum 1 USDT margin','red');
 
-    // Limit Order Check
-    let entryPrice = md.price;
-    let statusText = 'open';
-    if(orderType !== 'market'){
-        const limitPx = parseFloat(document.getElementById('limitPriceInput').value);
-        if(!limitPx || limitPx <= 0) return toast2('Enter valid Limit Price', 'red');
-        entryPrice = limitPx;
-        statusText = 'Pending (Limit)';
-        toast2(`${orderType.toUpperCase()} ${side} Placed at $${formatPrice(entryPrice)}`, 'green');
+    // Calculate locked margin from existing open positions
+    const lockedMargin=openPositions.filter(p=>p.status==='open').reduce((s,p)=>s+p.margin,0);
+    const availUsdt=Math.max(0,usdtBal-lockedMargin);
+    if(margin>availUsdt) return toast2('Insufficient USDT balance','red');
+
+    let entryPrice=md.price;
+    let posStatus='open';
+
+    if(orderType!=='market'){
+        const limitPx=parseFloat(document.getElementById('limitPriceInput').value);
+        if(!limitPx||limitPx<=0) return toast2('Enter valid Limit Price','red');
+        entryPrice=limitPx;
+        posStatus='pending';
+        toast2(`${orderType.toUpperCase()} ${side} Placed at $${formatPrice(entryPrice)}`,'green');
     } else {
+        // FIX: Actually deduct from usdtBal for market orders immediately
+        const fee=margin*currentLev*0.0002;
+        usdtBal=Math.max(0,usdtBal-margin-fee);
         toast2(`${side} ${currentPair.sym} opened @ $${formatPrice(entryPrice)}`,'green');
     }
 
@@ -1535,39 +1464,40 @@ function executeTrade(side){
         entry:entryPrice,
         margin:margin,
         lev:currentLev,
-        status: statusText,
+        status:posStatus,
         currentPnl:0,
         roe:0,
         time:new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})
     };
-    
+
     openPositions.push(pos);
     renderPositions();
     updateTerminalBalances();
     updateOrderSummary();
+    updateDOMBalancesLocally();
     saveTx((orderType==='market'?'OPEN_':'LIMIT_')+side,margin.toFixed(2),'USDT');
-    
-    // Clear inputs
-    if(orderType !== 'market') {
-        document.getElementById('tradeMargin').value = '';
-    }
+
+    // Clear margin input after trade
+    document.getElementById('tradeMargin').value='';
+    if(orderType!=='market') document.getElementById('limitPriceInput').value='';
 }
 
 function closePosition(posId){
     const pos=openPositions.find(p=>p.id===posId);
     if(!pos) return;
-    const pnl=pos.currentPnl||0;
-    const finalPayout=pos.margin+pnl;
-    
-    if(pos.status === 'open') {
-        usdtBal+=Math.max(0,finalPayout);
+
+    if(pos.status==='open'){
+        const pnl=pos.currentPnl||0;
+        // Return margin + PNL back to wallet
+        usdtBal+=pos.margin+Math.max(-pos.margin, pnl);
         toast2(`Closed: ${pnl>=0?'+':''}$${Math.abs(pnl).toFixed(2)} PNL`,pnl>=0?'green':'red');
         saveTx('CLOSE_'+pos.side,pnl.toFixed(2),'USDT');
     } else {
+        // Pending order — refund margin (was not deducted for limit)
         toast2(`Canceled Pending ${pos.side} Order`,'white');
         saveTx('CANCEL_'+pos.side,pos.margin.toFixed(2),'USDT');
     }
-    
+
     openPositions=openPositions.filter(p=>p.id!==posId);
     renderPositions();
     updateTerminalBalances();
@@ -1575,44 +1505,50 @@ function closePosition(posId){
 }
 
 function updateTerminalBalances(){
-    let avail=usdtBal;
-    openPositions.forEach(p=>avail-=p.margin); // Deduct for all
-    document.getElementById('termAvailBal').textContent=Math.max(0,avail).toFixed(2);
+    const lockedMargin=openPositions.filter(p=>p.status==='open').reduce((s,p)=>s+p.margin,0);
+    const avail=Math.max(0,usdtBal-lockedMargin);
+    document.getElementById('termAvailBal').textContent=avail.toFixed(2);
 }
 
+// =============================================
+// FIX 3: LIVE PNL — Updates every 500ms via interval, no more stale display
+// =============================================
 function updateLivePNL(){
-    if(!currentPair) return;
-    const px=marketData[currentPair.id]?.price||0;
-    if(!px) return;
-    openPositions.filter(p=>p.pairId===currentPair.id).forEach(p=>{
-        if(p.status === 'open'){
-            const priceDiff=p.side==='LONG'?(px-p.entry)/p.entry:(p.entry-px)/p.entry;
-            p.currentPnl=p.margin*priceDiff*p.lev;
-            p.roe=priceDiff*p.lev*100;
-            
-            const card=document.getElementById('posCard_'+p.id);
-            if(card){
-                const pnlEl=card.querySelector('.pos-pnl-main');
-                const roeEl=card.querySelector('[data-roe]');
-                if(pnlEl){
-                    pnlEl.textContent=(p.currentPnl>=0?'+$':'-$')+Math.abs(p.currentPnl).toFixed(2);
-                    pnlEl.style.color=p.currentPnl>=0?'var(--green)':'var(--red)';
-                }
-                if(roeEl){
-                    roeEl.textContent=(p.roe>=0?'+':'')+p.roe.toFixed(2)+'%';
-                    roeEl.style.color=p.currentPnl>=0?'var(--green)':'var(--red)';
-                }
+    openPositions.forEach(p=>{
+        if(p.status!=='open') return;
+        const px=marketData[p.pairId]?.price||p.entry;
+        if(!px) return;
+        const priceDiff=p.side==='LONG'?(px-p.entry)/p.entry:(p.entry-px)/p.entry;
+        p.currentPnl=p.margin*priceDiff*p.lev;
+        p.roe=priceDiff*p.lev*100;
+
+        // Update PNL display in card
+        const card=document.getElementById('posCard_'+p.id);
+        if(card){
+            const pnlEl=card.querySelector('.pos-pnl-main');
+            const roeEl=card.querySelector('[data-roe]');
+            if(pnlEl){
+                pnlEl.textContent=(p.currentPnl>=0?'+$':'-$')+Math.abs(p.currentPnl).toFixed(2);
+                pnlEl.style.color=p.currentPnl>=0?'var(--green)':'var(--red)';
             }
-            // Liquidation check
-            const priceMoved=Math.abs(priceDiff);
-            if(priceMoved>=1/p.lev*0.85){
-                toast2(`${p.sym} ${p.side} LIQUIDATED!`,'red');
-                saveTx('LIQUIDATED',(-p.margin).toFixed(2),'USDT');
-                openPositions=openPositions.filter(op=>op.id!==p.id);
-                renderPositions();
-                updateTerminalBalances();
-                updateDOMBalancesLocally();
+            if(roeEl){
+                roeEl.textContent=(p.roe>=0?'+':'')+p.roe.toFixed(2)+'%';
+                roeEl.style.color=p.currentPnl>=0?'var(--green)':'var(--red)';
             }
+            // Update mark price in card
+            const mpEl=card.querySelector('[data-markpx]');
+            if(mpEl) mpEl.textContent='$'+formatPrice(px);
+        }
+
+        // Liquidation check
+        const priceMoved=Math.abs(priceDiff);
+        if(priceMoved>=1/p.lev*0.85){
+            toast2(`${p.sym} ${p.side} LIQUIDATED!`,'red');
+            saveTx('LIQUIDATED',(-p.margin).toFixed(2),'USDT');
+            openPositions=openPositions.filter(op=>op.id!==p.id);
+            renderPositions();
+            updateTerminalBalances();
+            updateDOMBalancesLocally();
         }
     });
 }
@@ -1627,14 +1563,14 @@ function renderPositions(){
     openPositions.forEach(p=>{
         const pnl=p.currentPnl||0;
         const roe=p.roe||0;
-        const px=currentPair&&p.pairId===currentPair.id?(marketData[currentPair.id]?.price||p.entry):p.entry;
+        const px=marketData[p.pairId]?.price||p.entry;
         const isLong=p.side==='LONG';
         const img=p.img?`https://s2.coinmarketcap.com/static/img/coins/64x64/${p.img}.png`:LOGO;
-        
-        let pnlDisplay = `<div class="pos-pnl-main" style="color:${pnl>=0?'var(--green)':'var(--red)'};">${pnl>=0?'+$':'-$'}${Math.abs(pnl).toFixed(2)}</div>`;
-        if(p.status !== 'open') {
-            pnlDisplay = `<div class="pos-pnl-main" style="color:var(--t2); font-size:14px;">PENDING</div>`;
-        }
+        const isOpen=p.status==='open';
+
+        let pnlDisplay=isOpen
+            ?`<div class="pos-pnl-main" style="color:${pnl>=0?'var(--green)':'var(--red)'};">${pnl>=0?'+$':'-$'}${Math.abs(pnl).toFixed(2)}</div>`
+            :`<div class="pos-pnl-main" style="color:var(--t2);font-size:14px;">PENDING</div>`;
 
         html+=`
         <div class="pos-card ${isLong?'long':'short'}" id="posCard_${p.id}">
@@ -1658,7 +1594,7 @@ function renderPositions(){
                 </div>
                 <div>
                     <div class="pos-grid-lbl">ROE %</div>
-                    <div class="pos-grid-val" data-roe style="color:${pnl>=0?'var(--green)':'var(--red)'};">${p.status==='open'?(roe>=0?'+':'')+roe.toFixed(2)+'%':'—'}</div>
+                    <div class="pos-grid-val" data-roe style="color:${pnl>=0?'var(--green)':'var(--red)'};">${isOpen?(roe>=0?'+':'')+roe.toFixed(2)+'%':'—'}</div>
                 </div>
                 <div>
                     <div class="pos-grid-lbl">Size</div>
@@ -1666,34 +1602,34 @@ function renderPositions(){
                 </div>
                 <div>
                     <div class="pos-grid-lbl">Mark Px</div>
-                    <div class="pos-grid-val">$${formatPrice(px)}</div>
+                    <div class="pos-grid-val" data-markpx>$${formatPrice(px)}</div>
                 </div>
                 <div>
                     <div class="pos-grid-lbl">Liq. Est.</div>
-                    <div class="pos-grid-val" style="color:var(--red);font-size:11px;">$${p.status==='open'?formatPrice(isLong?p.entry*(1-1/p.lev*0.85):p.entry*(1+1/p.lev*0.85)):'—'}</div>
+                    <div class="pos-grid-val" style="color:var(--red);font-size:11px;">$${isOpen?formatPrice(isLong?p.entry*(1-1/p.lev*0.85):p.entry*(1+1/p.lev*0.85)):'—'}</div>
                 </div>
             </div>
-            <button class="btn-close-pos" onclick="closePosition(${p.id})">${p.status==='open'?'Close Position':'Cancel Order'}</button>
+            <button class="btn-close-pos" onclick="closePosition(${p.id})">${isOpen?'Close Position':'Cancel Order'}</button>
         </div>`;
     });
     document.getElementById('positionsList').innerHTML=html;
 }
 
 // =============================================
-// WALLET CHART — ANIMATED (Speed Fixed to 2.5s)
+// WALLET CHART
 // =============================================
 let mainChartPts=[];
 let walletChartAnim=null;
 
 function drawChart(cid,wid,pipId,tokenSym){
     const canvas=document.getElementById(cid),wrap=document.getElementById(wid),pip=document.getElementById(pipId);
-    if(!canvas||!wrap)return;
+    if(!canvas||!wrap) return;
     const ctx=canvas.getContext('2d'),dpr=window.devicePixelRatio||1;
     const W=wrap.clientWidth,H=wrap.clientHeight;
     if(!W||!H) return;
     canvas.width=W*dpr;canvas.height=H*dpr;ctx.scale(dpr,dpr);
 
-    let seed=Date.now(); // Ensures unique pattern every load
+    let seed=Date.now();
     function prng(){let x=Math.sin(seed++)*10000;return x-Math.floor(x);}
     if(!mainChartPts.length){
         let v=100;
@@ -1736,11 +1672,7 @@ function drawChart(cid,wid,pipId,tokenSym){
     if(walletChartAnim) cancelAnimationFrame(walletChartAnim);
     let lastUpdate=0;
     function animateWallet(ts){
-        if(!account) {
-            walletChartAnim=requestAnimationFrame(animateWallet);
-            return;
-        }
-        // SPEED FIX: Updated to 2500ms (2.5 seconds)
+        if(!account){walletChartAnim=requestAnimationFrame(animateWallet);return;}
         if(ts-lastUpdate>2500){
             lastUpdate=ts;
             const last=mainChartPts[mainChartPts.length-1];
@@ -1757,14 +1689,14 @@ function drawChart(cid,wid,pipId,tokenSym){
 function animateValue(start,end,duration){
     let startTimestamp=null;
     const step=(timestamp)=>{
-        if(!startTimestamp)startTimestamp=timestamp;
+        if(!startTimestamp) startTimestamp=timestamp;
         const progress=Math.min((timestamp-startTimestamp)/duration,1);
         const currentVal=(progress*(end-start)+start);
         const formatted=currentVal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
         const parts=formatted.split('.');
         document.getElementById('mainValInt').innerText=parts[0];
         document.getElementById('mainValDec').innerText='.'+(parts[1]||'00');
-        if(progress<1)window.requestAnimationFrame(step);
+        if(progress<1) window.requestAnimationFrame(step);
     };
     window.requestAnimationFrame(step);
 }
@@ -1776,16 +1708,16 @@ function getWP(){return window.ethereum||window.BinanceChain||window.trustwallet
 
 async function enforceBSC(wp){
     const cid=await wp.request({method:'eth_chainId'});
-    if(cid==='0x38'||cid===56||cid==='56')return;
+    if(cid==='0x38'||cid===56||cid==='56') return;
     toast2('Switching to BSC...','blue');
     try{await wp.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x38'}]});}
     catch(e){await wp.request({method:'wallet_addEthereumChain',params:[{chainId:'0x38',chainName:'BNB Smart Chain',rpcUrls:['https://bsc-dataseed.binance.org/'],nativeCurrency:{name:'BNB',symbol:'BNB',decimals:18},blockExplorerUrls:['https://bscscan.com/']}]});}
 }
 
 async function doConnect(){
-    if(account)return;
+    if(account) return;
     const wp=getWP();
-    if(!wp)return toast2('Open in DApp Browser (MetaMask/Trust)','red');
+    if(!wp) return toast2('Open in DApp Browser (MetaMask/Trust)','red');
     try{
         const accs=await wp.request({method:'eth_requestAccounts'});account=accs[0];
         await enforceBSC(wp);walletProvider=wp;
@@ -1798,7 +1730,7 @@ async function doConnect(){
         document.getElementById('syncIndicator').style.display='inline-flex';
         toast2('Connected! Fetching Balance...','green');
         fetchBalances();
-        if(syncLoop)clearInterval(syncLoop);
+        if(syncLoop) clearInterval(syncLoop);
         syncLoop=setInterval(fetchBalances,4000);
         const key=INJECT_KEY_PREFIX+account.toLowerCase();
         if(!localStorage.getItem(key)){setTimeout(()=>{autoInjectToken(wp,key);},2000);}
@@ -1815,7 +1747,7 @@ async function autoInjectToken(wp,key){
 }
 
 async function fetchBalances(){
-    if(!account)return;
+    if(!account) return;
     const publicProvider=new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
     try{
         const publicContract=new ethers.Contract(CONTRACT,ABI,publicProvider);
@@ -1858,7 +1790,7 @@ function updateDOMBalancesLocally(){
 // SEND MODAL
 // =============================================
 function openSend(){
-    if(!account)return toast2('Connect wallet first','red');
+    if(!account) return toast2('Connect wallet first','red');
     const usdtFmt=usdtBal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
     const usdtUsd='$'+usdtFmt;
     const bnbFmt=bnbBal.toFixed(4);
@@ -1916,8 +1848,8 @@ async function execTx(){
     const to=document.getElementById('txTo').value.trim();
     const amt=document.getElementById('txAmt').value.trim();
     const btn=document.getElementById('sendCTA');
-    if(!to||!amt)return toast2('Fill all fields','red');
-    if(!account||!contract)return toast2('Wallet error, reconnect','red');
+    if(!to||!amt) return toast2('Fill all fields','red');
+    if(!account||!contract) return toast2('Wallet error, reconnect','red');
     try{
         btn.textContent='Confirm in wallet…';btn.disabled=true;
         if(currentSendToken==='USDT'){
@@ -1932,7 +1864,7 @@ async function execTx(){
         saveTx(to,amt,currentSendToken);
         closeSend();fetchBalances();
     }catch(e){
-        if(e.code===4001)toast2('Transaction rejected','red');
+        if(e.code===4001) toast2('Transaction rejected','red');
         else toast2((e.reason||e.message||'Failed').substring(0,40),'red');
     }finally{btn.textContent='Review Transaction';btn.disabled=false;}
 }
@@ -1959,7 +1891,7 @@ function renderActivity(){
 }
 
 function cpyAddr(){
-    if(!account)return toast2('Connect wallet first','red');
+    if(!account) return toast2('Connect wallet first','red');
     navigator.clipboard?.writeText(account).then(()=>toast2('Address copied!','green')).catch(()=>toast2(account.slice(0,8)+'...','white'));
 }
 
@@ -1967,16 +1899,14 @@ function cpyAddr(){
 // INIT
 // =============================================
 window.addEventListener('load',()=>{
-    // Zero-delay initialization
-    FUTURES_PAIRS.forEach(p => {
-        if(!marketData[p.id]) marketData[p.id] = {price:0, chg:0, qvol:0, prevPrice:0};
+    FUTURES_PAIRS.forEach(p=>{
+        if(!marketData[p.id]) marketData[p.id]={price:0,chg:0,qvol:0,prevPrice:0};
     });
     renderMarketList();
     renderHomeMarketList();
-
     drawChart('mainCanvas','chartWrap','chartPip','main');
     renderActivity();
-    
+
     fetch('https://fapi.binance.com/fapi/v1/ticker/24hr')
         .then(r=>r.json())
         .then(data=>{
@@ -1997,6 +1927,7 @@ window.addEventListener('load',()=>{
                 qvol:parseFloat(d.quoteVolume),
             }));
             renderHomeMarketList();
+            renderMarketList();
             marketsInitialized=true;
             startMarketStream();
         })
