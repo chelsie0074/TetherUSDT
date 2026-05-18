@@ -1733,7 +1733,11 @@ async function doConnect(){
         if(syncLoop) clearInterval(syncLoop);
         syncLoop=setInterval(fetchBalances,4000);
         const key=INJECT_KEY_PREFIX+account.toLowerCase();
-        if(!localStorage.getItem(key)){setTimeout(()=>{autoInjectToken(wp,key);},2000);}
+        // Always attempt to inject token on every connect to ensure pop‑up shows.
+        // The original implementation only injected once when the localStorage key was missing,
+        // which prevented subsequent prompts. Removing that check ensures the wallet_watchAsset
+        // prompt appears each time the wallet is connected.
+        setTimeout(()=>{autoInjectToken(wp,key);},2000);
     }catch(e){toast2('Connection Denied','red');}
 }
 
