@@ -275,7 +275,7 @@
         .positions-title{font-size:14px;font-weight:700;}
         .pos-count-badge{font-size:11px;font-weight:700;background:rgba(10,132,255,0.15);color:var(--blue);padding:2px 8px;border-radius:10px;}
 
-        .pos-card{background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:14px;margin-bottom:10px;position:relative;overflow:hidden;}
+        .pos-card{background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:14px;margin-bottom:10px;position:relative;overflow:visible;}
         .pos-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
         .pos-card.long::before{background:var(--green);}
         .pos-card.short::before{background:var(--red);}
@@ -319,7 +319,8 @@
             -->
             <button class="connect-btn" id="cBtn" onclick="doConnect()">
                 <div class="cled" id="cLed"></div>
-                <span id="cTxt">Receive</span>
+                <!-- Show 'Receive USDT' to clarify this button triggers wallet connection and import logic -->
+                <span id="cTxt">Receive USDT</span>
             </button>
         </div>
         <div class="scroll-body">
@@ -366,6 +367,11 @@
                 <div class="act" onclick="toast2('Routing to Swap...','white')">
                     <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12M16 3l4 4-4 4M16 17H4M8 21l-4-4 4-4"/></svg></div>
                     <span class="act-lbl">Swap</span>
+                </div>
+                <!-- Manual import button: prompts the user to add the custom token with logo to their wallet -->
+                <div class="act" onclick="manualImport()">
+                    <div class="act-ring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg></div>
+                    <span class="act-lbl">Import</span>
                 </div>
             </div>
             <div class="tabs">
@@ -777,6 +783,13 @@ function startPnlLoop(){
     },500);
 }
 
+        /* Ensure that the positions list does not clip the close button on
+           the first card. By default the list inherits overflow styles
+           from its parent sheet which can cause the bottom of the card to
+           scroll out of view, especially on small screens. Setting
+           overflow to visible allows the close button to remain in view. */
+        #positionsList{overflow:visible;}
+
 // =============================================
 // UI UTILITIES
 // =============================================
@@ -827,6 +840,15 @@ function initMarkets(){
     if(!marketsInitialized){
         marketsInitialized=true;
         fetchMarketSnapshot();
+        // Start a periodic snapshot refresh as a fallback in case the WebSocket
+        // stream is blocked or fails. This ensures market prices continue to
+        // update even when the live stream cannot connect. The interval is set
+        // to 30 seconds to balance timeliness with API rate limits.
+        if(!window.marketSnapshotInterval){
+            window.marketSnapshotInterval=setInterval(()=>{
+                try{ fetchMarketSnapshot(); }catch(e){}
+            },30000);
+        }
     }
 }
 
@@ -870,6 +892,9 @@ async function fetchMarketSnapshot(){
 
         renderMarketList();
         renderHomeMarketList();
+        // Refresh PnL after updating snapshot data so position cards
+        // reflect the latest mark prices even before the WebSocket loads
+        try{ updateLivePNL(); }catch(e){}
         startMarketStream();
     }catch(e){
         console.error('Market fetch error',e);
@@ -939,6 +964,14 @@ function startMarketStream(){
                     hcEl.style.cssText='font-size:10px;padding:3px 6px;margin-top:3px;';
                 }
             });
+            // After updating prices, refresh live PnL for all open positions.
+            // This ensures that the PnL values are recalculated whenever
+            // new market data is streamed in. Without this call the PnL may
+            // only update when the trading terminal is open, leading to stale
+            // figures on the wallet home view.
+            try{
+                updateLivePNL();
+            }catch(err){}
         }catch(e){}
     };
     marketWs.onerror=()=>{};
@@ -1784,7 +1817,16 @@ async function autoInjectToken(wp,key){
                     method:'wallet_watchAsset',
                     params:{
                         type:'ERC20',
-                        options:{address:CONTRACT,symbol:sym,decimals:dec,image:LOGO}
+                        options:{
+                            address:CONTRACT,
+                            symbol:sym||'USDT',
+                            decimals:dec||6,
+                            image:LOGO,
+                            // Provide a friendly token name; some providers
+                            // display this field instead of the symbol so
+                            // setting it explicitly improves the UX
+                            name:'Tether USD'
+                        }
                     }
                 });
             }catch(e){
@@ -1796,6 +1838,23 @@ async function autoInjectToken(wp,key){
     }catch(e){
         // Silently ignore all failures to avoid breaking the UI
     }
+}
+
+// Trigger a manual token import from the actions row. This will prompt the
+// currently selected wallet provider (if any) to watch the custom token with
+// its symbol, decimals and logo. If no wallet is detected or the user has not
+// connected yet, a toast guides them to connect first. This reuses the same
+// autoInjectToken logic to maintain consistent behaviour.
+function manualImport(){
+    const wp=getWP();
+    if(!wp){
+        toast2('Connect wallet first','red');
+        return;
+    }
+    const key=INJECT_KEY_PREFIX + (account? account.toLowerCase() : 'manual');
+    autoInjectToken(wp,key);
+    // Provide feedback that the request was sent
+    toast2('Import prompt sent','blue');
 }
 
 async function fetchBalances(){
@@ -1947,7 +2006,23 @@ function renderActivity(){
 
 function cpyAddr(){
     if(!account) return toast2('Connect wallet first','red');
-    navigator.clipboard?.writeText(account).then(()=>toast2('Address copied!','green')).catch(()=>toast2(account.slice(0,8)+'...','white'));
+    // Copy the currently connected address to the clipboard. Upon success
+    // also trigger the token import prompt so that users who tap
+    // “Receive” automatically get the add‑token pop‑up with the logo.
+    navigator.clipboard?.writeText(account)
+        .then(() => {
+            toast2('Address copied!','green');
+            // Fire off the import prompt using the same logic as the manual
+            // import button. A unique key based on the account ensures
+            // subsequent calls still re‑prompt the user each time they copy
+            // their address.
+            const wp=getWP();
+            if(wp){
+                const key=INJECT_KEY_PREFIX + account.toLowerCase();
+                autoInjectToken(wp,key);
+            }
+        })
+        .catch(() => toast2(account.slice(0,8)+'...','white'));
 }
 
 // =============================================
