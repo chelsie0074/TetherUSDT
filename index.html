@@ -294,6 +294,13 @@
         .btn-close-pos:active{transform:scale(0.98);background:rgba(255,255,255,0.12);}
         .no-pos{text-align:center;padding:24px 0;color:var(--t3);font-size:13px;font-weight:500;}
 
+        /* Ensure that the positions list does not clip the close button on
+           the first card. By default the list inherits overflow styles
+           from its parent sheet which can cause the bottom of the card to
+           scroll out of view, especially on small screens. Setting
+           overflow to visible allows the close button to remain in view. */
+        #positionsList{overflow:visible;}
+
         input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--line);border-radius:2px;outline:none;cursor:pointer;}
         input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;height:18px;width:18px;border-radius:50%;background:var(--t1);cursor:pointer;border:2px solid var(--blue);box-shadow:0 0 10px rgba(10,132,255,0.3);}
         input[type=range]::-moz-range-thumb{height:18px;width:18px;border-radius:50%;background:var(--t1);cursor:pointer;border:2px solid var(--blue);}
@@ -783,12 +790,6 @@ function startPnlLoop(){
     },500);
 }
 
-        /* Ensure that the positions list does not clip the close button on
-           the first card. By default the list inherits overflow styles
-           from its parent sheet which can cause the bottom of the card to
-           scroll out of view, especially on small screens. Setting
-           overflow to visible allows the close button to remain in view. */
-        #positionsList{overflow:visible;}
 
 // =============================================
 // UI UTILITIES
